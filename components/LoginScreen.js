@@ -9,7 +9,7 @@ const LoginScreen = () => {
       <Button
         title="Nappi"
         onPress={() => {
-          navigation.navigate("Paskasivu");
+          navigation.navigate("Settings");
         }}
       />
     </View>

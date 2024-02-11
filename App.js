@@ -13,9 +13,10 @@ export default function App() {
       {/* Vaihda initialRouteName ennen mergeä */}
       <Stack.Navigator
         initialRouteName="HomeScreen"
-        screenOptions={{ headerShown: false }}
+        
+        // screenOptions={{ headerShown: false }}
       >
-        <Stack.Screen name="HomeScreen" component={HomeScreen} />
+        <Stack.Screen name="Home" component={HomeScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
@@ -29,3 +30,4 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
 });
+

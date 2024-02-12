@@ -2,17 +2,18 @@ import { StatusBar } from "expo-status-bar";
 import { StyleSheet, View, Text } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import LoginScreen from "./components/LoginScreen";
+import Login from "./components/Login";
 import Paskasivu from "./components/Paskasivu";
+import Register from "./components/Register";
 
 const Stack = createStackNavigator();
 
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="LoginScreen">
-        <Stack.Screen name="LoginScreen" component={LoginScreen} />
-        <Stack.Screen name="Paskasivu" component={Paskasivu} />
+      <Stack.Navigator initialRouteName="Register">
+        <Stack.Screen name="Login" component={Login} />
+        <Stack.Screen name="Register" component={Register} />
       </Stack.Navigator>
     </NavigationContainer>
   );

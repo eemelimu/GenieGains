@@ -11,7 +11,7 @@ const Paskasivu = () => {
       <Button
         title="Takaisin"
         onPress={() => {
-          navigation.navigate("LoginScreen");
+          navigation.navigate("Login");
         }}
       ></Button>
     </View>

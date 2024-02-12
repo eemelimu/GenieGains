@@ -1,13 +1,52 @@
-import React from "react";
+import React, { useContext } from "react";
 import { View, Text, Button, StyleSheet, Pressable } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { ThemeColors } from "../assets/ThemeColors";
 import { MaterialIcons } from "@expo/vector-icons";
 import { ScrollView } from "react-native-gesture-handler";
 import { AntDesign } from "@expo/vector-icons";
+import { ThemeContext } from "./ThemeContext";
 
 const SettingsButton = ({ color, text, children, navigationPage }) => {
   const navigation = useNavigation();
+  const {
+    theme: ThemeColors,
+    resetTheme,
+    changeThemeColor,
+  } = useContext(ThemeContext);
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: ThemeColors.primary,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    boldText: {
+      fontWeight: "bold",
+      color: ThemeColors.tertiary,
+      fontSize: 20,
+    },
+    button: {
+      flex: 1,
+      padding: 10,
+      backgroundColor: ThemeColors.secondary,
+      width: "80%",
+      borderRadius: 5,
+      borderBottomWidth: 2,
+      borderBottomColor: "black",
+      alignSelf: "center",
+    },
+    row: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+    },
+    scrollView: {
+      width: "100%",
+      marginTop: 20,
+      marginVertical: 20,
+      marginHorizontal: 20,
+    },
+  });
   return (
     <Pressable
       onPress={() => navigation.navigate(navigationPage)}
@@ -30,6 +69,46 @@ const SettingsButton = ({ color, text, children, navigationPage }) => {
 
 const SettingsScreen = () => {
   const navigation = useNavigation();
+  const {
+    theme: ThemeColors,
+    resetTheme,
+    changeThemeColor,
+  } = useContext(ThemeContext);
+  
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: ThemeColors.primary,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    boldText: {
+      fontWeight: "bold",
+      color: ThemeColors.tertiary,
+      fontSize: 20,
+    },
+    button: {
+      flex: 1,
+      padding: 10,
+      backgroundColor: ThemeColors.secondary,
+      width: "80%",
+      borderRadius: 5,
+      borderBottomWidth: 2,
+      borderBottomColor: "black",
+      alignSelf: "center",
+    },
+    row: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+    },
+    scrollView: {
+      width: "100%",
+      marginTop: 20,
+      marginVertical: 20,
+      marginHorizontal: 20,
+    },
+  });
+
   return (
     <View style={styles.container}>
       <MaterialIcons
@@ -99,37 +178,4 @@ const SettingsScreen = () => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: ThemeColors.primary,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  boldText: {
-    fontWeight: "bold",
-    color: ThemeColors.tertiary,
-    fontSize: 20,
-  },
-  button: {
-    flex: 1,
-    padding: 10,
-    backgroundColor: ThemeColors.secondary,
-    width: "80%",
-    borderRadius: 5,
-    borderBottomWidth: 2,
-    borderBottomColor: "black",
-    alignSelf: "center",
-  },
-  row: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
-  scrollView: {
-    width: "100%",
-    marginTop: 20,
-    marginVertical: 20,
-    marginHorizontal: 20,
-  },
-});
 export default SettingsScreen;

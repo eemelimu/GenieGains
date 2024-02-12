@@ -1,9 +1,34 @@
-import React from "react";
+import React, { useContext } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
-import { ThemeColors } from "../assets/ThemeColors";
+//import { ThemeColors } from "../assets/ThemeColors";
+import { ThemeContext } from "./ThemeContext";
 
 const Tos = () => {
+  const {
+    theme: ThemeColors,
+    resetTheme,
+    changeThemeColor,
+  } = useContext(ThemeContext);
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: ThemeColors.primary,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    text: {
+      padding: 10,
+      color: ThemeColors.tertiary,
+      fontSize: 20,
+      textAlign: "left",
+    },
+    boldText: {
+      fontWeight: "bold",
+      color: ThemeColors.tertiaryy,
+      fontSize: 25,
+    },
+  });
   return (
     <View style={styles.container}>
       <ScrollView>
@@ -102,25 +127,5 @@ const Tos = () => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: ThemeColors.primary,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  text: {
-    padding: 10,
-    color: ThemeColors.secondary,
-    fontSize: 20,
-    textAlign: "left",
-  },
-  boldText: {
-    fontWeight: "bold",
-    color: ThemeColors.tertiary,
-    fontSize: 25,
-  },
-});
 
 export default Tos;

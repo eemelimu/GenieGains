@@ -1,13 +1,19 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { View, Text, TouchableOpacity, Modal, StyleSheet } from "react-native";
-import { ThemeColors } from "../assets/ThemeColors";
-
+//import { ThemeColors } from "../assets/ThemeColors";
+import { ThemeContext } from "./ThemeContext";
 const Preferences = () => {
   const [isUnitModalVisible, setIsUnitModalVisible] = useState(false);
   const [isExperienceModalVisible, setIsExperienceModalVisible] =
     useState(false);
   const [selectedUnit, setSelectedUnit] = useState("");
   const [selectedExperience, setSelectedExperience] = useState("");
+
+  const {
+    theme: ThemeColors,
+    resetTheme,
+    changeThemeColor,
+  } = useContext(ThemeContext);
 
   const handleOpenUnitModal = () => {
     setIsUnitModalVisible(true);
@@ -36,7 +42,69 @@ const Preferences = () => {
     console.log("Selected experience:", selectedExperience);
     setIsExperienceModalVisible(false);
   };
-
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      justifyContent: "center",
+      alignItems: "center",
+      backgroundColor: ThemeColors.primary,
+    },
+    button: {
+      backgroundColor: ThemeColors.secondary,
+      paddingVertical: 15,
+      paddingHorizontal: 20,
+      borderRadius: 10,
+      marginVertical: 10,
+    },
+    buttonText: {
+      fontSize: 16,
+      color: ThemeColors.tertiary,
+    },
+    modalContainer: {
+      flex: 1,
+      justifyContent: "center",
+      alignItems: "center",
+      backgroundColor: ThemeColors.secondary,
+      opacity: 0.8,
+    },
+    modalContent: {
+      backgroundColor: ThemeColors.secondary,
+      borderRadius: 10,
+      padding: 20,
+      width: "80%",
+    },
+    modalButtonContainer: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      marginTop: 20,
+    },
+    modalButton: {
+      backgroundColor: ThemeColors.primary,
+      paddingVertical: 10,
+      paddingHorizontal: 20,
+      borderRadius: 20,
+      marginVertical: 5,
+      alignItems: "center",
+    },
+    selectedButton: {
+      backgroundColor: ThemeColors.quaternary,
+    },
+    modalButtonText: {
+      fontSize: 16,
+      fontWeight: "bold",
+      color: ThemeColors.tertiary,
+    },
+    confirmButton: {
+      backgroundColor: ThemeColors.quaternary,
+      flex: 1,
+      marginRight: 5,
+    },
+    cancelButton: {
+      backgroundColor: ThemeColors.primary,
+      flex: 1,
+      marginLeft: 5,
+    },
+  });
   return (
     <View style={styles.container}>
       <TouchableOpacity style={styles.button} onPress={handleOpenUnitModal}>
@@ -156,68 +224,6 @@ const Preferences = () => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: ThemeColors.primary,
-  },
-  button: {
-    backgroundColor: ThemeColors.secondary,
-    paddingVertical: 15,
-    paddingHorizontal: 20,
-    borderRadius: 10,
-    marginVertical: 10,
-  },
-  buttonText: {
-    fontSize: 16,
-    color: ThemeColors.tertiary,
-  },
-  modalContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: ThemeColors.secondary,
-    opacity: 0.8,
-  },
-  modalContent: {
-    backgroundColor: ThemeColors.secondary,
-    borderRadius: 10,
-    padding: 20,
-    width: "80%",
-  },
-  modalButtonContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginTop: 20,
-  },
-  modalButton: {
-    backgroundColor: ThemeColors.primary,
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 20,
-    marginVertical: 5,
-    alignItems: "center",
-  },
-  selectedButton: {
-    backgroundColor: ThemeColors.quaternary,
-  },
-  modalButtonText: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color: ThemeColors.tertiary,
-  },
-  confirmButton: {
-    backgroundColor: ThemeColors.quaternary,
-    flex: 1,
-    marginRight: 5,
-  },
-  cancelButton: {
-    backgroundColor: ThemeColors.primary,
-    flex: 1,
-    marginLeft: 5,
-  },
-});
+
 
 export default Preferences;

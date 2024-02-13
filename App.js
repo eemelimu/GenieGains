@@ -14,7 +14,7 @@ const CustomHeader = ({ navigation }) => {
         size={30}
         color="black"
         style={{ marginLeft: 20 }}
-        onPress={() => navigation.openDrawer()}
+        onPress={() => console.log("Drawer menu: toimiva tällainen löytyy omasta branchistä 'HomeScreenDrawer'")}
       />
     </View>
   );

@@ -3,6 +3,7 @@ import { View, Button, Text, TextInput, TouchableOpacity, Image } from "react-na
 import { useNavigation } from "@react-navigation/native";
 import { StyleSheet } from "react-native";
 import { useFonts } from "expo-font";
+import { ThemeColors } from "../assets/ThemeColors";
 
 
 
@@ -56,7 +57,7 @@ export default Login;
 const styles = StyleSheet.create ({
   container: {
     width: "100%",
-    color: "white",
+    color: ThemeColors.white,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -81,7 +82,7 @@ const styles = StyleSheet.create ({
     fontFamily: "DMBold",
   },
   passwordInput:{
-    backgroundColor: "white",
+    backgroundColor: ThemeColors.white,
     width: "70%",
     height: "10%",
     borderRadius: 50,
@@ -94,17 +95,17 @@ const styles = StyleSheet.create ({
   
   },
   registerBtnText: {
-    backgroundColor: "#DB8300",
-    color: "black",
+    backgroundColor: ThemeColors.orange,
+    color: ThemeColors.black,
     fontSize: 30,
     padding: 10,
     borderRadius: 25,
-    textShadowColor: "black",
+    textShadowColor: ThemeColors.black,
     fontFamily: "DMBold",
   },
 
   userNameInput: {
-    backgroundColor: "white",
+    backgroundColor: ThemeColors.white,
     width: "70%",
     height: "10%",
     borderRadius: 50,

@@ -4,6 +4,7 @@ import { useNavigation } from "@react-navigation/native";
 import { StyleSheet } from "react-native";
 import { useFonts } from "expo-font";
 import CheckBox from 'expo-checkbox';
+import { ThemeColors } from "../assets/ThemeColors";
 
 
 
@@ -81,7 +82,7 @@ const Preferences = () => {
 const styles = StyleSheet.create ({
   container: {
     width: "100%",
-    color: "white",
+    color: ThemeColors.white,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -119,12 +120,12 @@ const styles = StyleSheet.create ({
     paddingLeft: 40,
   },
   NextBtnText: {
-    backgroundColor: "#DB8300",
-    color: "black",
+    backgroundColor: ThemeColors.orange,
+    color: ThemeColors.black,
     fontSize: 30,
     padding: 10,
     borderRadius: 25,
-    textShadowColor: "black",
+    textShadowColor: ThemeColors.black,
     fontFamily: "DMBold",
   }
 

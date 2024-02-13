@@ -4,4 +4,6 @@ export const ThemeColors = {
     tertiary: "#FFD700",
     quaternary: "#FF4500",
     orange: "#DB8300",
+    white: "#FFFFFF",
+    black: "#000000",
 };

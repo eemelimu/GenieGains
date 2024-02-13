@@ -4,6 +4,7 @@ import { useNavigation } from "@react-navigation/native";
 import axios from 'axios';
 import { StyleSheet } from "react-native";
 import { useFonts } from "expo-font";
+import { ThemeColors } from "../assets/ThemeColors";
 
 const Register = () => {
   const navigation = useNavigation();
@@ -102,7 +103,7 @@ const styles = StyleSheet.create ({
     fontFamily: "DMBold",
   },
   passwordInput:{
-    backgroundColor: "white",
+    backgroundColor: ThemeColors.white,
     width: "70%",
     height: "7%",
     borderRadius: 50,
@@ -113,16 +114,16 @@ const styles = StyleSheet.create ({
     paddingTop: 25,
   },
   registerBtnText: {
-    backgroundColor: "#DB8300",
-    color: "black",
+    backgroundColor: ThemeColors.orange,
+    color: ThemeColors.black,
     fontSize: 30,
     padding: 10,
     borderRadius: 25,
-    textShadowColor: "black",
+    textShadowColor: ThemeColors.black,
     fontFamily: "DMBold",
   },
   userNameInput: {
-    backgroundColor: "white",
+    backgroundColor: ThemeColors.white,
     width: "70%",
     height: "7%",
     borderRadius: 50,

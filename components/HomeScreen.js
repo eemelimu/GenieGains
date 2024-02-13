@@ -23,20 +23,16 @@ const HomeScreen = () => {
     day: "numeric",
   });
 
-  const handleStartWorkout = () => {
-    console.log("Start workout button pressed");
+  const handleProgress = () => {
+    console.log("Progress button\nTODO: Avaa sivun missä graafit ja omat goalsit.");
   };
 
-  const handleSettings = () => {
-    console.log("Settings button pressed");
-  };
-
-  const handleJournal = () => {
-    console.log("Journal button pressed");
+  const handleLog = () => {
+    console.log("Log button\nTODO: Avaa sivun missä edelliset treenit ja niiden tiedot.");
   };
 
   const handleNewWorkout = () => {
-    console.log("New workout button pressed");
+    console.log("New Workout button\nTODO: Voi valita valmiin treenin tai luoda uuden treenin");
   };
 
   // TODO: Hae käyttäjän nimi useEffectin avulla
@@ -51,7 +47,7 @@ const HomeScreen = () => {
       setGreeting("Good evening");
     }
   }, []);
-
+  
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
@@ -74,7 +70,7 @@ const HomeScreen = () => {
       </ScrollView>
 
       <View style={styles.footer}>
-        <TouchableOpacity style={styles.footerButton} onPress={handleJournal}>
+        <TouchableOpacity style={styles.footerButton} onPress={handleLog}>
           <Entypo name="back-in-time" size={24} color="black" />
           <Text>Log</Text>
         </TouchableOpacity>
@@ -87,7 +83,7 @@ const HomeScreen = () => {
             Start Workout
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.footerButton} onPress={handleJournal}>
+        <TouchableOpacity style={styles.footerButton} onPress={handleProgress}>
           <Ionicons name="stats-chart" size={24} color="black" />
           <Text>Progress</Text>
         </TouchableOpacity>

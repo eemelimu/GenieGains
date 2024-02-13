@@ -5,6 +5,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import Login from "./components/Login";
 import Paskasivu from "./components/Paskasivu";
 import Register from "./components/Register";
+import Preferences from "./components/Preferences";
 
 const Stack = createStackNavigator();
 
@@ -14,6 +15,7 @@ export default function App() {
       <Stack.Navigator initialRouteName="Register">
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="Register" component={Register} />
+        <Stack.Screen name="Preferences" component={Preferences} />
       </Stack.Navigator>
     </NavigationContainer>
   );

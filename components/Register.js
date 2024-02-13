@@ -40,7 +40,7 @@ const Register = () => {
       <TouchableOpacity
         style={styles.registerBtn}
         onPress={() => {
-          navigation.navigate("Paskasivu");
+          navigation.navigate("Preferences");
         }}><Text 
         style={styles.registerBtnText}
         >Register</Text></TouchableOpacity>

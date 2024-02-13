@@ -19,11 +19,7 @@ const AccountSettings = () => {
   const [newPassword, setNewPassword] = useState("");
   const [email, setEmail] = useState("");
 
-  const {
-    theme: ThemeColors,
-    resetTheme,
-    changeThemeColor,
-  } = useContext(ThemeContext);
+  const { theme: ThemeColors } = useContext(ThemeContext);
 
   const handleEmailChange = () => {
     setEmailModalVisible(true);
@@ -42,6 +38,9 @@ const AccountSettings = () => {
     // Logic to save password change
     //check the old password is actually the old password
     setPasswordModalVisible(false);
+  };
+  const handleLogout = () => {
+    // Logic to logout
   };
 
   const styles = StyleSheet.create({
@@ -106,7 +105,6 @@ const AccountSettings = () => {
     },
   });
 
-
   return (
     <View style={styles.container}>
       <Text style={styles.username}>Username: {username}</Text>
@@ -119,6 +117,10 @@ const AccountSettings = () => {
       <Pressable style={styles.button} onPress={handlePasswordChange}>
         <MaterialIcons name="lock" size={24} color={ThemeColors.tertiary} />
         <Text style={styles.buttonText}>Change Password</Text>
+      </Pressable>
+      <Pressable style={styles.button} onPress={handleLogout}>
+        <MaterialIcons name="logout" size={24} color={ThemeColors.tertiary} />
+        <Text style={styles.buttonText}>Logout</Text>
       </Pressable>
 
       {/* Email Modal */}
@@ -191,7 +193,5 @@ const AccountSettings = () => {
     </View>
   );
 };
-
-
 
 export default AccountSettings;

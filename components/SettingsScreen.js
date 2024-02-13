@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { View, Text, Button, StyleSheet, Pressable } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { ThemeColors } from "../assets/ThemeColors";
+//import { ThemeColors } from "../assets/ThemeColors";
 import { MaterialIcons } from "@expo/vector-icons";
 import { ScrollView } from "react-native-gesture-handler";
 import { AntDesign } from "@expo/vector-icons";
@@ -74,7 +74,7 @@ const SettingsScreen = () => {
     resetTheme,
     changeThemeColor,
   } = useContext(ThemeContext);
-  
+
   const styles = StyleSheet.create({
     container: {
       flex: 1,
@@ -152,7 +152,7 @@ const SettingsScreen = () => {
           />
         </SettingsButton>
         <SettingsButton
-          navigationPage={"Preferences"}
+          navigationPage={"Preferences Settings"}
           color={ThemeColors.tertiary}
           text="Preferences"
         >

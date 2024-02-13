@@ -9,11 +9,7 @@ const Preferences = () => {
   const [selectedUnit, setSelectedUnit] = useState("");
   const [selectedExperience, setSelectedExperience] = useState("");
 
-  const {
-    theme: ThemeColors,
-    resetTheme,
-    changeThemeColor,
-  } = useContext(ThemeContext);
+  const { theme: ThemeColors } = useContext(ThemeContext);
 
   const handleOpenUnitModal = () => {
     setIsUnitModalVisible(true);
@@ -196,11 +192,11 @@ const Preferences = () => {
             <TouchableOpacity
               style={[
                 styles.modalButton,
-                selectedExperience === "Advanced" && styles.selectedButton,
+                selectedExperience === "Professional" && styles.selectedButton,
               ]}
-              onPress={() => setSelectedExperience("Advanced")}
+              onPress={() => setSelectedExperience("Professional")}
             >
-              <Text style={styles.modalButtonText}>Advanced</Text>
+              <Text style={styles.modalButtonText}>Professionaö</Text>
             </TouchableOpacity>
 
             <View style={styles.modalButtonContainer}>
@@ -223,7 +219,5 @@ const Preferences = () => {
     </View>
   );
 };
-
-
 
 export default Preferences;

@@ -8,7 +8,7 @@ import Paskasivu from "./components/Paskasivu";
 import SettingsScreen from "./components/SettingsScreen";
 import Tos from "./components/Tos";
 import ColorSettings from "./components/ColorSettings";
-import Preferences from "./components/Preferences";
+import PreferencesSettings from "./components/PreferencesSettings";
 import NotificationsPreferences from "./components/NotificationsPreferences";
 import AccountSettings from "./components/AccoungSettings";
 import { ThemeProvider } from "./components/ThemeContext";
@@ -24,7 +24,10 @@ export default function App() {
             <Stack.Screen name="Settings" component={SettingsScreen} />
             <Stack.Screen name="Terms of Service" component={Tos} />
             <Stack.Screen name="Appearance" component={ColorSettings} />
-            <Stack.Screen name="Preferences" component={Preferences} />
+            <Stack.Screen
+              name="Preferences Settings"
+              component={PreferencesSettings}
+            />
             <Stack.Screen name="Account Settings" component={AccountSettings} />
             <Stack.Screen
               name="Notification Options"

@@ -35,10 +35,18 @@ const Login = () => {
       <TouchableOpacity
         style={styles.registerBtn}
         onPress={() => {
-          navigation.navigate("Paskasivu");
+          navigation.navigate("Preferences");
         }}><Text 
         style={styles.registerBtnText}
         >Login</Text></TouchableOpacity>
+
+        <TouchableOpacity
+        style={styles.registerBtn}
+        onPress={() => {
+          navigation.navigate("Register");
+        }}>
+        <Text style={styles.registerBtnText}>Register</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -56,18 +64,18 @@ const styles = StyleSheet.create ({
   Logo: {
     width: 200,
     height: 200,
-    paddingTop: 100,
+    marginTop: 10,
   },
 
   userName: {
-    paddingTop: 50,
+    paddingTop: 40,
     fontSize: 35,
     paddingBottom: 20,
     fontFamily: "DMBold",
   },
 
   password: {
-    paddingTop: 50,
+    paddingTop: 40,
     fontSize: 35,
     paddingBottom: 20,
     fontFamily: "DMBold",
@@ -82,7 +90,7 @@ const styles = StyleSheet.create ({
   },
 
   registerBtn: {
-    paddingTop: 50,
+    paddingTop: 25,
   
   },
   registerBtnText: {

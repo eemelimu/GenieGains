@@ -44,14 +44,14 @@ const Register = () => {
         style={styles.Logo}
         source={require("../assets/Logo1.png")}
       />
-      <Text style={styles.userName}> Username </Text>
+      <Text style={styles.information}> Username </Text>
       <TextInput
         style={styles.userNameInput}
         placeholder = "    Enter username..."
         value={username}
         onChangeText={setUsername}
       />
-      <Text style={styles.password}> Password </Text>
+      <Text style={styles.information}> Password </Text>
       <TextInput
         style={styles.passwordInput}
         placeholder = "    Enter password..."
@@ -59,7 +59,13 @@ const Register = () => {
         value={password}
         onChangeText={setPassword}
       />
-      <Text style={styles.password}> E-Mail </Text>
+      <Text style={styles.information}> Confirm Password </Text>
+      <TextInput
+        style={styles.passwordInput}
+        placeholder = "    Enter password..."
+        secureTextEntry={true}
+      />
+      <Text style={styles.information}> E-Mail </Text>
       <TextInput
         style={styles.passwordInput}
         placeholder = "    Enter E-Mail..."
@@ -72,12 +78,7 @@ const Register = () => {
       >
         <Text style={styles.registerBtnText}>Register</Text>
       </TouchableOpacity>
-      <TouchableOpacity
-        style={styles.loginBtn}
-        onPress={() => navigation.navigate("Login")}
-      >
-        <Text style={styles.loginBtnText}>Login</Text>
-      </TouchableOpacity>
+
     </View>
   );
 };
@@ -94,22 +95,16 @@ const styles = StyleSheet.create ({
     width: 150,
     height: 150,
   },
-  userName: {
-    paddingTop: 25,
-    fontSize: 30,
-    paddingBottom: 20,
-    fontFamily: "DMBold",
-  },
-  password: {
-    paddingTop: 25,
-    fontSize: 30,
+  information: {
+    paddingTop: 20,
+    fontSize: 25,
     paddingBottom: 20,
     fontFamily: "DMBold",
   },
   passwordInput:{
     backgroundColor: "white",
     width: "70%",
-    height: "8%",
+    height: "7%",
     borderRadius: 50,
     fontSize: 20,
     fontFamily: "DMRegular",
@@ -126,22 +121,10 @@ const styles = StyleSheet.create ({
     textShadowColor: "black",
     fontFamily: "DMBold",
   },
-  loginBtn: {
-    paddingTop: 10,
-  },
-  loginBtnText: {
-    backgroundColor: "#DB8300",
-    color: "black",
-    fontSize: 30,
-    padding: 10,
-    borderRadius: 25,
-    textShadowColor: "black",
-    fontFamily: "DMBold",
-  },
   userNameInput: {
     backgroundColor: "white",
     width: "70%",
-    height: "8%",
+    height: "7%",
     borderRadius: 50,
     fontSize: 20,
     fontFamily: "DMRegular",

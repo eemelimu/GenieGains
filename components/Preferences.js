@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import { View, Button, Text, TextInput, TouchableOpacity, Image } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { StyleSheet } from "react-native";
@@ -10,6 +10,8 @@ import CheckBox from 'expo-checkbox';
 
 const Preferences = () => {
   const navigation = useNavigation();
+  const [selectedSkill, setSelectedSkill] = useState(null);
+
 
   let [fontsLoaded] = useFonts({
     "DMBold": require("../assets/fonts/DMSans-Bold.ttf"),
@@ -20,24 +22,56 @@ const Preferences = () => {
   }
   return (
     <View style={styles.container}>
-      <Text style={styles.preferenceText}> To get started you need to choose your skill level! </Text>
+      <Text style={styles.preferenceText}>
+        To get started you need to choose your skill level!
+      </Text>
       <View style={styles.checkboxContainer}>
+        <TouchableOpacity
+          style={styles.checkboxItem}
+          onPress={() => setSelectedSkill("Beginner")}
+        >
+          <CheckBox
+            style={styles.checkbox}
+            value={selectedSkill === "Beginner"}
+            onValueChange={() => setSelectedSkill("Beginner")}
+            color="#DB8300"
+          />
+          <Text style={styles.skills}>Beginner</Text>
+        </TouchableOpacity>
 
-        <CheckBox
-        style={styles.checkbox}
-        disabled={false}
-        />
-        <Text style={styles.skills}>     Beginner</Text>
+        <TouchableOpacity
+          style={styles.checkboxItem}
+          onPress={() => setSelectedSkill("Intermediate")}
+        >
+          <CheckBox
+            style={styles.checkbox}
+            value={selectedSkill === "Intermediate"}
+            onValueChange={() => setSelectedSkill("Intermediate")}
+            color="#DB8300"
+          />
+          <Text style={styles.skills}>Intermediate</Text>
+        </TouchableOpacity>
 
-        <CheckBox
-        style={styles.checkbox}
-        disabled={false}
-        />
-        <Text style={styles.skills}>     Beginner</Text>
+        <TouchableOpacity
+          style={styles.checkboxItem}
+          onPress={() => setSelectedSkill("Professional")}
+        >
+          <CheckBox
+            style={styles.checkbox}
+            value={selectedSkill === "Professional"}
+            onValueChange={() => setSelectedSkill("Professional")} 
+            color="#DB8300"
+          />
+          <Text style={styles.skills}>Professional</Text>
+        </TouchableOpacity>
 
-        
+      </View>
+      <TouchableOpacity
+        style={styles.NextBtn}
+        onPress={() => { navigation.navigate("Preferences2")}} >
 
-        </View>
+          <Text style={styles.NextBtnText}>Next</Text>
+        </TouchableOpacity>
     </View>
   );
 };
@@ -48,35 +82,51 @@ const styles = StyleSheet.create ({
   container: {
     width: "100%",
     color: "white",
-    
     alignItems: "center",
+    justifyContent: "center",
   },
 
  checkboxContainer: {
-   flexDirection: "row",
+  flexDirection: "column",
    marginBottom: 20,
-   alignItems: "vertical",
     
  },
+ checkboxItem: {
+  flexDirection: "row",
+  alignItems: "center",
+  marginBottom: 70,
+},
 
-    checkbox: {
-      alignSelf: "center",
-      
-    },
+  checkbox: {
+    alignSelf: "center",
+    width: 35,
+    height: 35,
+
+  },
 
   preferenceText: {
     paddingTop: 10,
     fontSize: 35,
-    paddingBottom: 20,
+    marginBottom: 80,
     fontFamily: "DMBold",
     paddingHorizontal: 20,
     textAlign: "center",
   },
 
   skills: {
-    fontSize: 20,
+    fontSize: 30,
     fontFamily: "DMRegular",
+    paddingLeft: 40,
   },
+  NextBtnText: {
+    backgroundColor: "#DB8300",
+    color: "black",
+    fontSize: 30,
+    padding: 10,
+    borderRadius: 25,
+    textShadowColor: "black",
+    fontFamily: "DMBold",
+  }
 
   
 

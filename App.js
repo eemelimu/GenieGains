@@ -4,8 +4,13 @@ import { StyleSheet, View, Text } from "react-native";
 
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import LoginScreen from "./components/LoginScreen";
+import Login from "./components/Login";
 import Paskasivu from "./components/Paskasivu";
+<<<<<<< HEAD
+import Register from "./components/Register";
+import Preferences from "./components/Preferences";
+import Preferences2 from "./components/Preferences2";
+=======
 import SettingsScreen from "./components/SettingsScreen";
 import Tos from "./components/Tos";
 import ColorSettings from "./components/ColorSettings";
@@ -13,6 +18,7 @@ import PreferencesSettings from "./components/PreferencesSettings";
 import NotificationsPreferences from "./components/NotificationsPreferences";
 import AccountSettings from "./components/AccoungSettings";
 import { ThemeProvider } from "./components/ThemeContext";
+>>>>>>> main
 
 const Stack = createStackNavigator();
 
@@ -32,6 +38,17 @@ const CustomHeader = ({ navigation }) => {
 
 export default function App() {
   return (
+<<<<<<< HEAD
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="Login">
+        <Stack.Screen name="Login" component={Login} />
+        <Stack.Screen name="Register" component={Register} />
+        <Stack.Screen name="Preferences" component={Preferences} />
+        <Stack.Screen name="Paskasivu" component={Paskasivu} />
+        <Stack.Screen name="Preferences2" component={Preferences2} />
+      </Stack.Navigator>
+    </NavigationContainer>
+=======
     <SafeAreaView style={styles.container}>
       <NavigationContainer>
        
@@ -65,6 +82,7 @@ export default function App() {
         </NavigationContainer>
       </ThemeProvider>
     </>
+>>>>>>> main
   );
 }
 

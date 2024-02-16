@@ -1,21 +1,33 @@
-import { StyleSheet, View, Text, SafeAreaView } from "react-native";
+import React from "react";
+import {
+  StyleSheet,
+  View,
+  Text,
+  SafeAreaView,
+  TouchableOpacity,
+} from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
+import { SimpleLineIcons } from "@expo/vector-icons";
 import HomeScreen from "./components/HomeScreen";
-import { SimpleLineIcons } from '@expo/vector-icons';
+import { GoalsPage } from "./components/GoalsPage";
+import { Ionicons } from "@expo/vector-icons";
 
 const Stack = createStackNavigator();
 
-const CustomHeader = ({ navigation }) => {
+const CustomHeader = ({ navigation, title, showMenuButton }) => {
   return (
     <View style={styles.header}>
-      <SimpleLineIcons
-        name="menu"
-        size={30}
-        color="black"
-        style={{ marginLeft: 20 }}
-        onPress={() => console.log("Drawer menu: toimiva tällainen löytyy omasta branchistä 'HomeScreenDrawer'")}
-      />
+      {showMenuButton ? (
+        <TouchableOpacity onPress={() => console.log("Drawer menu")}>
+          <SimpleLineIcons name="menu" size={24} color="black" />
+        </TouchableOpacity>
+      ) : (
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Ionicons name="arrow-back" size={28} color="black" />
+        </TouchableOpacity>
+      )}
+      <Text style={styles.headerTitle}>{title}</Text>
     </View>
   );
 };
@@ -26,11 +38,18 @@ export default function App() {
       <NavigationContainer>
         <Stack.Navigator
           initialRouteName="Home"
-          screenOptions={{
-            header: ({ navigation }) => <CustomHeader navigation={navigation} />,
-          }}
+          screenOptions={({ navigation, route }) => ({
+            header: () => (
+              <CustomHeader
+                navigation={navigation}
+                title={route.name === "Home" ? "Home" : "Goals"}
+                showMenuButton={route.name === "Home"}
+              />
+            ),
+          })}
         >
           <Stack.Screen name="Home" component={HomeScreen} />
+          <Stack.Screen name="Goals" component={GoalsPage} />
         </Stack.Navigator>
       </NavigationContainer>
     </SafeAreaView>
@@ -43,11 +62,16 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
   },
   header: {
-    left: -20,
-    top: 50,
     flexDirection: "row",
     alignItems: "center",
     paddingHorizontal: 20,
-    paddingTop: 10,
+    paddingTop: 50,
+  },
+  headerTitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginLeft: "auto",
+    marginRight: "auto",
+    marginBottom: 10,
   },
 });

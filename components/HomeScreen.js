@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigation } from "@react-navigation/native";
 import {
   StyleSheet,
   View,
@@ -10,13 +11,13 @@ import {
 import { ThemeColors } from "../assets/ThemeColors";
 import { AntDesign } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons } from "@expo/vector-icons";
 
 const HomeScreen = () => {
   const [date] = useState(new Date());
   const [greeting, setGreeting] = useState("");
   const [name, setName] = useState("name");
-
+  const navigation = useNavigation();
   const dateToString = date.toLocaleDateString(undefined, {
     weekday: "short",
     month: "short",
@@ -32,6 +33,7 @@ const HomeScreen = () => {
   };
 
   const handleJournal = () => {
+    navigation.navigate("Goals");
     console.log("Journal button pressed");
   };
 

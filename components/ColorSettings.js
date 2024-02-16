@@ -13,7 +13,6 @@ import ColorPicker, {
   Panel3,
   Preview,
   Swatches,
-  ColorKit,
   colorKit,
 } from "reanimated-color-picker";
 import { ThemeContext } from "./ThemeContext";

@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, Image } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import axios from 'axios';
 import { StyleSheet } from "react-native";
 import { useFonts } from "expo-font";
 import { ThemeColors } from "../assets/ThemeColors";
@@ -13,23 +12,7 @@ const Register = () => {
   const [email, setEmail] = useState("");
   // add unit & experience
   // add password2
-
-  const registerUser = async () => {
-    try {
-      const response = await axios.post('http://localhost:8000/register', {
-        username: username,
-        password: password,
-        email: email,
-        unit: "metric", // remove hard coding
-        experience: "beginner"
-      });
-      
-      console.log(response.status);
-      navigation.navigate("Login"); // navigate to login page or homescreen?
-    } catch (error) {
-      console.error('Error registering user:', error);
-    }
-  };
+  
 
   let [fontsLoaded] = useFonts({
     "DMBold": require("../assets/fonts/DMSans-Bold.ttf"),

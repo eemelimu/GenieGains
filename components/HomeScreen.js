@@ -17,7 +17,7 @@ const HomeScreen = () => {
   const [greeting, setGreeting] = useState("");
   const [name, setName] = useState("name");
   const [workouts, setWorkouts] = useState([]);
-  const [token, setToken] = useState("");
+  const [token, setToken] = useState("723614a8-47b4-4c22-8328-969f649d048a");
 
   const dateToString = date.toLocaleDateString(undefined, {
     weekday: "short",
@@ -25,29 +25,24 @@ const HomeScreen = () => {
     day: "numeric",
   });
 
-useEffect(() => {
-  try {
-    fetch("http://localhost:8000/exercise", {
-      method: "GET",
-      headers: {
-        'Content-Type': 'application/json',
-        'Auth-Token': token,
-      },
-    })
-    .then((response) => {
-      console.log("Workouts fetched");
-      console.log(response.json);
-      return response.json();
-    })
-    .then((data) => console.log(data))
-    .catch((error) => {
+  useEffect(() => {
+    try {
+      fetch("http://localhost:8000/exercise", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Auth-Token": token,
+        },
+      })
+        .then((response) => response.json())
+        .then((data) => setWorkouts(data.exercise_list))
+        .catch((error) => {
+          console.log("Error fetching workouts: ", error);
+        });
+    } catch (error) {
       console.log("Error fetching workouts: ", error);
-    });
-  } catch (error) {
-    console.log("Error fetching workouts: ", error);
-  }
-}, []);
-
+    }
+  }, []);
 
   const handleStartWorkout = async () => {
     console.log(workouts);
@@ -62,7 +57,6 @@ useEffect(() => {
   };
 
   // TODO:
-  // Hae käyttäjän nimi useEffectin avulla
   // Search bar yläreunaan jolla voi hakea treenejä nimen perusteella
 
   useEffect(() => {
@@ -85,7 +79,13 @@ useEffect(() => {
         </Text>
       </View>
       <ScrollView style={{ flex: 1 }}>
-        <View style={styles.main}></View>
+        <View style={styles.main}>
+        <Text>{
+          workouts.map((workout) => {
+            return <Workout key={workout.id} name={workout.name} date={workout.updated} />;
+          })
+        }</Text>
+        </View>
       </ScrollView>
 
       <View style={styles.footer}>

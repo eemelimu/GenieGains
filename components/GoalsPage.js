@@ -34,9 +34,9 @@ export const GoalsPage = () => {
       {
         id: 1,
         name: "Workout",
-        date: 1767218400000,
+        date: 1744028000000,
         unit: "steps",
-        target: 10000,
+        target: 1000000,
         data: [
           { date: 1704060000000, value: 1, note: "Was lazy", unit: "steps" },
           { date: 1706738400000, value: 3, note: "Was lazy", unit: "steps" },
@@ -73,6 +73,27 @@ export const GoalsPage = () => {
           { date: 1733064000000, value: -13, note: "Was lazy", unit: "kg" },
         ],
       },
+      {
+        id: 3,
+        name: "Shorter goal",
+        date: 1710540000000,
+        unit: "steps",
+        target: 10000,
+        data: [
+          { date: 1708120800000, value: 1000, note: "Was lazy", unit: "kg" },
+          { date: 1708207200000, value: 1500, note: "Was lazy", unit: "kg" },
+          { date: 1708293600000, value: 1000, note: "Was lazy", unit: "kg" },
+          { date: 1708380000000, value: 100, note: "Was lazy", unit: "kg" },
+          { date: 1708466400000, value: 270, note: "Was lazy", unit: "kg" },
+          { date: 1708552800000, value: 50, note: "Was lazy", unit: "kg" },
+          { date: 1708639200000, value: 0, note: "Was lazy", unit: "kg" },
+          { date: 1708725600000, value: 1000, note: "Was lazy", unit: "kg" },
+          { date: 1708812000000, value: 1000, note: "Was lazy", unit: "kg" },
+          { date: 1708898400000, value: 500, note: "Was lazy", unit: "kg" },
+          { date: 1708984800000, value: 1200, note: "Was lazy", unit: "kg" },
+          { date: 1709071200000, value: 100, note: "Was lazy", unit: "kg" },
+        ],
+      },
     ]);
   }, []);
   useEffect(() => {
@@ -103,45 +124,48 @@ export const GoalsPage = () => {
   const ChartElement = ({ id }) => {
     const [isDatapointModalVisible, setIsDatapointModalVisible] =
       useState(false);
-    const [chartData, setChartData] = useState([]);
+    const [chartData, setChartData] = useState({});
     const [selectedDatapoint, setSelectedDatapoint] = useState({});
     useEffect(() => {
-      setChartData(goalsData.filter((goal) => goal.id === id));
+      setChartData(goalsData.find((goal) => goal.id === value));
     }, [goalsData]);
 
     const calculateRemainingData = (data, target) => {
-      console.log(data);
-      if (!!!data) {
-        return [];
+      const latestEntry = data[0];
+      let sum = 0;
+      for (i in data) {
+        sum += data[i].value;
       }
-      const latestEntry = data[data.length - 1];
-      const difference = target - latestEntry.value;
+      console.log(sum);
+      const difference = target.target; //-sum
       const daysDifference =
         (target.date - latestEntry.date) / (1000 * 3600 * 24);
+      console.log(daysDifference);
       const remainingWeightPerDay = difference / daysDifference;
       const remainingData = [];
       let currentDate = latestEntry.date;
       while (currentDate < target.date) {
-        remainingData.push({ date: currentDate, value: remainingWeightPerDay });
+        //remainingData.push({ date: currentDate, value: remainingWeightPerDay });
+        remainingData.push(remainingWeightPerDay);
         currentDate += 1000 * 3600 * 24; // Add one day
       }
-
+      console.log(remainingData);
       return remainingData;
     };
 
-    if (!chartData[0]?.data) {
+    if (!chartData?.data) {
       return <Text>No data for this goal</Text>;
     } else
       return (
         <View style={styles.container}>
           <Text>
-            {chartData[0]?.name} Goal of {chartData[0]?.target}{" "}
-            {chartData[0]?.unit} by {epochToDate(chartData[0]?.date)}
+            {chartData?.name} Goal of {chartData?.target} {chartData?.unit} by{" "}
+            {epochToDate(chartData?.date)}
           </Text>
           <View>
             <LineChart
               onDataPointClick={(data) => {
-                setSelectedDatapoint(chartData[0].data[data.index]);
+                setSelectedDatapoint(chartData.data[data.index]);
                 setIsDatapointModalVisible(true);
               }}
               decorator={() => {
@@ -155,12 +179,12 @@ export const GoalsPage = () => {
                     >
                       <View style={styles.modalContainer}>
                         <Text>Selected datapoint:</Text>
-                        <Text>Date:{epochToDate(selectedDatapoint.date)}</Text>
+                        <Text>Date:{epochToDate(selectedDatapoint?.date)}</Text>
                         <Text>
-                          Progress:{selectedDatapoint.value}{" "}
-                          {selectedDatapoint.unit}
+                          Progress:{selectedDatapoint?.value}{" "}
+                          {selectedDatapoint?.unit}
                         </Text>
-                        <Text>Note:{selectedDatapoint.note}</Text>
+                        <Text>Note:{selectedDatapoint?.note}</Text>
                         <Pressable
                           style={styles.btn}
                           onPress={() => setIsDatapointModalVisible(false)}
@@ -190,7 +214,7 @@ export const GoalsPage = () => {
                         fontWeight="bold"
                         textAnchor="middle"
                       >
-                        {chartData[0]?.unit}
+                        {chartData?.unit}
                       </TextSVG>
                     </Svg>
                   </View>
@@ -198,17 +222,23 @@ export const GoalsPage = () => {
               }}
               data={{
                 datasets: [
-                  chartData.map((entry) => ({
-                    data: entry.data.map((item) => item.value),
-                  })),
-                  [{ data: 1 }, { data: 2 }],
+                  {
+                    data: calculateRemainingData(chartData.data, {
+                      target: chartData.target,
+                      date: chartData.date,
+                    }),
+                    color: (opacity = 1) => `rgba(255, 25, 25, ${opacity})`,
+                  },
+                  {
+                    data: chartData.data.map((item) => item.value),
+                  },
                 ],
               }}
-              width={Dimensions.get("window").width - 50}
+              width={Dimensions.get("window").width - 40}
               height={220}
               yAxisLabel=""
               yAxisSuffix=""
-              yAxisInterval={1} // optional, defaults to 1
+              yAxisInterval={100} // optional, defaults to 1
               chartConfig={{
                 backgroundGradientFrom: "#eb5234",
                 backgroundGradientTo: "#23d962",
@@ -216,8 +246,8 @@ export const GoalsPage = () => {
                 color: (opacity = 1) => `rgba(255, 255, 2555, ${opacity})`,
                 labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
                 propsForDots: {
-                  r: "6",
-                  strokeWidth: "4",
+                  r: "5",
+                  strokeWidth: "3",
                   stroke: "#23d9bb",
                 },
               }}
@@ -236,7 +266,9 @@ export const GoalsPage = () => {
   return (
     <View style={styles.container}>
       {goalsData.length > 0 && value ? (
-        <ChartElement id={value}></ChartElement>
+        <>
+          <ChartElement id={value}></ChartElement>
+        </>
       ) : (
         <Text>You have no goal selected</Text>
       )}
@@ -252,3 +284,4 @@ export const GoalsPage = () => {
     </View>
   );
 };
+export default GoalsPage;

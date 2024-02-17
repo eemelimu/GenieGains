@@ -10,7 +10,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { SimpleLineIcons } from "@expo/vector-icons";
 import HomeScreen from "./components/HomeScreen";
-import { GoalsPage } from "./components/GoalsPage";
+import GoalsPage from "./components/GoalsPage2";
 import { Ionicons } from "@expo/vector-icons";
 
 const Stack = createStackNavigator();

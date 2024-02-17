@@ -17,7 +17,7 @@ const HomeScreen = () => {
   const [greeting, setGreeting] = useState("");
   const [name, setName] = useState("name");
   const [workouts, setWorkouts] = useState([]);
-  const [token, setToken] = useState("723614a8-47b4-4c22-8328-969f649d048a");
+  const [token, setToken] = useState("");
 
   const dateToString = date.toLocaleDateString(undefined, {
     weekday: "short",
@@ -25,22 +25,29 @@ const HomeScreen = () => {
     day: "numeric",
   });
 
-  useEffect(() => {
-    try {
-      fetch("http://localhost:8000/exercise", {
-        method: "GET",
-        headers: {
-          'Content-Type': 'application/json',
-          'Auth-Token' : token,
-        },
-      })
-        .then((response) => response.json())
-        .then((data) => console.log(data));
-        console.log("Workouts fetched");
-    } catch (error) {
+useEffect(() => {
+  try {
+    fetch("http://localhost:8000/exercise", {
+      method: "GET",
+      headers: {
+        'Content-Type': 'application/json',
+        'Auth-Token': token,
+      },
+    })
+    .then((response) => {
+      console.log("Workouts fetched");
+      console.log(response.json);
+      return response.json();
+    })
+    .then((data) => console.log(data))
+    .catch((error) => {
       console.log("Error fetching workouts: ", error);
-    }
-  }, []);
+    });
+  } catch (error) {
+    console.log("Error fetching workouts: ", error);
+  }
+}, []);
+
 
   const handleStartWorkout = async () => {
     console.log(workouts);

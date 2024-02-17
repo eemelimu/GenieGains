@@ -9,14 +9,25 @@ const Register = () => {
   const navigation = useNavigation();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [password2, setPassword2] = useState("");
   const [email, setEmail] = useState("");
   // add unit & experience
   // add password2
-  
 
+  
+  const moveToPreferences = () => {
+    navigation.navigate("Preferences", {
+      data: {
+        password: password,
+        confirmPassword: password2,
+        email: email,
+        username: username,
+      },
+    });
+  };
   let [fontsLoaded] = useFonts({
-    "DMBold": require("../assets/fonts/DMSans-Bold.ttf"),
-    "DMRegular": require("../assets/fonts/DMSans-Regular.ttf"),
+    DMBold: require("../assets/fonts/DMSans-Bold.ttf"),
+    DMRegular: require("../assets/fonts/DMSans-Regular.ttf"),
   });
   if (!fontsLoaded) {
     return null;
@@ -24,21 +35,18 @@ const Register = () => {
 
   return (
     <View style={styles.container}>
-      <Image 
-        style={styles.Logo}
-        source={require("../assets/Logo1.png")}
-      />
+      <Image style={styles.Logo} source={require("../assets/Logo1.png")} />
       <Text style={styles.information}> Username </Text>
       <TextInput
         style={styles.userNameInput}
-        placeholder = "    Enter username..."
+        placeholder="    Enter username..."
         value={username}
         onChangeText={setUsername}
       />
       <Text style={styles.information}> Password </Text>
       <TextInput
         style={styles.passwordInput}
-        placeholder = "    Enter password..."
+        placeholder="    Enter password..."
         secureTextEntry={true}
         value={password}
         onChangeText={setPassword}
@@ -46,30 +54,28 @@ const Register = () => {
       <Text style={styles.information}> Confirm Password </Text>
       <TextInput
         style={styles.passwordInput}
-        placeholder = "    Enter password..."
+        placeholder="    Enter password..."
         secureTextEntry={true}
+        value={password2}
+        onChangeText={setPassword2}
       />
       <Text style={styles.information}> E-Mail </Text>
       <TextInput
         style={styles.passwordInput}
-        placeholder = "    Enter E-Mail..."
+        placeholder="    Enter E-Mail..."
         value={email}
         onChangeText={setEmail}
       />
-      <TouchableOpacity
-        style={styles.registerBtn}
-        onPress={registerUser}
-      >
+      <TouchableOpacity style={styles.registerBtn} onPress={moveToPreferences}>
         <Text style={styles.registerBtnText}>Register</Text>
       </TouchableOpacity>
-
     </View>
   );
 };
 
 export default Register;
 
-const styles = StyleSheet.create ({
+const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
@@ -85,7 +91,7 @@ const styles = StyleSheet.create ({
     paddingBottom: 20,
     fontFamily: "DMBold",
   },
-  passwordInput:{
+  passwordInput: {
     backgroundColor: ThemeColors.white,
     width: "70%",
     height: "7%",

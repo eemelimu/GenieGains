@@ -1,22 +1,51 @@
-import React, {useState} from "react";
-import { View, Button, Text, TextInput, TouchableOpacity, Image } from "react-native";
+import React, { useState } from "react";
+import {
+  View,
+  Button,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  Image,
+} from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { StyleSheet } from "react-native";
 import { useFonts } from "expo-font";
-import CheckBox from 'expo-checkbox';
+import CheckBox from "expo-checkbox";
 import { ThemeColors } from "../assets/ThemeColors";
 
-
-
-
-const Preferences = () => {
+const Preferences = ({ route }) => {
   const navigation = useNavigation();
   const [SelectedUnit, setSelectedUnit] = useState(null);
+  console.log("data from register and preferences?", route.params);
+  const registerUser = async () => {
+    try {
+      const response = await fetch("http://localhost:8000/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username: route.params.data.username,
+          password: route.params.data.password,
+          confirmPassword: route.params.data.confirmPassword,
+          email: route.params.data.email,
+          unit: SelectedUnit,
+          experience: route.params.data.selectedSkill,
+        }),
+      });
 
-
+      if (!response.ok) {
+        throw new Error("Failed to register user");
+      }
+      console.log(response.status);
+      navigation.navigate("Login"); // navigate to login page or homescreen?
+    } catch (error) {
+      console.error("Error registering user:", error);
+    }
+  };
   let [fontsLoaded] = useFonts({
-    "DMBold": require("../assets/fonts/DMSans-Bold.ttf"),
-    "DMRegular": require("../assets/fonts/DMSans-Regular.ttf"),
+    DMBold: require("../assets/fonts/DMSans-Bold.ttf"),
+    DMRegular: require("../assets/fonts/DMSans-Regular.ttf"),
   });
   if (!fontsLoaded) {
     return null;
@@ -52,21 +81,20 @@ const Preferences = () => {
           />
           <Text style={styles.skills}>Imperial</Text>
         </TouchableOpacity>
-
       </View>
       <TouchableOpacity
         style={styles.NextBtn}
-        onPress={() => { navigation.navigate("Paskasivu")}} >
-
-          <Text style={styles.NextBtnText}>Next</Text>
-        </TouchableOpacity>
+        onPress={() => {
+          registerUser();
+        }}
+      >
+        <Text style={styles.NextBtnText}>Next</Text>
+      </TouchableOpacity>
     </View>
   );
 };
 
-
-
-const styles = StyleSheet.create ({
+const styles = StyleSheet.create({
   container: {
     width: "100%",
     color: ThemeColors.white,
@@ -74,22 +102,20 @@ const styles = StyleSheet.create ({
     justifyContent: "center",
   },
 
- checkboxContainer: {
-  flexDirection: "column",
-   marginBottom: 20,
-    
- },
- checkboxItem: {
-  flexDirection: "row",
-  alignItems: "center",
-  marginBottom: 70,
-},
+  checkboxContainer: {
+    flexDirection: "column",
+    marginBottom: 20,
+  },
+  checkboxItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 70,
+  },
 
   checkbox: {
     alignSelf: "center",
     width: 35,
     height: 35,
-
   },
 
   preferenceText: {
@@ -114,12 +140,6 @@ const styles = StyleSheet.create ({
     borderRadius: 25,
     textShadowColor: ThemeColors.black,
     fontFamily: "DMBold",
-  }
-
-  
-
-
+  },
 });
 export default Preferences;
-
-  

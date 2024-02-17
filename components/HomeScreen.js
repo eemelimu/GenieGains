@@ -11,6 +11,7 @@ import { ThemeColors } from "../assets/ThemeColors";
 import { AntDesign } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
+import { withRadialActionMenu } from 'react-native-radial-context-menu'
 
 const HomeScreen = () => {
   const [date] = useState(new Date());
@@ -78,7 +79,7 @@ const HomeScreen = () => {
 
   // TODO:
   // Search bar yläreunaan jolla voi hakea treenejä nimen perusteella
-
+  // Radial menu start workouttiin: https://github.com/thegreatercurve/react-native-radial-context-menu
   useEffect(() => {
     const currentTime = new Date().getHours();
     if (currentTime < 12) {
@@ -133,11 +134,11 @@ const HomeScreen = () => {
 
 const Workout = ({ name, date }) => {
   return (
-    <View style={styles.singleWorkout}>
+    <TouchableOpacity style={styles.singleWorkout} onPress={() => console.log(name)}>
       <Text style={styles.workoutName}>{name}</Text>
       <Text style={styles.workoutDate}>{date}</Text>
       <Text>Days since last: -</Text>
-    </View>
+    </TouchableOpacity>
   );
 };
 

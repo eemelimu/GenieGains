@@ -10,12 +10,15 @@ import {
 import { ThemeColors } from "../assets/ThemeColors";
 import { AntDesign } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons } from "@expo/vector-icons";
+import { withRadialActionMenu } from 'react-native-radial-context-menu'
 
 const HomeScreen = () => {
   const [date] = useState(new Date());
   const [greeting, setGreeting] = useState("");
   const [name, setName] = useState("name");
+  const [workouts, setWorkouts] = useState([]);
+  const [token, setToken] = useState("723614a8-47b4-4c22-8328-969f649d048a");
 
   const dateToString = date.toLocaleDateString(undefined, {
     weekday: "short",
@@ -23,20 +26,60 @@ const HomeScreen = () => {
     day: "numeric",
   });
 
-  const handleProgress = () => {
-    console.log("Progress button\nTODO: Avaa sivun missä graafit ja omat goalsit.");
+  // Fetch workouts from the server
+  useEffect(() => {
+    try {
+      fetch("http://localhost:8000/exercise", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Auth-Token": token,
+        },
+      })
+        .then((response) => response.json())
+        .then((data) => setWorkouts(data.exercise_list))
+        .catch((error) => {
+          console.log("Error fetching workouts: ", error);
+        });
+    } catch (error) {
+      console.log("Error fetching workouts: ", error);
+    }
+  }, []);
+
+  useEffect(() => {
+    try {
+      fetch("http://localhost:8000/user", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Auth-Token": token,
+        },
+      })
+        .then((response) => response.json())
+        .then((data) => setName(data.username))
+        .catch((error) => {
+          console.log("Error fetching workouts: ", error);
+        });
+    } catch (error) {
+      console.log("Error fetching workouts: ", error);
+    }
+  }, []);
+
+  const handleStartWorkout = async () => {
+    console.log(workouts);
   };
 
-  const handleLog = () => {
-    console.log("Log button\nTODO: Avaa sivun missä edelliset treenit ja niiden tiedot.");
+  const handleSettings = () => {
+    console.log("Settings button pressed");
   };
 
-  const handleNewWorkout = () => {
-    console.log("New Workout button\nTODO: Voi valita valmiin treenin tai luoda uuden treenin");
+  const handleJournal = () => {
+    console.log("Journal button pressed");
   };
 
-  // TODO: Hae käyttäjän nimi useEffectin avulla
-
+  // TODO:
+  // Search bar yläreunaan jolla voi hakea treenejä nimen perusteella
+  // Radial menu start workouttiin: https://github.com/thegreatercurve/react-native-radial-context-menu
   useEffect(() => {
     const currentTime = new Date().getHours();
     if (currentTime < 12) {
@@ -47,7 +90,7 @@ const HomeScreen = () => {
       setGreeting("Good evening");
     }
   }, []);
-  
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
@@ -58,32 +101,29 @@ const HomeScreen = () => {
       </View>
       <ScrollView style={{ flex: 1 }}>
         <View style={styles.main}>
-          <Workout name="Push" date={dateToString} />
-          <Workout name="Pull" date={dateToString} />
-          <Workout name="Legs" date={dateToString} />
-          <Workout name="Push" date={dateToString} />
-          <Workout name="Pull" date={dateToString} />
-          <Workout name="Legs" date={dateToString} />
-          <Workout name="Workout 7" date={dateToString} />
-          <Workout name="Workout 8" date={dateToString} />
+        <Text>{
+          workouts.map((workout) => {
+            return <Workout key={workout.id} name={workout.name} date={workout.updated} />;
+          })
+        }</Text>
         </View>
       </ScrollView>
 
       <View style={styles.footer}>
-        <TouchableOpacity style={styles.footerButton} onPress={handleLog}>
+        <TouchableOpacity style={styles.footerButton} onPress={handleJournal}>
           <Entypo name="back-in-time" size={24} color="black" />
           <Text>Log</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.footerButton, styles.startWorkoutButton]}
-          onPress={handleNewWorkout}
+          onPress={handleStartWorkout}
         >
           <AntDesign name="plus" size={24} color="black" />
           <Text style={{ fontWeight: "bold", fontSize: 15 }}>
             Start Workout
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.footerButton} onPress={handleProgress}>
+        <TouchableOpacity style={styles.footerButton} onPress={handleJournal}>
           <Ionicons name="stats-chart" size={24} color="black" />
           <Text>Progress</Text>
         </TouchableOpacity>
@@ -94,11 +134,11 @@ const HomeScreen = () => {
 
 const Workout = ({ name, date }) => {
   return (
-    <View style={styles.singleWorkout}>
+    <TouchableOpacity style={styles.singleWorkout} onPress={() => console.log(name)}>
       <Text style={styles.workoutName}>{name}</Text>
       <Text style={styles.workoutDate}>{date}</Text>
       <Text>Days since last: -</Text>
-    </View>
+    </TouchableOpacity>
   );
 };
 

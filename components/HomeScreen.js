@@ -25,6 +25,7 @@ const HomeScreen = () => {
     day: "numeric",
   });
 
+  // Fetch workouts from the server
   useEffect(() => {
     try {
       fetch("http://localhost:8000/exercise", {
@@ -36,6 +37,25 @@ const HomeScreen = () => {
       })
         .then((response) => response.json())
         .then((data) => setWorkouts(data.exercise_list))
+        .catch((error) => {
+          console.log("Error fetching workouts: ", error);
+        });
+    } catch (error) {
+      console.log("Error fetching workouts: ", error);
+    }
+  }, []);
+
+  useEffect(() => {
+    try {
+      fetch("http://localhost:8000/user", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Auth-Token": token,
+        },
+      })
+        .then((response) => response.json())
+        .then((data) => setName(data.username))
         .catch((error) => {
           console.log("Error fetching workouts: ", error);
         });

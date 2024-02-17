@@ -10,12 +10,14 @@ import {
 import { ThemeColors } from "../assets/ThemeColors";
 import { AntDesign } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons } from "@expo/vector-icons";
 
 const HomeScreen = () => {
   const [date] = useState(new Date());
   const [greeting, setGreeting] = useState("");
   const [name, setName] = useState("name");
+  const [workouts, setWorkouts] = useState([]);
+  const [token, setToken] = useState("723614a8-47b4-4c22-8328-969f649d048a");
 
   const dateToString = date.toLocaleDateString(undefined, {
     weekday: "short",
@@ -23,8 +25,25 @@ const HomeScreen = () => {
     day: "numeric",
   });
 
-  const handleStartWorkout = () => {
-    console.log("Start workout button pressed");
+  useEffect(() => {
+    try {
+      fetch("http://localhost:8000/exercise", {
+        method: "GET",
+        headers: {
+          'Content-Type': 'application/json',
+          'Auth-Token' : token,
+        },
+      })
+        .then((response) => response.json())
+        .then((data) => console.log(data));
+        console.log("Workouts fetched");
+    } catch (error) {
+      console.log("Error fetching workouts: ", error);
+    }
+  }, []);
+
+  const handleStartWorkout = async () => {
+    console.log(workouts);
   };
 
   const handleSettings = () => {
@@ -35,11 +54,9 @@ const HomeScreen = () => {
     console.log("Journal button pressed");
   };
 
-  const handleNewWorkout = () => {
-    console.log("New workout button pressed");
-  };
-
-  // TODO: Hae käyttäjän nimi useEffectin avulla
+  // TODO:
+  // Hae käyttäjän nimi useEffectin avulla
+  // Search bar yläreunaan jolla voi hakea treenejä nimen perusteella
 
   useEffect(() => {
     const currentTime = new Date().getHours();
@@ -61,16 +78,7 @@ const HomeScreen = () => {
         </Text>
       </View>
       <ScrollView style={{ flex: 1 }}>
-        <View style={styles.main}>
-          <Workout name="Push" date={dateToString} />
-          <Workout name="Pull" date={dateToString} />
-          <Workout name="Legs" date={dateToString} />
-          <Workout name="Push" date={dateToString} />
-          <Workout name="Pull" date={dateToString} />
-          <Workout name="Legs" date={dateToString} />
-          <Workout name="Workout 7" date={dateToString} />
-          <Workout name="Workout 8" date={dateToString} />
-        </View>
+        <View style={styles.main}></View>
       </ScrollView>
 
       <View style={styles.footer}>
@@ -80,7 +88,7 @@ const HomeScreen = () => {
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.footerButton, styles.startWorkoutButton]}
-          onPress={handleNewWorkout}
+          onPress={handleStartWorkout}
         >
           <AntDesign name="plus" size={24} color="black" />
           <Text style={{ fontWeight: "bold", fontSize: 15 }}>

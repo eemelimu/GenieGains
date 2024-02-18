@@ -33,7 +33,7 @@ const SettingsButton = ({ color, text, children, navigationPage }) => {
       width: "80%",
       borderRadius: 5,
       borderBottomWidth: 2,
-      borderBottomColor: "black",
+      borderBottomColor: ThemeColors.quaternary,
       alignSelf: "center",
     },
     row: {

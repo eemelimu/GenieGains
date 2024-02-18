@@ -11,7 +11,7 @@ import { ThemeColors } from "../assets/ThemeColors";
 import { AntDesign } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
-import { withRadialActionMenu } from 'react-native-radial-context-menu'
+import { useNavigation } from "@react-navigation/native";
 
 const HomeScreen = () => {
   const [date] = useState(new Date());
@@ -19,6 +19,8 @@ const HomeScreen = () => {
   const [name, setName] = useState("name");
   const [workouts, setWorkouts] = useState([]);
   const [token, setToken] = useState("723614a8-47b4-4c22-8328-969f649d048a");
+  const navigation = useNavigation();
+  const [menuVisible, setMenuVisible] = useState(true);
 
   const dateToString = date.toLocaleDateString(undefined, {
     weekday: "short",
@@ -65,21 +67,26 @@ const HomeScreen = () => {
     }
   }, []);
 
-  const handleStartWorkout = async () => {
-    console.log(workouts);
+  const handleProgress = () => {
+    console.log("Progress button pressed");
   };
 
-  const handleSettings = () => {
-    console.log("Settings button pressed");
+  const handleLog = () => {
+    console.log("Log button pressed");
   };
 
-  const handleJournal = () => {
-    console.log("Journal button pressed");
+  const handleNewWorkout = () => {
+    console.log("New workout button pressed");
+    navigation.navigate("Workout");
   };
 
+  const handleFromRoutines = () => {
+    console.log("From routines button pressed");
+  };
+  
   // TODO:
   // Search bar yläreunaan jolla voi hakea treenejä nimen perusteella
-  // Radial menu start workouttiin: https://github.com/thegreatercurve/react-native-radial-context-menu
+
   useEffect(() => {
     const currentTime = new Date().getHours();
     if (currentTime < 12) {
@@ -101,29 +108,44 @@ const HomeScreen = () => {
       </View>
       <ScrollView style={{ flex: 1 }}>
         <View style={styles.main}>
-        <Text>{
-          workouts.map((workout) => {
-            return <Workout key={workout.id} name={workout.name} date={workout.updated} />;
-          })
-        }</Text>
+          <Text>
+            {workouts.map((workout) => {
+              return (
+                <Workout
+                  key={workout.id}
+                  name={workout.name}
+                  date={workout.updated}
+                />
+              );
+            })}
+          </Text>
         </View>
       </ScrollView>
-
+      {menuVisible && (
+        <View style={styles.workoutMenu}>
+        <TouchableOpacity style={styles.menuItem} onPress={handleNewWorkout}>
+          <Text>New</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.menuItem} onPress={handleFromRoutines}>
+          <Text>From routines</Text>
+        </TouchableOpacity>
+        </View>
+      )}
       <View style={styles.footer}>
-        <TouchableOpacity style={styles.footerButton} onPress={handleJournal}>
+        <TouchableOpacity style={styles.footerButton} onPress={handleLog}>
           <Entypo name="back-in-time" size={24} color="black" />
           <Text>Log</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.footerButton, styles.startWorkoutButton]}
-          onPress={handleStartWorkout}
+          onPress={() => setMenuVisible(!menuVisible)}
         >
           <AntDesign name="plus" size={24} color="black" />
           <Text style={{ fontWeight: "bold", fontSize: 15 }}>
             Start Workout
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.footerButton} onPress={handleJournal}>
+        <TouchableOpacity style={styles.footerButton} onPress={handleProgress}>
           <Ionicons name="stats-chart" size={24} color="black" />
           <Text>Progress</Text>
         </TouchableOpacity>
@@ -133,8 +155,12 @@ const HomeScreen = () => {
 };
 
 const Workout = ({ name, date }) => {
+  const navigation = useNavigation();
   return (
-    <TouchableOpacity style={styles.singleWorkout} onPress={() => console.log(name)}>
+    <TouchableOpacity
+      style={styles.singleWorkout}
+      onPress={() => console.log(`${name} workout pressed`)}
+    >
       <Text style={styles.workoutName}>{name}</Text>
       <Text style={styles.workoutDate}>{date}</Text>
       <Text>Days since last: -</Text>
@@ -143,6 +169,22 @@ const Workout = ({ name, date }) => {
 };
 
 const styles = StyleSheet.create({
+  // jos ongelmia nappien kanssa, laita bottom: 0 ja height: 100
+  workoutMenu: {
+    position: "absolute",
+    bottom: 80,
+    width: "100%",
+    height: 40,
+    justifyContent: "center",
+    flexDirection: "row",
+  },
+  menuItem: {
+    marginHorizontal: 10,
+    backgroundColor: "#D8D8D8",
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 50,
+  },
   singleWorkout: {
     width: "90%",
     height: 100,

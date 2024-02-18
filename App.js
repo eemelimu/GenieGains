@@ -13,11 +13,12 @@ import { createDrawerNavigator } from "@react-navigation/drawer";
 import HomeScreen from "./components/HomeScreen";
 import { SimpleLineIcons } from "@expo/vector-icons";
 import { DrawerContent } from "./components/DrawerContent";
+import { Workout } from "./components/Workout";
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 
-const CustomHeader = ({navigation}) => {
+const CustomHeader = ({ navigation }) => {
   const handleDrawer = () => {
     navigation.openDrawer();
   };
@@ -41,10 +42,13 @@ const HomeStack = () => {
       <Stack.Screen
         name="Home"
         component={HomeScreen}
-        // options={{headerShown: false}}
         options={({ navigation }) => ({
           header: () => <CustomHeader navigation={navigation} />,
         })}
+      />
+      <Stack.Screen
+        name="Workout"
+        component={Workout}
       />
     </Stack.Navigator>
   );

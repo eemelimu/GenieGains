@@ -20,7 +20,7 @@ const HomeScreen = () => {
   const [workouts, setWorkouts] = useState([]);
   const [token, setToken] = useState("723614a8-47b4-4c22-8328-969f649d048a");
   const navigation = useNavigation();
-  const [menuVisible, setMenuVisible] = useState(true);
+  const [menuVisible, setMenuVisible] = useState(false);
 
   const dateToString = date.toLocaleDateString(undefined, {
     weekday: "short",

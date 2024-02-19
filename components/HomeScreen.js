@@ -10,12 +10,17 @@ import {
 import { ThemeColors } from "../assets/ThemeColors";
 import { AntDesign } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
 
 const HomeScreen = () => {
   const [date] = useState(new Date());
   const [greeting, setGreeting] = useState("");
   const [name, setName] = useState("name");
+  const [workouts, setWorkouts] = useState([]);
+  const [token, setToken] = useState("723614a8-47b4-4c22-8328-969f649d048a");
+  const navigation = useNavigation();
+  const [menuVisible, setMenuVisible] = useState(false);
 
   const dateToString = date.toLocaleDateString(undefined, {
     weekday: "short",
@@ -23,23 +28,64 @@ const HomeScreen = () => {
     day: "numeric",
   });
 
-  const handleStartWorkout = () => {
-    console.log("Start workout button pressed");
+  // Fetch workouts from the server
+  useEffect(() => {
+    try {
+      fetch("http://localhost:8000/exercise", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Auth-Token": token,
+        },
+      })
+        .then((response) => response.json())
+        .then((data) => setWorkouts(data.exercise_list))
+        .catch((error) => {
+          console.log("Error fetching workouts: ", error);
+        });
+    } catch (error) {
+      console.log("Error fetching workouts: ", error);
+    }
+  }, []);
+
+  useEffect(() => {
+    try {
+      fetch("http://localhost:8000/user", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Auth-Token": token,
+        },
+      })
+        .then((response) => response.json())
+        .then((data) => setName(data.username))
+        .catch((error) => {
+          console.log("Error fetching workouts: ", error);
+        });
+    } catch (error) {
+      console.log("Error fetching workouts: ", error);
+    }
+  }, []);
+
+  const handleProgress = () => {
+    console.log("Progress button pressed");
   };
 
-  const handleSettings = () => {
-    console.log("Settings button pressed");
-  };
-
-  const handleJournal = () => {
-    console.log("Journal button pressed");
+  const handleLog = () => {
+    console.log("Log button pressed");
   };
 
   const handleNewWorkout = () => {
     console.log("New workout button pressed");
+    navigation.navigate("Workout");
   };
 
-  // TODO: Hae käyttäjän nimi useEffectin avulla
+  const handleFromRoutines = () => {
+    console.log("From routines button pressed");
+  };
+  
+  // TODO:
+  // Search bar yläreunaan jolla voi hakea treenejä nimen perusteella
 
   useEffect(() => {
     const currentTime = new Date().getHours();
@@ -62,32 +108,44 @@ const HomeScreen = () => {
       </View>
       <ScrollView style={{ flex: 1 }}>
         <View style={styles.main}>
-          <Workout name="Push" date={dateToString} />
-          <Workout name="Pull" date={dateToString} />
-          <Workout name="Legs" date={dateToString} />
-          <Workout name="Push" date={dateToString} />
-          <Workout name="Pull" date={dateToString} />
-          <Workout name="Legs" date={dateToString} />
-          <Workout name="Workout 7" date={dateToString} />
-          <Workout name="Workout 8" date={dateToString} />
+          <Text>
+            {workouts.map((workout) => {
+              return (
+                <Workout
+                  key={workout.id}
+                  name={workout.name}
+                  date={workout.updated}
+                />
+              );
+            })}
+          </Text>
         </View>
       </ScrollView>
-
+      {menuVisible && (
+        <View style={styles.workoutMenu}>
+        <TouchableOpacity style={styles.menuItem} onPress={handleNewWorkout}>
+          <Text>New</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.menuItem} onPress={handleFromRoutines}>
+          <Text>From routines</Text>
+        </TouchableOpacity>
+        </View>
+      )}
       <View style={styles.footer}>
-        <TouchableOpacity style={styles.footerButton} onPress={handleJournal}>
+        <TouchableOpacity style={styles.footerButton} onPress={handleLog}>
           <Entypo name="back-in-time" size={24} color="black" />
           <Text>Log</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.footerButton, styles.startWorkoutButton]}
-          onPress={handleNewWorkout}
+          onPress={() => setMenuVisible(!menuVisible)}
         >
           <AntDesign name="plus" size={24} color="black" />
           <Text style={{ fontWeight: "bold", fontSize: 15 }}>
             Start Workout
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.footerButton} onPress={handleJournal}>
+        <TouchableOpacity style={styles.footerButton} onPress={handleProgress}>
           <Ionicons name="stats-chart" size={24} color="black" />
           <Text>Progress</Text>
         </TouchableOpacity>
@@ -97,16 +155,36 @@ const HomeScreen = () => {
 };
 
 const Workout = ({ name, date }) => {
+  const navigation = useNavigation();
   return (
-    <View style={styles.singleWorkout}>
+    <TouchableOpacity
+      style={styles.singleWorkout}
+      onPress={() => console.log(`${name} workout pressed`)}
+    >
       <Text style={styles.workoutName}>{name}</Text>
       <Text style={styles.workoutDate}>{date}</Text>
       <Text>Days since last: -</Text>
-    </View>
+    </TouchableOpacity>
   );
 };
 
 const styles = StyleSheet.create({
+  // jos ongelmia nappien kanssa, laita bottom: 0 ja height: 100
+  workoutMenu: {
+    position: "absolute",
+    bottom: 80,
+    width: "100%",
+    height: 40,
+    justifyContent: "center",
+    flexDirection: "row",
+  },
+  menuItem: {
+    marginHorizontal: 10,
+    backgroundColor: "#D8D8D8",
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 50,
+  },
   singleWorkout: {
     width: "90%",
     height: 100,

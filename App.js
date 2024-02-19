@@ -1,27 +1,56 @@
-import { StyleSheet, View, Text, SafeAreaView } from "react-native";
+import React from "react";
+import {
+  StyleSheet,
+  View,
+  Text,
+  SafeAreaView,
+  Button,
+  TouchableOpacity,
+} from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
+import { createDrawerNavigator } from "@react-navigation/drawer";
 import HomeScreen from "./components/HomeScreen";
-import Login from "./components/Login"
-import Register from "./components/Register"
-import Preferences from "./components/Preferences"
-import Preferences2 from "./components/Preferences2"
-import PreferencesSettings from "./components/PreferencesSettings"
-import { SimpleLineIcons } from '@expo/vector-icons';
+import { SimpleLineIcons } from "@expo/vector-icons";
+import { DrawerContent } from "./components/DrawerContent";
+import { Workout } from "./components/Workout";
 
 const Stack = createStackNavigator();
+const Drawer = createDrawerNavigator();
 
 const CustomHeader = ({ navigation }) => {
+  const handleDrawer = () => {
+    navigation.openDrawer();
+  };
+
   return (
     <View style={styles.header}>
-      <SimpleLineIcons
-        name="menu"
-        size={30}
-        color="black"
-        style={{ marginLeft: 20 }}
-        onPress={() => console.log("Drawer menu: toimiva tällainen löytyy omasta branchistä 'HomeScreenDrawer'")}
-      />
+      <TouchableOpacity onPress={handleDrawer}>
+        <SimpleLineIcons
+          name="menu"
+          size={30}
+          color="black"
+          style={{ marginLeft: 20 }}
+        />
+      </TouchableOpacity>
     </View>
+  );
+};
+const HomeStack = () => {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name="Home"
+        component={HomeScreen}
+        options={({ navigation }) => ({
+          header: () => <CustomHeader navigation={navigation} />,
+        })}
+      />
+      <Stack.Screen
+        name="Workout"
+        component={Workout}
+      />
+    </Stack.Navigator>
   );
 };
 
@@ -29,23 +58,41 @@ export default function App() {
   return (
     <SafeAreaView style={styles.container}>
       <NavigationContainer>
-        <Stack.Navigator
-          initialRouteName="Login"
-          screenOptions={{
-            header: ({ navigation }) => <CustomHeader navigation={navigation} />,
-          }}
-        >
-          <Stack.Screen name="Login" component={Login} />
-          <Stack.Screen name="Register" component={Register} />
-          <Stack.Screen name="Preferences" component={Preferences} />
-          <Stack.Screen name="Preferences2" component={Preferences2} />
-          <Stack.Screen name="PreferenceSettings" component={PreferencesSettings} />
-          <Stack.Screen name="Home" component={HomeScreen} />
-        </Stack.Navigator>
+        <Drawer.Navigator>
+          <Drawer.Screen
+            options={{ headerShown: false }}
+            // options={{
+            //   header: ({ navigation }) => (
+            //     <CustomHeader navigation={navigation} />
+            //   ),
+            // }}
+            name="Drawer content"
+            component={HomeStack}
+          />
+        </Drawer.Navigator>
       </NavigationContainer>
     </SafeAreaView>
   );
 }
+
+// export default function App() {
+//   return (
+//     <SafeAreaView style={styles.container}>
+//       <NavigationContainer>
+//         <Stack.Navigator
+//           initialRouteName="Home"
+//           screenOptions={{
+//             header: ({ navigation }) => (
+//               <CustomHeader navigation={navigation} />
+//             ),
+//           }}
+//         >
+//           <Stack.Screen name="Home" component={HomeScreen} />
+//         </Stack.Navigator>
+//       </NavigationContainer>
+//     </SafeAreaView>
+//   );
+// }
 
 const styles = StyleSheet.create({
   container: {

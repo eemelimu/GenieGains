@@ -42,7 +42,7 @@ export default function App() {
             header: () => (
               <CustomHeader
                 navigation={navigation}
-                title={route.name === "Home" ? "Home" : "Goals"}
+                title={route.name}
                 showMenuButton={route.name === "Home"}
               />
             ),

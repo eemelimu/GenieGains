@@ -1,51 +1,89 @@
-import React from "react";
-import { View, Button, Text, TextInput, TouchableOpacity, Image } from "react-native";
+import React, { useState } from "react";
+import {
+  View,
+  Button,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  Image,
+} from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { StyleSheet } from "react-native";
 import { useFonts } from "expo-font";
 import { ThemeColors } from "../assets/ThemeColors";
-
-
-
-
+import { useAuth } from "./AuthContext";
 const Login = () => {
+  const { dispatch } = useAuth();
   const navigation = useNavigation();
-
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   let [fontsLoaded] = useFonts({
-    "DMBold": require("../assets/fonts/DMSans-Bold.ttf"),
-    "DMRegular": require("../assets/fonts/DMSans-Regular.ttf"),
+    DMBold: require("../assets/fonts/DMSans-Bold.ttf"),
+    DMRegular: require("../assets/fonts/DMSans-Regular.ttf"),
   });
   if (!fontsLoaded) {
     return null;
   }
+
+  const handleLogin = async () => {
+    try {
+      const res = await fetch("http://localhost:8000/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username,
+          password,
+        }),
+      });
+      const data = await res.json();
+      console.log(data);
+      if (res.ok) {
+        dispatch({
+          type: "LOGIN",
+          payload: { token: "backend sends no token yet lol" },
+        });
+        navigation.navigate("Home");
+      } else {
+        throw new Error("Failed to login");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
   return (
     <View style={styles.container}>
-      <Image 
-      style={styles.Logo}
-      source={require("../assets/Logo1.png")}></Image>
+      <Image
+        style={styles.Logo}
+        source={require("../assets/Logo1.png")}
+      ></Image>
       <Text style={styles.userName}> Username </Text>
       <TextInput
-      style={styles.userNameInput}
-      placeholder = "    Enter username..."
+        value={username}
+        onChangeText={setUsername}
+        style={styles.userNameInput}
+        placeholder="    Enter username..."
       />
       <Text style={styles.password}> Password </Text>
       <TextInput
-      style={styles.passwordInput}
-      placeholder = "    Enter password..."
+        secureTextEntry={true}
+        value={password}
+        onChangeText={setPassword}
+        style={styles.passwordInput}
+        placeholder="    Enter password..."
       />
+      <TouchableOpacity style={styles.registerBtn} onPress={handleLogin}>
+        <Text style={styles.registerBtnText}>Login</Text>
+      </TouchableOpacity>
+
       <TouchableOpacity
         style={styles.registerBtn}
         onPress={() => {
-          navigation.navigate("Preferences");
-        }}><Text 
-        style={styles.registerBtnText}
-        >Login</Text></TouchableOpacity>
-
-        <TouchableOpacity
-        style={styles.registerBtn}
-        onPress={() => {
           navigation.navigate("Register");
-        }}>
+        }}
+      >
         <Text style={styles.registerBtnText}>Register</Text>
       </TouchableOpacity>
     </View>
@@ -54,7 +92,7 @@ const Login = () => {
 
 export default Login;
 
-const styles = StyleSheet.create ({
+const styles = StyleSheet.create({
   container: {
     width: "100%",
     color: ThemeColors.white,
@@ -81,7 +119,7 @@ const styles = StyleSheet.create ({
     paddingBottom: 20,
     fontFamily: "DMBold",
   },
-  passwordInput:{
+  passwordInput: {
     backgroundColor: ThemeColors.white,
     width: "70%",
     height: "10%",
@@ -92,7 +130,6 @@ const styles = StyleSheet.create ({
 
   registerBtn: {
     paddingTop: 25,
-  
   },
   registerBtnText: {
     backgroundColor: ThemeColors.orange,
@@ -112,16 +149,13 @@ const styles = StyleSheet.create ({
     fontSize: 20,
     fontFamily: "DMRegular",
   },
-
-
-  
-
-
-})
-{/* <Button
+});
+{
+  /* <Button
 title="Register"
 style={styles.searchBtn}
 onPress={() => {
   navigation.navigate("Paskasivu");
 }}
-/> */}
+/> */
+}

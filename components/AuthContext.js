@@ -38,17 +38,19 @@ export const AuthProvider = ({ children }) => {
       try {
         const token = await AsyncStorage.getItem("token");
         if (token) {
-          const res = await fetch("http::localhost:8000/login", {
+          const res = await fetch("http://localhost:8000/token_login", {
             method: "POST",
             headers: {
               HTTP_AUTH_TOKEN: token,
             },
           });
-          const ok = res.ok;
+          const ok = res.status === 200;
+          console.log("token check is :", ok);
           if (ok) {
             dispatch({ type: "LOGIN", payload: { token } });
             navigation.navigate("Home");
           } else {
+            await AsyncStorage.removeItem("token");
             throw new Error("Invalid token");
           }
         } else {

@@ -33,7 +33,7 @@ const Preferences = ({ route }) => {
           experience: route.params.data.selectedSkill,
         }),
       });
-
+      console.log(await response.json());
       if (!response.ok) {
         throw new Error("Failed to register user");
       }

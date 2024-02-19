@@ -12,13 +12,15 @@ import { AntDesign } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-
+import { useAuth } from "./AuthContext";
 const HomeScreen = () => {
   const [date] = useState(new Date());
   const [greeting, setGreeting] = useState("");
   const [name, setName] = useState("name");
   const [workouts, setWorkouts] = useState([]);
-  const [token, setToken] = useState("723614a8-47b4-4c22-8328-969f649d048a");
+  //const [token, setToken] = useState("723614a8-47b4-4c22-8328-969f649d048a");
+  const { state } = useAuth();
+  const token = state.token;
   const navigation = useNavigation();
   const [menuVisible, setMenuVisible] = useState(false);
 
@@ -83,7 +85,7 @@ const HomeScreen = () => {
   const handleFromRoutines = () => {
     console.log("From routines button pressed");
   };
-  
+
   // TODO:
   // Search bar yläreunaan jolla voi hakea treenejä nimen perusteella
 
@@ -123,12 +125,15 @@ const HomeScreen = () => {
       </ScrollView>
       {menuVisible && (
         <View style={styles.workoutMenu}>
-        <TouchableOpacity style={styles.menuItem} onPress={handleNewWorkout}>
-          <Text>New</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.menuItem} onPress={handleFromRoutines}>
-          <Text>From routines</Text>
-        </TouchableOpacity>
+          <TouchableOpacity style={styles.menuItem} onPress={handleNewWorkout}>
+            <Text>New</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.menuItem}
+            onPress={handleFromRoutines}
+          >
+            <Text>From routines</Text>
+          </TouchableOpacity>
         </View>
       )}
       <View style={styles.footer}>

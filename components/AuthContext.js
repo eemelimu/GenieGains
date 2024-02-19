@@ -38,11 +38,24 @@ export const AuthProvider = ({ children }) => {
       try {
         const token = await AsyncStorage.getItem("token");
         if (token) {
-          //check if token is valid from server
-          dispatch({ type: "LOGIN", payload: { token } });
-          navigation.navigate("Home");
+          const res = await fetch("http::localhost:8000/login", {
+            method: "POST",
+            headers: {
+              HTTP_AUTH_TOKEN: token,
+            },
+          });
+          const ok = res.ok;
+          if (ok) {
+            dispatch({ type: "LOGIN", payload: { token } });
+            navigation.navigate("Home");
+          } else {
+            throw new Error("Invalid token");
+          }
+        } else {
+          throw new Error("No token in local db");
         }
       } catch (error) {
+        dispatch({ type: "LOGOUT" });
         console.error("Error initializing auth:", error);
         navigation.navigate("Login");
       }

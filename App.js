@@ -12,6 +12,7 @@ import { SimpleLineIcons } from "@expo/vector-icons";
 import HomeScreen from "./components/HomeScreen";
 import GoalsPage from "./components/GoalsPage2";
 import { Ionicons } from "@expo/vector-icons";
+import { AuthProvider } from "./components/AuthContext";
 
 const Stack = createStackNavigator();
 
@@ -35,6 +36,7 @@ const CustomHeader = ({ navigation, title, showMenuButton }) => {
 export default function App() {
   return (
     <SafeAreaView style={styles.container}>
+      
       <NavigationContainer>
         <Stack.Navigator
           initialRouteName="Home"
@@ -47,9 +49,10 @@ export default function App() {
               />
             ),
           })}
-        >
+        ><AuthProvider>
           <Stack.Screen name="Home" component={HomeScreen} />
           <Stack.Screen name="Goals" component={GoalsPage} />
+          </AuthProvider>
         </Stack.Navigator>
       </NavigationContainer>
     </SafeAreaView>

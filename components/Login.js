@@ -44,7 +44,6 @@ const Login = () => {
           type: "LOGIN",
           payload: { token: "backend sends no token yet lol" },
         });
-        navigation.navigate("Home");
       } else {
         throw new Error("Failed to login");
       }

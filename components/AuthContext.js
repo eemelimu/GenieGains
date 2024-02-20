@@ -71,8 +71,10 @@ export const AuthProvider = ({ children }) => {
       try {
         if (state.isAuthenticated) {
           await AsyncStorage.setItem("token", state.token);
+          navigation.navigate("Home");
         } else {
           await AsyncStorage.removeItem("token");
+          navigation.navigate("Login");
         }
       } catch (error) {
         console.error("Error handling auth change:", error);

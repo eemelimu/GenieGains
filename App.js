@@ -18,6 +18,7 @@ import Preferences from "./components/Preferences";
 import Preferences2 from "./components/Preferences2";
 import Register from "./components/Register";
 import { useAuth } from "./components/AuthContext";
+import { Workout } from "./components/Workout";
 
 const Stack = createStackNavigator();
 
@@ -57,6 +58,7 @@ export default function App() {
             })}
           >
             <Stack.Screen name="Home" component={HomeScreen} />
+            <Stack.Screen name="Workout" component={Workout} />
             <Stack.Screen name="Goals" component={GoalsPage} />
             <Stack.Screen name="Login" component={Login} />
             <Stack.Screen name="Preferences" component={Preferences} />

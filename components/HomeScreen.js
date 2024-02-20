@@ -12,15 +12,16 @@ import { AntDesign } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-import { useAuth } from "./AuthContext";
+// import { useAuth } from "./AuthContext";
+
 const HomeScreen = () => {
   const [date] = useState(new Date());
   const [greeting, setGreeting] = useState("");
   const [name, setName] = useState("name");
   const [workouts, setWorkouts] = useState([]);
-  //const [token, setToken] = useState("723614a8-47b4-4c22-8328-969f649d048a");
-  const { state } = useAuth();
-  const token = state.token;
+  const [token, setToken] = useState("a5eae033-3997-4845-b16d-2b11b14b6e29");
+  // const { state } = useAuth();
+  // const token = state.token;
   const navigation = useNavigation();
   const [menuVisible, setMenuVisible] = useState(false);
 

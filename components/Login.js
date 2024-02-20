@@ -42,7 +42,7 @@ const Login = () => {
       if (res.ok) {
         dispatch({
           type: "LOGIN",
-          payload: { token: "backend sends no token yet lol" },
+          payload: { token: data.token },
         });
       } else {
         throw new Error("Failed to login");

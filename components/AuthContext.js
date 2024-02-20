@@ -41,7 +41,7 @@ export const AuthProvider = ({ children }) => {
           const res = await fetch("http://localhost:8000/token_login", {
             method: "POST",
             headers: {
-              HTTP_AUTH_TOKEN: token,
+              "Auth-Token": token,
             },
           });
           const ok = res.status === 200;

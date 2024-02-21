@@ -13,10 +13,15 @@ import ModalDropdown from "react-native-modal-dropdown";
 import { useAuth } from "./AuthContext";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
+import { workerData } from "worker_threads";
 
 // TODO:
 // - Dropdown menun fonttia selkeemmäks
 // - Finish Workout -nappi, joka lähettää tiedot serverille ja navigoi takaisin etusivulle
+// - Bug fix: Jos lisää kaksi liikettä ja lisää toiseen liikkeeseen lisää sarjoja,
+//   niin toisen liikkeen päälle ilmestyy tyhjää tilaa.
+//   COPILOTIN rakaisu: Tämä johtuu siitä, että molemmat liikkeet käyttävät samaa statea sarjojen lisäämiseen.
+//   Ratkaisu: Jokaiselle liikkeelle oma state sarjojen lisäämiseen.
 
 export const Workout = () => {
   const [name, setName] = useState("");
@@ -50,6 +55,26 @@ export const Workout = () => {
     setAddedMovements(newMovements);
   };
 
+  // EI TOIMI TÄLLÄ HETKELLÄ.
+  const handleFinishWorkout = () => {
+    const workoutData = {
+      name: name,
+      notes: notes,
+      movements: addedMovements
+      .map((movement) => {
+        return {
+          name: movement.name,
+          sets: movement.sets.map((set) => ({
+            weight: set.weight,
+            reps: set.reps
+          }))
+        };
+      })
+    };
+    console.log(workoutData);
+  };
+  
+  
   useEffect(() => {
     try {
       fetch("http://localhost:8000/movement", {
@@ -132,6 +157,11 @@ export const Workout = () => {
           )}
         </View>
       </ScrollView>
+      <View style={styles.footer}>
+        <TouchableOpacity style={styles.footerButton}>
+          <Button title="Finish Workout" onPress={handleFinishWorkout} />
+        </TouchableOpacity>
+      </View>
     </SafeAreaView>
   );
 };
@@ -227,12 +257,13 @@ const styles = StyleSheet.create({
   singleMovementContainer: {
     flex: 1,
     padding: 20,
+    marginBottom: 20,
   },
   singleMovementRow: {
     flexDirection: "row",
     alignItems: "center",
     paddingHorizontal: 10,
-    marginBottom: 10,
+    marginBottom: 5,
   },
   singleMovementColumn: {
     flexDirection: "column",
@@ -355,5 +386,12 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     alignItems: "center",
     justifyContent: "center",
+  },
+  footer: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 20,
+    bottom: 5,
   },
 });

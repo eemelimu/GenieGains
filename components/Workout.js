@@ -11,6 +11,8 @@ import {
 } from "react-native";
 import ModalDropdown from "react-native-modal-dropdown";
 import { useAuth } from "./AuthContext";
+import { MaterialIcons } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 
 // TODO:
 // - Dropdown menun fonttia selkeemmäks
@@ -27,7 +29,7 @@ export const Workout = () => {
   const token = state.token;
   const [dropdownKey, setDropdownKey] = useState(0);
 
-  const handleAddExercise = () => {
+  const handleAddMovement = () => {
     const selectedMovementFilter = movements.filter(
       (movement) => movement.name === selectedMovement
     );
@@ -40,6 +42,13 @@ export const Workout = () => {
       setAddedMovements([...addedMovements, selectedMovementFilter[0]]);
       setDropdownKey((prevKey) => prevKey + 1);
     }
+  };
+
+  const handleRemoveMovement = (movement) => {
+    const newMovements = addedMovements.filter(
+      (addedMovement) => addedMovement.id !== movement.id
+    );
+    setAddedMovements(newMovements);
   };
 
   useEffect(() => {
@@ -103,7 +112,7 @@ export const Workout = () => {
         <View style={styles.addMenuItem}>
           <TouchableOpacity
             style={styles.addExercise}
-            onPress={handleAddExercise}
+            onPress={handleAddMovement}
           >
             <Text>Add exercise</Text>
           </TouchableOpacity>
@@ -113,7 +122,11 @@ export const Workout = () => {
         <View style={styles.addedMovements}>
           {addedMovements.length > 0 ? (
             addedMovements.map((movement) => (
-              <SingleMovement key={movement.id} movement={movement} />
+              <SingleMovement
+                key={movement.id}
+                movement={movement}
+                handleRemoveMovement={handleRemoveMovement}
+              />
             ))
           ) : (
             <Text>No exercises added</Text>
@@ -124,11 +137,15 @@ export const Workout = () => {
   );
 };
 
-const SingleMovement = ({ movement }) => {
+const SingleMovement = ({ movement, handleRemoveMovement }) => {
   const [sets, setSets] = useState([{ weight: "", reps: "" }]);
 
   const handleAddSet = () => {
     setSets([...sets, { weight: "", reps: "" }]);
+  };
+
+  const handleRemoveSet = (index) => {
+    index >= 1 ? setSets(sets.filter((set, i) => i !== index)) : null;
   };
 
   const handleRepsChange = (index, text) => {
@@ -145,7 +162,15 @@ const SingleMovement = ({ movement }) => {
 
   return (
     <View style={styles.singleMovementContainer}>
-      <Text style={styles.singleMovementTitle}>{movement.name}</Text>
+      <Text style={styles.singleMovementTitle}>
+        {movement.name}
+        <TouchableOpacity
+          onPress={() => handleRemoveMovement(movement)}
+          style={styles.removeIcon}
+        >
+          <MaterialIcons name="delete-outline" size={24} color="black" />
+        </TouchableOpacity>
+      </Text>
       {sets.map((set, index) => (
         <SingleSet
           key={index}
@@ -153,6 +178,7 @@ const SingleMovement = ({ movement }) => {
           setWeight={(text) => handleWeightChange(index, text)}
           setReps={(text) => handleRepsChange(index, text)}
           setNumber={index + 1}
+          handleRemoveSet={() => handleRemoveSet(index)}
         />
       ))}
       <View>
@@ -166,7 +192,7 @@ const SingleMovement = ({ movement }) => {
   );
 };
 
-const SingleSet = ({ set, setWeight, setReps, setNumber }) => {
+const SingleSet = ({ set, setWeight, setReps, setNumber, handleRemoveSet }) => {
   const { weight, reps } = set;
 
   return (
@@ -190,6 +216,9 @@ const SingleSet = ({ set, setWeight, setReps, setNumber }) => {
         keyboardType="numeric"
         placeholderTextColor="rgba(0, 0, 0, 0.5)"
       />
+      <TouchableOpacity onPress={handleRemoveSet}>
+        <Ionicons name="remove" size={24} color="black" />
+      </TouchableOpacity>
     </View>
   );
 };
@@ -252,6 +281,10 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     alignItems: "center",
     justifyContent: "center",
+  },
+  removeIcon: {
+    position: "absolute",
+    right: 0,
   },
   // Add Movement Styles
   addMenu: {

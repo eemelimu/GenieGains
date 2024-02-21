@@ -7,11 +7,13 @@ import {
   SafeAreaView,
   TouchableOpacity,
   Button,
+  ScrollView,
 } from "react-native";
 import ModalDropdown from "react-native-modal-dropdown";
 
 export const Workout = () => {
   const [name, setName] = useState("");
+  const [notes, setNotes] = useState("");
   const [selectedMovement, setSelectedMovement] = useState(null);
   const [movements, setMovements] = useState([]);
   const [addedMovements, setAddedMovements] = useState([]);
@@ -69,8 +71,8 @@ export const Workout = () => {
           <Text style={styles.label}>Notes</Text>
           <TextInput
             style={styles.input}
-            value={name}
-            onChangeText={(text) => setName(text)}
+            value={notes}
+            onChangeText={(text) => setNotes(text)}
             placeholder="Notes"
             placeholderTextColor="rgba(0, 0, 0, 0.5)"
           />
@@ -90,6 +92,7 @@ export const Workout = () => {
             dropdownStyle={styles.dropdown}
           />
         </View>
+
         <View style={styles.addMenuItem}>
           <TouchableOpacity
             style={styles.addExercise}
@@ -99,6 +102,7 @@ export const Workout = () => {
           </TouchableOpacity>
         </View>
       </View>
+      <ScrollView style={{ flex: 1 }}>
       <View style={styles.addedMovements}>
         {addedMovements.length > 0 ? (
           addedMovements.map((movement) => (
@@ -108,22 +112,44 @@ export const Workout = () => {
           <Text>No exercises added</Text>
         )}
       </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };
 
 const SingleMovement = ({ movement }) => {
-  const [sets, setSets] = useState([{ weight: '', reps: '' }]);
+  const [reps, setReps] = useState(0);
+  const [weight, setWeight] = useState(0);
+  const [sets, setSets] = useState([{ weight: "", reps: "" }]);
 
   const handleAddSet = () => {
-    setSets([...sets, { weight: '', reps: '' }]);
+    setSets([...sets, { weight: weight, reps: reps }]);
+    setReps(0);
+    setWeight(0);
+  };
+
+  const handleRepsChange = (index, text) => {
+    const newSets = [...sets];
+    newSets[index].reps = text;
+    setSets(newSets);
+  };
+
+  const handleWeightChange = (index, text) => {
+    const newSets = [...sets];
+    newSets[index].weight = text;
+    setSets(newSets);
   };
 
   return (
     <View style={styles.singleMovementContainer}>
       <Text style={styles.singleMovementTitle}>{movement.name}</Text>
       {sets.map((set, index) => (
-        <SingleSet key={index} set={set} />
+        <SingleSet
+          key={index}
+          set={set}
+          setWeight={(text) => handleWeightChange(index, text)}
+          setReps={(text) => handleRepsChange(index, text)}
+        />
       ))}
       <TouchableOpacity style={styles.addSetButton} onPress={handleAddSet}>
         <Text>Add set</Text>
@@ -132,18 +158,8 @@ const SingleMovement = ({ movement }) => {
   );
 };
 
-
-
-const SingleSet = ({ set }) => {
+const SingleSet = ({ set, setWeight, setReps }) => {
   const { weight, reps } = set;
-  
-  const handleWeightChange = (text) => {
-    // Handle weight input change
-  };
-
-  const handleRepsChange = (text) => {
-    // Handle reps input change
-  };
 
   return (
     <View style={styles.singleMovementRow}>
@@ -151,7 +167,7 @@ const SingleSet = ({ set }) => {
       <TextInput
         style={styles.singleMovementInput}
         value={weight}
-        onChangeText={handleWeightChange}
+        onChangeText={(text) => setWeight(text)}
         placeholder="Weight"
         keyboardType="numeric"
         placeholderTextColor="rgba(0, 0, 0, 0.5)"
@@ -160,7 +176,7 @@ const SingleSet = ({ set }) => {
       <TextInput
         style={styles.singleMovementInput}
         value={reps}
-        onChangeText={handleRepsChange}
+        onChangeText={(text) => setReps(text)}
         placeholder="Reps"
         keyboardType="numeric"
         placeholderTextColor="rgba(0, 0, 0, 0.5)"
@@ -168,8 +184,6 @@ const SingleSet = ({ set }) => {
     </View>
   );
 };
-
-
 
 const styles = StyleSheet.create({
   // Single Movement Styles

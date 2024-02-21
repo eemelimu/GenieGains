@@ -16,7 +16,6 @@ import { Ionicons } from "@expo/vector-icons";
 
 // TODO:
 // - Dropdown menun fonttia selkeemmäks
-// - Lisää liikkeen poisto
 // - Finish Workout -nappi, joka lähettää tiedot serverille ja navigoi takaisin etusivulle
 
 export const Workout = () => {

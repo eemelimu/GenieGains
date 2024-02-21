@@ -10,6 +10,12 @@ import {
   ScrollView,
 } from "react-native";
 import ModalDropdown from "react-native-modal-dropdown";
+import { useAuth } from "./AuthContext";
+
+// TODO:
+// - Dropdown menun fonttia selkeemmäks
+// - Lisää liikkeen poisto
+// - Finish Workout -nappi, joka lähettää tiedot serverille ja navigoi takaisin etusivulle
 
 export const Workout = () => {
   const [name, setName] = useState("");
@@ -17,7 +23,8 @@ export const Workout = () => {
   const [selectedMovement, setSelectedMovement] = useState(null);
   const [movements, setMovements] = useState([]);
   const [addedMovements, setAddedMovements] = useState([]);
-  const [token, setToken] = useState("a5eae033-3997-4845-b16d-2b11b14b6e29");
+  const { state } = useAuth();
+  const token = state.token;
   const [dropdownKey, setDropdownKey] = useState(0);
 
   const handleAddExercise = () => {
@@ -103,29 +110,25 @@ export const Workout = () => {
         </View>
       </View>
       <ScrollView style={{ flex: 1 }}>
-      <View style={styles.addedMovements}>
-        {addedMovements.length > 0 ? (
-          addedMovements.map((movement) => (
-            <SingleMovement key={movement.id} movement={movement} />
-          ))
-        ) : (
-          <Text>No exercises added</Text>
-        )}
-      </View>
+        <View style={styles.addedMovements}>
+          {addedMovements.length > 0 ? (
+            addedMovements.map((movement) => (
+              <SingleMovement key={movement.id} movement={movement} />
+            ))
+          ) : (
+            <Text>No exercises added</Text>
+          )}
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
 };
 
 const SingleMovement = ({ movement }) => {
-  const [reps, setReps] = useState(0);
-  const [weight, setWeight] = useState(0);
   const [sets, setSets] = useState([{ weight: "", reps: "" }]);
 
   const handleAddSet = () => {
-    setSets([...sets, { weight: weight, reps: reps }]);
-    setReps(0);
-    setWeight(0);
+    setSets([...sets, { weight: "", reps: "" }]);
   };
 
   const handleRepsChange = (index, text) => {
@@ -149,20 +152,26 @@ const SingleMovement = ({ movement }) => {
           set={set}
           setWeight={(text) => handleWeightChange(index, text)}
           setReps={(text) => handleRepsChange(index, text)}
+          setNumber={index + 1}
         />
       ))}
-      <TouchableOpacity style={styles.addSetButton} onPress={handleAddSet}>
-        <Text>Add set</Text>
-      </TouchableOpacity>
+      <View>
+        <Button
+          title="Add set"
+          onPress={handleAddSet}
+          style={styles.addSetButton}
+        />
+      </View>
     </View>
   );
 };
 
-const SingleSet = ({ set, setWeight, setReps }) => {
+const SingleSet = ({ set, setWeight, setReps, setNumber }) => {
   const { weight, reps } = set;
 
   return (
     <View style={styles.singleMovementRow}>
+      <Text style={styles.singleMovementLabel}>{setNumber}.</Text>
       <Text style={styles.singleMovementLabel}>Weight</Text>
       <TextInput
         style={styles.singleMovementInput}
@@ -194,16 +203,18 @@ const styles = StyleSheet.create({
   singleMovementRow: {
     flexDirection: "row",
     alignItems: "center",
-    paddingHorizontal: 20,
+    paddingHorizontal: 10,
     marginBottom: 10,
   },
   singleMovementColumn: {
     flexDirection: "column",
   },
   singleMovementLabel: {
-    width: 100,
+    // width: 60,
     marginBottom: 2,
     top: 5,
+    paddingLeft: 5,
+    paddingRight: 5,
   },
   singleMovementInput: {
     borderWidth: 1,
@@ -233,6 +244,14 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 70,
     left: 10,
+  },
+  addSetButton: {
+    backgroundColor: "#D8D8D8",
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+    alignItems: "center",
+    justifyContent: "center",
   },
   // Add Movement Styles
   addMenu: {

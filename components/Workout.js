@@ -59,7 +59,6 @@ export const Workout = () => {
     setWorkoutData(workoutData.filter((data) => data.id !== movement.id));
   };
 
-  // POST ei toimi
   const handleFinishWorkout = async () => {
     try {
       const res = await fetch("http://localhost:8000/exercise", {
@@ -70,7 +69,7 @@ export const Workout = () => {
         },
         body: JSON.stringify({
           name: name,
-          notes: notes,
+          note: notes,
           type: name,
         }),
       });

@@ -13,15 +13,16 @@ import ModalDropdown from "react-native-modal-dropdown";
 import { useAuth } from "./AuthContext";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
-import { workerData } from "worker_threads";
 
 // TODO:
+// - Video
 // - Dropdown menun fonttia selkeemmäks
 // - Finish Workout -nappi, joka lähettää tiedot serverille ja navigoi takaisin etusivulle
 // - Bug fix: Jos lisää kaksi liikettä ja lisää toiseen liikkeeseen lisää sarjoja,
 //   niin toisen liikkeen päälle ilmestyy tyhjää tilaa.
 //   COPILOTIN rakaisu: Tämä johtuu siitä, että molemmat liikkeet käyttävät samaa statea sarjojen lisäämiseen.
 //   Ratkaisu: Jokaiselle liikkeelle oma state sarjojen lisäämiseen.
+// - Workout automaattinen nimen luonti: Ottaa jokaisen liikkeen kategorian ja listaa sen nimeen
 
 export const Workout = () => {
   const [name, setName] = useState("");
@@ -32,6 +33,7 @@ export const Workout = () => {
   const { state } = useAuth();
   const token = state.token;
   const [dropdownKey, setDropdownKey] = useState(0);
+  const [workoutData, setWorkoutData] = useState([]);
 
   const handleAddMovement = () => {
     const selectedMovementFilter = movements.filter(
@@ -45,6 +47,7 @@ export const Workout = () => {
       }
       setAddedMovements([...addedMovements, selectedMovementFilter[0]]);
       setDropdownKey((prevKey) => prevKey + 1);
+      setWorkoutData([selectedMovementFilter[0], ...workoutData]);
     }
   };
 
@@ -53,28 +56,31 @@ export const Workout = () => {
       (addedMovement) => addedMovement.id !== movement.id
     );
     setAddedMovements(newMovements);
+    setWorkoutData(workoutData.filter((data) => data.id !== movement.id));
   };
 
-  // EI TOIMI TÄLLÄ HETKELLÄ.
-  const handleFinishWorkout = () => {
-    const workoutData = {
-      name: name,
-      notes: notes,
-      movements: addedMovements
-      .map((movement) => {
-        return {
-          name: movement.name,
-          sets: movement.sets.map((set) => ({
-            weight: set.weight,
-            reps: set.reps
-          }))
-        };
-      })
-    };
-    console.log(workoutData);
+  // POST ei toimi
+  const handleFinishWorkout = async () => {
+    try {
+      const res = await fetch("http://localhost:8000/exercise", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Auth-Token": token,
+        },
+        body: JSON.stringify({
+          name: name,
+          notes: notes,
+          type: name,
+        }),
+      });
+      const data = await res.json();
+      console.log(data);
+    } catch (error) {
+      console.log("Error: ", error);
+    }
   };
-  
-  
+
   useEffect(() => {
     try {
       fetch("http://localhost:8000/movement", {
@@ -132,7 +138,6 @@ export const Workout = () => {
             dropdownStyle={styles.dropdown}
           />
         </View>
-
         <View style={styles.addMenuItem}>
           <TouchableOpacity
             style={styles.addExercise}
@@ -150,6 +155,8 @@ export const Workout = () => {
                 key={movement.id}
                 movement={movement}
                 handleRemoveMovement={handleRemoveMovement}
+                workoutData={workoutData}
+                setWorkoutData={setWorkoutData}
               />
             ))
           ) : (
@@ -166,15 +173,45 @@ export const Workout = () => {
   );
 };
 
-const SingleMovement = ({ movement, handleRemoveMovement }) => {
+const SingleMovement = ({
+  movement,
+  handleRemoveMovement,
+  workoutData,
+  setWorkoutData,
+}) => {
   const [sets, setSets] = useState([{ weight: "", reps: "" }]);
 
   const handleAddSet = () => {
     setSets([...sets, { weight: "", reps: "" }]);
+    if (workoutData.includes(movement)) {
+      const index = workoutData.indexOf(movement);
+      const newWorkoutData = [...workoutData];
+      newWorkoutData[index].sets = sets;
+      setWorkoutData(newWorkoutData);
+    }
+  };
+
+  const handleSetOnChange = (index, text) => {
+    const newSets = [...sets];
+    newSets[index] = text;
+    setSets(newSets);
+    if (workoutData.includes(movement)) {
+      const index = workoutData.indexOf(movement);
+      const newWorkoutData = [...workoutData];
+      newWorkoutData[index].sets = sets;
+      setWorkoutData(newWorkoutData);
+    }
   };
 
   const handleRemoveSet = (index) => {
     index >= 1 ? setSets(sets.filter((set, i) => i !== index)) : null;
+    if (index >= 1) {
+      const newWorkoutData = [...workoutData];
+      newWorkoutData[workoutData.indexOf(movement)].sets = sets.filter(
+        (set, i) => i !== index
+      );
+      setWorkoutData(newWorkoutData);
+    }
   };
 
   const handleRepsChange = (index, text) => {
@@ -208,6 +245,7 @@ const SingleMovement = ({ movement, handleRemoveMovement }) => {
           setReps={(text) => handleRepsChange(index, text)}
           setNumber={index + 1}
           handleRemoveSet={() => handleRemoveSet(index)}
+          handleSetOnChange={() => handleSetOnChange(index)}
         />
       ))}
       <View>
@@ -221,7 +259,14 @@ const SingleMovement = ({ movement, handleRemoveMovement }) => {
   );
 };
 
-const SingleSet = ({ set, setWeight, setReps, setNumber, handleRemoveSet }) => {
+const SingleSet = ({
+  set,
+  setWeight,
+  setReps,
+  setNumber,
+  handleRemoveSet,
+  handleSetOnChange,
+}) => {
   const { weight, reps } = set;
 
   return (
@@ -235,6 +280,7 @@ const SingleSet = ({ set, setWeight, setReps, setNumber, handleRemoveSet }) => {
         placeholder="Weight"
         keyboardType="numeric"
         placeholderTextColor="rgba(0, 0, 0, 0.5)"
+        onChange={handleSetOnChange}
       />
       <Text style={styles.singleMovementLabel}>Reps</Text>
       <TextInput
@@ -244,6 +290,7 @@ const SingleSet = ({ set, setWeight, setReps, setNumber, handleRemoveSet }) => {
         placeholder="Reps"
         keyboardType="numeric"
         placeholderTextColor="rgba(0, 0, 0, 0.5)"
+        onChange={handleSetOnChange}
       />
       <TouchableOpacity onPress={handleRemoveSet}>
         <Ionicons name="remove" size={24} color="black" />

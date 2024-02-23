@@ -160,6 +160,11 @@ const HomeScreen = () => {
 
 const Workout = ({ name, date }) => {
   const navigation = useNavigation();
+
+  const handleWorkoutPress = () => {
+    console.log(`Name: ${name}`);
+  };
+  
   return (
     <TouchableOpacity
       style={styles.singleWorkout}

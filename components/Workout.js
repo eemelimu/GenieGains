@@ -59,7 +59,7 @@ export const Workout = () => {
     setWorkoutData(workoutData.filter((data) => data.id !== movement.id));
   };
 
-  const handleFinishWorkout = async () => {
+  const createExercise = async (name, notes) => {
     try {
       const res = await fetch("http://localhost:8000/exercise", {
         method: "POST",
@@ -74,7 +74,52 @@ export const Workout = () => {
         }),
       });
       const data = await res.json();
-      console.log(data);
+      return data.id;
+    } catch (error) {
+      console.log("Error: ", error);
+    }
+  };
+
+  const addSetsToExercise = async (exerciseId, sets, movement) => {
+    try {
+      const res = await fetch(
+        `http://localhost:8000/exercisemovementconnection`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Auth-Token": token,
+          },
+          body: JSON.stringify({
+            exercise_id: exerciseId,
+            movement_id: movement.id,
+            weight: sets.weight,
+            reps: sets.reps,
+            video: "",
+            time: 0,
+          }),
+        }
+      );
+      const data = await res.json();
+      console.log(`Data returned from addSetsToExercise: ${data.id}`);
+    } catch (error) {
+      console.log("Error: ", error);
+    }
+  };
+
+  const handleFinishWorkout = async () => {
+    try {
+      const exerciseId = await createExercise(name, notes);
+      await Promise.all(
+        workoutData.map(async (movement) => {
+
+          await Promise.all(
+            movement.sets.map(async (set) => {
+              await addSetsToExercise(exerciseId, set, movement);
+            })
+          );
+        })
+      );
     } catch (error) {
       console.log("Error: ", error);
     }

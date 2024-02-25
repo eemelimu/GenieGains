@@ -16,7 +16,7 @@ import { useNavigation } from "@react-navigation/native";
 import { useAuth } from "./AuthContext";
 
 // TODO
-// Search bar toimii oudosti, haettujen treenien styles erilainen
+// Search bar styles paremmaksi
 
 const HomeScreen = () => {
   const [date] = useState(new Date());
@@ -30,7 +30,6 @@ const HomeScreen = () => {
   const [searchMenuVisible, setSearchMenuVisible] = useState(false);
   const [searchText, setSearchText] = useState("");
   const [searchedWorkouts, setSearchedWorkouts] = useState(workouts);
-  const originalWorkouts = workouts;
 
   const dateToString = date.toLocaleDateString(undefined, {
     weekday: "short",
@@ -144,30 +143,26 @@ const HomeScreen = () => {
       </View>
       <ScrollView style={{ flex: 1 }}>
         <View style={styles.main}>
-          {!searchMenuVisible ? (
-            <Text>
-              {workouts.map((workout) => {
-                return (
-                  <Workout
-                    key={workout.id}
-                    name={workout.name}
-                    date={workout.updated}
-                  />
-                );
-              })}
-            </Text>
-          ) : !searchText || searchedWorkouts.length === 0 ? (
-            <Text>No workouts found...</Text>
-          ) : (
-            searchedWorkouts.map((workout) => {
-              return (
+          {searchMenuVisible && searchText ? (
+            searchedWorkouts.length > 0 ? (
+              searchedWorkouts.map((workout) => (
                 <Workout
                   key={workout.id}
                   name={workout.name}
                   date={workout.updated}
                 />
-              );
-            })
+              ))
+            ) : (
+              <Text>No workouts found</Text>
+            )
+          ) : (
+            workouts.map((workout) => (
+              <Workout
+                key={workout.id}
+                name={workout.name}
+                date={workout.updated}
+              />
+            ))
           )}
         </View>
       </ScrollView>

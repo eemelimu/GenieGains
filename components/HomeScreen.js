@@ -14,9 +14,10 @@ import { Entypo } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { useAuth } from "./AuthContext";
-
+import { EvilIcons } from '@expo/vector-icons';
 // TODO
 // Search bar styles paremmaksi
+// Search barin hightlightaus (aktivointi) kun painaa search iconia
 
 const HomeScreen = () => {
   const [date] = useState(new Date());
@@ -228,7 +229,12 @@ const styles = StyleSheet.create({
   },
   searchItemInput: {
     position: "absolute",
-    right: 10,
+    right: 30,
+    width: 125,
+    backgroundColor: "lightgrey",
+    borderRadius: 5,
+    paddingVertical: 5,
+    paddingHorizontal: 10,
   },
   workoutMenu: {
     position: "absolute",

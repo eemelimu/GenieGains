@@ -6,6 +6,7 @@ import {
   SafeAreaView,
   TouchableOpacity,
   ScrollView,
+  TextInput,
 } from "react-native";
 import { ThemeColors } from "../assets/ThemeColors";
 import { AntDesign } from "@expo/vector-icons";
@@ -13,6 +14,9 @@ import { Entypo } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { useAuth } from "./AuthContext";
+
+// TODO
+// Search bar toimii oudosti, haettujen treenien styles erilainen
 
 const HomeScreen = () => {
   const [date] = useState(new Date());
@@ -23,6 +27,10 @@ const HomeScreen = () => {
   const token = state.token;
   const navigation = useNavigation();
   const [menuVisible, setMenuVisible] = useState(false);
+  const [searchMenuVisible, setSearchMenuVisible] = useState(false);
+  const [searchText, setSearchText] = useState("");
+  const [searchedWorkouts, setSearchedWorkouts] = useState(workouts);
+  const originalWorkouts = workouts;
 
   const dateToString = date.toLocaleDateString(undefined, {
     weekday: "short",
@@ -30,7 +38,6 @@ const HomeScreen = () => {
     day: "numeric",
   });
 
-  // Fetch workouts from the server
   useEffect(() => {
     try {
       fetch("http://localhost:8000/exercise", {
@@ -85,8 +92,12 @@ const HomeScreen = () => {
     console.log("From routines button pressed");
   };
 
-  // TODO:
-  // Search bar yläreunaan jolla voi hakea treenejä nimen perusteella
+  const handleSearchTextChange = (text) => {
+    setSearchText(text);
+    setSearchedWorkouts(
+      workouts.filter((workout) => workout.name.includes(text))
+    );
+  };
 
   useEffect(() => {
     const currentTime = new Date().getHours();
@@ -105,12 +116,50 @@ const HomeScreen = () => {
         <Text style={styles.date}>{dateToString.toUpperCase()}</Text>
         <Text style={styles.greetings}>
           {greeting}, {name}!
+          {searchMenuVisible ? (
+            <View style={styles.searchItem}>
+              <TextInput
+                style={styles.searchItemInput}
+                placeholder="Search..."
+                value={searchText}
+                onChangeText={handleSearchTextChange}
+              />
+              <Ionicons
+                name="remove"
+                size={24}
+                color="black"
+                onPress={() => setSearchMenuVisible(!searchMenuVisible)}
+              />
+            </View>
+          ) : (
+            <AntDesign
+              name="search1"
+              size={24}
+              color="black"
+              style={styles.searchItem}
+              onPress={() => setSearchMenuVisible(!searchMenuVisible)}
+            />
+          )}
         </Text>
       </View>
       <ScrollView style={{ flex: 1 }}>
         <View style={styles.main}>
-          <Text>
-            {workouts.map((workout) => {
+          {!searchMenuVisible ? (
+            <Text>
+              {workouts.map((workout) => {
+                return (
+                  <Workout
+                    key={workout.id}
+                    name={workout.name}
+                    date={workout.updated}
+                  />
+                );
+              })}
+            </Text>
+          ) : !searchText || searchedWorkouts.length === 0 ? (
+            <Text>No workouts found...</Text>
+          ) : (
+            searchedWorkouts.map((workout) => {
               return (
                 <Workout
                   key={workout.id}
@@ -118,8 +167,8 @@ const HomeScreen = () => {
                   date={workout.updated}
                 />
               );
-            })}
-          </Text>
+            })
+          )}
         </View>
       </ScrollView>
       {menuVisible && (
@@ -164,7 +213,7 @@ const Workout = ({ name, date }) => {
   const handleWorkoutPress = () => {
     console.log(`Name: ${name}`);
   };
-  
+
   return (
     <TouchableOpacity
       style={styles.singleWorkout}
@@ -178,7 +227,14 @@ const Workout = ({ name, date }) => {
 };
 
 const styles = StyleSheet.create({
-  // jos ongelmia nappien kanssa, laita bottom: 0 ja height: 100
+  searchItem: {
+    position: "absolute",
+    right: 10,
+  },
+  searchItemInput: {
+    position: "absolute",
+    right: 10,
+  },
   workoutMenu: {
     position: "absolute",
     bottom: 80,

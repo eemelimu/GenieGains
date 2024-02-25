@@ -9,6 +9,7 @@ import {
   Button,
   ScrollView,
 } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 import ModalDropdown from "react-native-modal-dropdown";
 import { useAuth } from "./AuthContext";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -34,6 +35,7 @@ export const Workout = () => {
   const token = state.token;
   const [dropdownKey, setDropdownKey] = useState(0);
   const [workoutData, setWorkoutData] = useState([]);
+  const navigation = useNavigation();
 
   const handleAddMovement = () => {
     const selectedMovementFilter = movements.filter(
@@ -101,7 +103,7 @@ export const Workout = () => {
         }
       );
       const data = await res.json();
-      console.log(`Data returned from addSetsToExercise: ${data.id}`);
+      return data;
     } catch (error) {
       console.log("Error: ", error);
     }
@@ -112,7 +114,6 @@ export const Workout = () => {
       const exerciseId = await createExercise(name, notes);
       await Promise.all(
         workoutData.map(async (movement) => {
-
           await Promise.all(
             movement.sets.map(async (set) => {
               await addSetsToExercise(exerciseId, set, movement);
@@ -123,6 +124,7 @@ export const Workout = () => {
     } catch (error) {
       console.log("Error: ", error);
     }
+    navigation.navigate("Home");
   };
 
   useEffect(() => {

@@ -63,11 +63,9 @@ const CustomHeader = ({ navigation, title, showMenuButton, route }) => {
   );
 };
 
-export default function App() {
+const HomeStack = () => {
   return (
-    <SafeAreaView style={styles.container}>
-      <NavigationContainer>
-        <AuthProvider>
+
           <Stack.Navigator
             initialRouteName={"Login"}
             screenOptions={({ navigation, route }) => ({
@@ -89,6 +87,21 @@ export default function App() {
             <Stack.Screen name="Preferences2" component={Preferences2} />
             <Stack.Screen name="Register" component={Register} />
           </Stack.Navigator>
+  );
+};
+
+export default function App() {
+  return (
+    <SafeAreaView style={styles.container}>
+      <NavigationContainer>
+        <AuthProvider>
+        <Drawer.Navigator>
+          <Drawer.Screen
+            options={{ headerShown: false }}
+            name="Drawer content"
+            component={HomeStack}
+          />
+        </Drawer.Navigator>
         </AuthProvider>
       </NavigationContainer>
     </SafeAreaView>

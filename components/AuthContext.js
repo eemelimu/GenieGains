@@ -2,12 +2,13 @@
 import React, { createContext, useReducer, useContext, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
-
+import { BACKEND_URL } from "../assets/config";
 const AuthContext = createContext();
 
 const initialState = {
   isAuthenticated: false,
   token: null,
+  isLoading: true,
 };
 
 const reducer = (state, action) => {
@@ -24,6 +25,11 @@ const reducer = (state, action) => {
         isAuthenticated: false,
         token: null,
       };
+    case "STOPPED_LOADING":
+      return {
+        ...state,
+        isLoading: false,
+      };
     default:
       return state;
   }
@@ -38,28 +44,30 @@ export const AuthProvider = ({ children }) => {
       try {
         const token = await AsyncStorage.getItem("token");
         if (token) {
-          const res = await fetch("http://localhost:8000/token_login", {
+          const res = await fetch(BACKEND_URL + "token_login", {
             method: "POST",
             headers: {
               "Auth-Token": token,
             },
           });
+
           const ok = res.status === 200;
           console.log("token check is :", ok);
           if (ok) {
             dispatch({ type: "LOGIN", payload: { token } });
-            navigation.navigate("Home");
+            dispatch({ type: "STOPPED_LOADING" });
           } else {
             await AsyncStorage.removeItem("token");
             throw new Error("Invalid token");
           }
         } else {
+          dispatch({ type: "STOPPED_LOADING" });
           throw new Error("No token in local db");
         }
       } catch (error) {
+        dispatch({ type: "STOPPED_LOADING" });
         dispatch({ type: "LOGOUT" });
         console.error("Error initializing auth:", error);
-        navigation.navigate("Login");
       }
     };
 
@@ -68,6 +76,11 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const handleAuthChange = async () => {
+      console.log("Auth state changed:", state.isAuthenticated);
+      console.log("Auth is loading:", state.isLoading);
+      if (state.isLoading) {
+        return;
+      }
       try {
         if (state.isAuthenticated) {
           await AsyncStorage.setItem("token", state.token);
@@ -82,7 +95,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     handleAuthChange();
-  }, [state.isAuthenticated, state.token]);
+  }, [state.isAuthenticated, state.token, state.isLoading]);
 
   return (
     <AuthContext.Provider value={{ state, dispatch }}>

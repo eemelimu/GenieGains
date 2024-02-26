@@ -18,22 +18,25 @@ import Preferences from "./components/Preferences";
 import Preferences2 from "./components/Preferences2";
 import Register from "./components/Register";
 import { useAuth } from "./components/AuthContext";
+import LoadingPage from "./components/LoadingPage";
 
 const Stack = createStackNavigator();
 
 const CustomHeader = ({ navigation, title, showMenuButton }) => {
   return (
     <View style={styles.header}>
-      {showMenuButton ? (
-        <TouchableOpacity onPress={() => console.log("Drawer menu")}>
-          <SimpleLineIcons name="menu" size={24} color="black" />
-        </TouchableOpacity>
-      ) : (
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Ionicons name="arrow-back" size={28} color="black" />
-        </TouchableOpacity>
-      )}
-      <Text style={styles.headerTitle}>{title}</Text>
+      <>
+        {showMenuButton ? (
+          <TouchableOpacity onPress={() => console.log("Drawer menu")}>
+            <SimpleLineIcons name="menu" size={24} color="black" />
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <Ionicons name="arrow-back" size={28} color="black" />
+          </TouchableOpacity>
+        )}
+        <Text style={styles.headerTitle}>{title}</Text>
+      </>
     </View>
   );
 };
@@ -41,11 +44,10 @@ const CustomHeader = ({ navigation, title, showMenuButton }) => {
 export default function App() {
   return (
     <SafeAreaView style={styles.container}>
-      {" "}
       <NavigationContainer>
         <AuthProvider>
           <Stack.Navigator
-            initialRouteName={"Login"}
+            initialRouteName={"Loading"}
             screenOptions={({ navigation, route }) => ({
               header: () => (
                 <CustomHeader
@@ -56,6 +58,7 @@ export default function App() {
               ),
             })}
           >
+            <Stack.Screen name="Loading" component={LoadingPage} />
             <Stack.Screen name="Home" component={HomeScreen} />
             <Stack.Screen name="Goals" component={GoalsPage} />
             <Stack.Screen name="Login" component={Login} />

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   StyleSheet,
   View,
@@ -19,18 +19,42 @@ import Preferences2 from "./components/Preferences2";
 import Register from "./components/Register";
 import { useAuth } from "./components/AuthContext";
 import { Workout } from "./components/Workout";
+import Toast from "react-native-toast-message";
+import { createDrawerNavigator } from "@react-navigation/drawer";
 
 const Stack = createStackNavigator();
+const Drawer = createDrawerNavigator();
 
-const CustomHeader = ({ navigation, title, showMenuButton }) => {
+const CustomHeader = ({ navigation, title, showMenuButton, route }) => {
+  const [clickCounter, setClickCounter] = useState(0);
+  const handleDrawer = () => {
+    navigation.openDrawer();
+  };
+
   return (
     <View style={styles.header}>
       {showMenuButton ? (
-        <TouchableOpacity onPress={() => console.log("Drawer menu")}>
+        <TouchableOpacity onPress={handleDrawer}>
           <SimpleLineIcons name="menu" size={24} color="black" />
         </TouchableOpacity>
       ) : (
-        <TouchableOpacity onPress={() => navigation.goBack()}>
+        <TouchableOpacity
+          onPress={() => {
+            if (route !== "Workout" || clickCounter === 1) {
+              setClickCounter(0);
+              navigation.goBack();
+            } else {
+              setClickCounter(clickCounter + 1);
+              Toast.show({
+                type: "success",
+                text1: "Hello",
+                text2: "This is some something 👋",
+              });
+              console.log(clickCounter);
+              console.log("fix toast");
+            }
+          }}
+        >
           <Ionicons name="arrow-back" size={28} color="black" />
         </TouchableOpacity>
       )}
@@ -52,6 +76,7 @@ export default function App() {
                   navigation={navigation}
                   title={route.name}
                   showMenuButton={route.name === "Home"}
+                  route={route.name}
                 />
               ),
             })}

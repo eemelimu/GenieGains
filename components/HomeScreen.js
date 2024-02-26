@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import {
   StyleSheet,
   View,
@@ -12,9 +12,9 @@ import { ThemeColors } from "../assets/ThemeColors";
 import { AntDesign } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { useAuth } from "./AuthContext";
-import { EvilIcons } from '@expo/vector-icons';
+
 // TODO
 // Search bar styles paremmaksi
 // Search barin hightlightaus (aktivointi) kun painaa search iconia
@@ -38,24 +38,26 @@ const HomeScreen = () => {
     day: "numeric",
   });
 
-  useEffect(() => {
-    try {
-      fetch("http://localhost:8000/exercise", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          "Auth-Token": token,
-        },
-      })
-        .then((response) => response.json())
-        .then((data) => setWorkouts(data.exercise_list))
-        .catch((error) => {
-          console.log("Error fetching workouts: ", error);
-        });
-    } catch (error) {
-      console.log("Error fetching workouts: ", error);
-    }
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      try {
+        fetch("http://localhost:8000/exercise", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "Auth-Token": token,
+          },
+        })
+          .then((response) => response.json())
+          .then((data) => setWorkouts(data.exercise_list))
+          .catch((error) => {
+            console.log("Error fetching workouts: ", error);
+          });
+      } catch (error) {
+        console.log("Error fetching workouts: ", error);
+      }
+    }, [])
+  );
 
   useEffect(() => {
     try {

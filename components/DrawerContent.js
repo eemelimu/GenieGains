@@ -15,6 +15,8 @@ import { Entypo } from "@expo/vector-icons";
 
 // TODO
 // - FEEDBACK: Animoi inputin avaaminen ja sulkeminen
+// - FEEDBACK: Lähetä palautetta toiminnallisuus
+// - FEEDBACK: Feedback Sent -viesti ja sen animointi
 
 export const DrawerContent = () => {
   const navigation = useNavigation();

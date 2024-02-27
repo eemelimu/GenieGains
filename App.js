@@ -21,6 +21,7 @@ import { useAuth } from "./components/AuthContext";
 import { Workout } from "./components/Workout";
 import Toast from "react-native-toast-message";
 import { createDrawerNavigator } from "@react-navigation/drawer";
+import { DrawerContent } from "./components/DrawerContent";
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -65,28 +66,27 @@ const CustomHeader = ({ navigation, title, showMenuButton, route }) => {
 
 const HomeStack = () => {
   return (
-
-          <Stack.Navigator
-            initialRouteName={"Login"}
-            screenOptions={({ navigation, route }) => ({
-              header: () => (
-                <CustomHeader
-                  navigation={navigation}
-                  title={route.name}
-                  showMenuButton={route.name === "Home"}
-                  route={route.name}
-                />
-              ),
-            })}
-          >
-            <Stack.Screen name="Home" component={HomeScreen} />
-            <Stack.Screen name="Workout" component={Workout} />
-            <Stack.Screen name="Goals" component={GoalsPage} />
-            <Stack.Screen name="Login" component={Login} />
-            <Stack.Screen name="Preferences" component={Preferences} />
-            <Stack.Screen name="Preferences2" component={Preferences2} />
-            <Stack.Screen name="Register" component={Register} />
-          </Stack.Navigator>
+    <Stack.Navigator
+      initialRouteName={"Login"}
+      screenOptions={({ navigation, route }) => ({
+        header: () => (
+          <CustomHeader
+            navigation={navigation}
+            title={route.name}
+            showMenuButton={route.name === "Home"}
+            route={route.name}
+          />
+        ),
+      })}
+    >
+      <Stack.Screen name="Home" component={HomeScreen} />
+      <Stack.Screen name="Workout" component={Workout} />
+      <Stack.Screen name="Goals" component={GoalsPage} />
+      <Stack.Screen name="Login" component={Login} />
+      <Stack.Screen name="Preferences" component={Preferences} />
+      <Stack.Screen name="Preferences2" component={Preferences2} />
+      <Stack.Screen name="Register" component={Register} />
+    </Stack.Navigator>
   );
 };
 
@@ -95,13 +95,15 @@ export default function App() {
     <SafeAreaView style={styles.container}>
       <NavigationContainer>
         <AuthProvider>
-        <Drawer.Navigator>
-          <Drawer.Screen
-            options={{ headerShown: false }}
-            name="Drawer content"
-            component={HomeStack}
-          />
-        </Drawer.Navigator>
+          <Drawer.Navigator
+            drawerContent={(props) => <DrawerContent {...props} />}
+          >
+            <Drawer.Screen
+              options={{ headerShown: false }}
+              name=" "
+              component={HomeStack}
+            />
+          </Drawer.Navigator>
         </AuthProvider>
       </NavigationContainer>
     </SafeAreaView>

@@ -22,12 +22,17 @@ export const DrawerContent = () => {
   const navigation = useNavigation();
   const [feedbackInputVisible, setFeedbackInputVisible] = useState(false);
   const [feedbackText, setFeedbackText] = useState("");
+  const [feedbackSent, setFeedbackSent] = useState(false);
 
   const handleSendFeedback = () => {
     if (feedbackText.length > 0) {
       // Luo toiminnallisuus lähettää palautetta
       console.log("Send feedback: ", feedbackText);
       setFeedbackText("");
+      setFeedbackSent(true);
+      setTimeout(() => {
+        setFeedbackSent(false);
+      }, 3000);
     }
     setFeedbackInputVisible(false);
   };
@@ -60,7 +65,11 @@ export const DrawerContent = () => {
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.drawerItem}
-        onPress={() => console.log("Päättäkää onko FAQ vai Help and Support. Uuden sivun luonti ja navigointi sinne.")}
+        onPress={() =>
+          console.log(
+            "Päättäkää onko FAQ vai Help and Support. Uuden sivun luonti ja navigointi sinne."
+          )
+        }
       >
         <MaterialIcons
           name="support-agent"
@@ -115,6 +124,11 @@ export const DrawerContent = () => {
           </TouchableOpacity>
         </View>
       )}
+      {feedbackSent && (
+        <View style={styles.sendFeedBackItemSent}>
+          <Text>Feedback Sent</Text>
+        </View>
+      )}
       <View style={styles.drawerFooter}>
         <TouchableOpacity
           style={styles.drawerFooterItem}
@@ -144,8 +158,19 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     padding: 10,
   },
+  sendFeedBackItemSent: {
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#CCFFCC",
+    borderRadius: 10,
+    alignSelf: "center",
+    marginTop: 10,
+  },
   sendFeedbackInput: {
-    padding: 8,
+    paddingVertical: 10,
     paddingHorizontal: 20,
     backgroundColor: "lightgrey",
     width: 250,
@@ -154,6 +179,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontStyle: "italic",
     color: "grey",
+    alignSelf: "center",
   },
   drawerItem: {
     fontSize: 25,

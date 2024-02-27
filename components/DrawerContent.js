@@ -12,6 +12,7 @@ import { SimpleLineIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { AntDesign } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
+import { useAuth } from "./AuthContext";
 
 // TODO
 // - FEEDBACK: Animoi inputin avaaminen ja sulkeminen
@@ -19,22 +20,34 @@ import { Entypo } from "@expo/vector-icons";
 // - FEEDBACK: Feedback Sent -viesti ja sen animointi
 
 export const DrawerContent = () => {
-  const navigation = useNavigation();
   const [feedbackInputVisible, setFeedbackInputVisible] = useState(false);
   const [feedbackText, setFeedbackText] = useState("");
   const [feedbackSent, setFeedbackSent] = useState(false);
+  const [feedbackWarning, setFeedbackWarning] = useState(false);
+  const navigation = useNavigation();
+  const { dispatch } = useAuth();
 
+  const handleLogout = () => {
+    dispatch({
+      type: "LOGOUT",
+    });
+  };
+  
   const handleSendFeedback = () => {
     if (feedbackText.length > 0) {
       // Luo toiminnallisuus lähettää palautetta
-      console.log("Send feedback: ", feedbackText);
       setFeedbackText("");
       setFeedbackSent(true);
       setTimeout(() => {
         setFeedbackSent(false);
       }, 3000);
+      setFeedbackInputVisible(false);
+    } else {
+      setFeedbackWarning(true);
+      setTimeout(() => {
+        setFeedbackWarning(false);
+      }, 3000);
     }
-    setFeedbackInputVisible(false);
   };
 
   return (
@@ -110,7 +123,7 @@ export const DrawerContent = () => {
       {feedbackInputVisible && (
         <View style={styles.sendFeedBackItem}>
           <TextInput
-            style={styles.sendFeedbackInput}
+            style={[styles.sendFeedbackInput, feedbackWarning && { borderWidth: 1, borderColor: "red"}]}
             placeholder="What's on your mind?"
             onChangeText={setFeedbackText}
           />
@@ -132,7 +145,7 @@ export const DrawerContent = () => {
       <View style={styles.drawerFooter}>
         <TouchableOpacity
           style={styles.drawerFooterItem}
-          onPress={() => console.log("luo logout toiminnallisuus")}
+          onPress={handleLogout}
         >
           <SimpleLineIcons
             name="logout"

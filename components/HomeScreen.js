@@ -31,12 +31,41 @@ const HomeScreen = () => {
   const [searchMenuVisible, setSearchMenuVisible] = useState(false);
   const [searchText, setSearchText] = useState("");
   const [searchedWorkouts, setSearchedWorkouts] = useState(workouts);
+  const [workoutMovements, setWorkoutMovements] = useState(null);
 
   const dateToString = date.toLocaleDateString(undefined, {
     weekday: "short",
     month: "short",
     day: "numeric",
   });
+
+  const exercisesWithMovements = async () => {
+    try {
+      fetch("http://localhost:8000/exercisemovementconnection", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Auth-Token": token,
+        },
+      })
+        .then((response) => response.json())
+        .then((data) =>
+          setWorkoutMovements(
+            data.exercisemovementconnection_list.map((workout) => ({
+              id: workout.id,
+              name: workout.exercise_name,
+              updated: workout.updated,
+              movements: [{ name: workout.movement_name, reps: workout.reps, weight: workout.weight }]
+            }))
+          )
+        )
+        .catch((error) => {
+          console.log("Error fetching workouts: ", error);
+        });
+    } catch (error) {
+      console.log("Error fetching workouts: ", error);
+    }
+  };
 
   useFocusEffect(
     useCallback(() => {
@@ -79,7 +108,9 @@ const HomeScreen = () => {
   }, []);
 
   const handleProgress = () => {
-    console.log("Progress button pressed");
+    // testauksen vuoksi tässä nämä
+    exercisesWithMovements();
+    console.log(workoutMovements);
   };
 
   const handleLog = () => {
@@ -153,6 +184,7 @@ const HomeScreen = () => {
                   key={workout.id}
                   name={workout.name}
                   date={workout.updated}
+                  movements={workout.movements}
                 />
               ))
             ) : (
@@ -205,24 +237,21 @@ const HomeScreen = () => {
   );
 };
 
-const Workout = ({ name, date }) => {
-  const navigation = useNavigation();
+const Workout = ({ name, date, movements }) => {
 
   const handleWorkoutPress = () => {
-    console.log(`Name: ${name}`);
+    console.log("Workout pressed");
   };
 
   return (
-    <TouchableOpacity
-      style={styles.singleWorkout}
-      onPress={() => console.log(`${name} workout pressed`)}
-    >
+    <TouchableOpacity style={styles.singleWorkout} onPress={handleWorkoutPress}>
       <Text style={styles.workoutName}>{name}</Text>
       <Text style={styles.workoutDate}>{date}</Text>
       <Text>Days since last: -</Text>
     </TouchableOpacity>
   );
 };
+
 
 const styles = StyleSheet.create({
   searchItem: {

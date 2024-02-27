@@ -36,7 +36,7 @@ export const DrawerContent = () => {
     <View style={styles.drawerContainer}>
       <TouchableOpacity
         style={styles.drawerItem}
-        onPress={() => console.log("luo navigointi kun mergetty")}
+        onPress={() => console.log("Navigoi profiili sivulle.")}
       >
         <AntDesign
           name="user"
@@ -48,7 +48,7 @@ export const DrawerContent = () => {
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.drawerItem}
-        onPress={() => console.log("luo navigointi kun mergetty")}
+        onPress={() => console.log("Navigoi aseukset sivulle.")}
       >
         <Feather
           name="settings"
@@ -60,7 +60,7 @@ export const DrawerContent = () => {
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.drawerItem}
-        onPress={() => console.log("Tai sitten FAQ.")}
+        onPress={() => console.log("Päättäkää onko FAQ vai Help and Support. Uuden sivun luonti ja navigointi sinne.")}
       >
         <MaterialIcons
           name="support-agent"
@@ -74,7 +74,7 @@ export const DrawerContent = () => {
         style={styles.drawerItem}
         onPress={() =>
           console.log(
-            "Navigoi Terms of Service sivulle, jossa on myös sovelluksen versio yms."
+            "Navigoi sivulle, jossa on TOS ja sovelluksen versio yms."
           )
         }
       >

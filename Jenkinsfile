@@ -19,17 +19,6 @@ pipeline {
             }
 
         }
-        stage('Build') {
-            steps {
-                script {
-                    if (isUnix()) {
-                        sh 'npm run startweb'
-                    } else {
-                        bat 'npm run startweb'
-                    }
-                }
-            }
-        }
         stage('Test') {
             steps {
                 script {

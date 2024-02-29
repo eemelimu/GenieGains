@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "main": "/node_modules/expo/AppEntry.js",
   "scripts": {
+    "startweb":"expo start --web --non-interactive",
     "test":"jest test --coverage",
     "start": "npm i&&expo start --tunnel",
     "android": "expo start --android",

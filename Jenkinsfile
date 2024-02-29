@@ -23,9 +23,9 @@ pipeline {
             steps {
                 script {
                     if (isUnix()) {
-                        sh 'npm start'
+                        sh 'npm startweb'
                     } else {
-                        bat 'npm start'
+                        bat 'npm startweb'
                     }
                 }
             }

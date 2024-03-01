@@ -173,6 +173,13 @@ const SettingsScreen = () => {
             color={ThemeColors.tertiary}
           />
         </SettingsButton>
+        <SettingsButton
+          navigationPage={"About"}
+          color={ThemeColors.tertiary}
+          text="About"
+        >
+          <AntDesign name="exclamationcircle" size={24} color={ThemeColors.tertiary} />
+        </SettingsButton>
       </ScrollView>
     </View>
   );

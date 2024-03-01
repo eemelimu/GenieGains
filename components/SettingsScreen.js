@@ -6,6 +6,8 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { ScrollView } from "react-native-gesture-handler";
 import { AntDesign } from "@expo/vector-icons";
 import { ThemeContext } from "./ThemeContext";
+import { FontAwesome } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 
 const SettingsButton = ({ color, text, children, navigationPage }) => {
   const navigation = useNavigation();
@@ -134,8 +136,8 @@ const SettingsScreen = () => {
           color={ThemeColors.tertiary}
           text="Appearance"
         >
-          <MaterialIcons
-            name="account-circle"
+          <FontAwesome
+            name="paint-brush"
             size={24}
             color={ThemeColors.tertiary}
           />
@@ -145,8 +147,8 @@ const SettingsScreen = () => {
           color={ThemeColors.tertiary}
           text="Notifications"
         >
-          <MaterialIcons
-            name="account-circle"
+          <Ionicons
+            name="notifications"
             size={24}
             color={ThemeColors.tertiary}
           />
@@ -156,29 +158,25 @@ const SettingsScreen = () => {
           color={ThemeColors.tertiary}
           text="Preferences"
         >
-          <MaterialIcons
-            name="account-circle"
-            size={24}
-            color={ThemeColors.tertiary}
-          />
+          <FontAwesome name="wrench" size={24} color={ThemeColors.tertiary} />
         </SettingsButton>
         <SettingsButton
           navigationPage={"Terms of Service"}
           color={ThemeColors.tertiary}
           text="Terms of Service"
         >
-          <MaterialIcons
-            name="account-circle"
-            size={24}
-            color={ThemeColors.tertiary}
-          />
+          <FontAwesome name="legal" size={24} color={ThemeColors.tertiary} />
         </SettingsButton>
         <SettingsButton
           navigationPage={"About"}
           color={ThemeColors.tertiary}
           text="About"
         >
-          <AntDesign name="exclamationcircle" size={24} color={ThemeColors.tertiary} />
+          <AntDesign
+            name="exclamationcircle"
+            size={24}
+            color={ThemeColors.tertiary}
+          />
         </SettingsButton>
       </ScrollView>
     </View>

@@ -52,39 +52,97 @@ const HomeScreen = () => {
     setSelectedWorkout({});
   };
 
-  const exercisesWithMovements = async () => {
-    try {
-      fetch(BACKEND_URL + "exercisemovementconnection", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          "Auth-Token": token,
-        },
-      })
-        .then((response) => response.json())
-        .then((data) =>
-          setWorkoutMovements(
-            data.exercisemovementconnection_list.map((workout) => ({
-              id: workout.id,
-              name: workout.exercise_name,
-              updated: workout.updated,
-              movements: [
-                {
-                  name: workout.movement_name,
-                  reps: workout.reps,
-                  weight: workout.weight,
-                },
-              ],
-            }))
-          )
-        )
-        .catch((error) => {
-          console.log("Error fetching workouts: ", error);
-        });
-    } catch (error) {
-      console.log("Error fetching workouts: ", error);
-    }
-  };
+  // const exercisesWithMovements = async () => {
+  //   try {
+  //     const res = await fetch(BACKEND_URL + "exercisemovementconnection", {
+  //       method: "GET",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //         "Auth-Token": token,
+  //       },
+  //     });
+  //     const data = await res.json();
+
+  //     const groupedMovements = {};
+
+  //     data.exercisemovementconnection_list.forEach((workout) => {
+  //       const { exercise_id, id, exercise_name, updated, movement_name, reps, weight } = workout;
+
+  //       if (!groupedMovements[exercise_id]) {
+  //         groupedMovements[exercise_id] = {
+  //           id: exercise_id,
+  //           name: exercise_name,
+  //           updated: updated,
+  //           movements: [],
+  //         };
+  //       }
+
+  //       groupedMovements[exercise_id].movements.push({
+  //         id: id,
+  //         name: movement_name,
+  //         reps: reps,
+  //         weight: weight,
+  //       });
+  //     });
+
+  //     setWorkoutMovements(Object.values(groupedMovements));
+  //   } catch (error) {
+  //     console.log("Error fetching workout movements: ", error);
+  //   }
+  // };
+
+  useFocusEffect(
+    useCallback(() => {
+      const fetchData = async () => {
+        try {
+          const res = await fetch(BACKEND_URL + "exercisemovementconnection", {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              "Auth-Token": token,
+            },
+          });
+          const data = await res.json();
+
+          const groupedMovements = {};
+
+          data.exercisemovementconnection_list.forEach((workout) => {
+            const {
+              exercise_id,
+              id,
+              exercise_name,
+              updated,
+              movement_name,
+              reps,
+              weight,
+            } = workout;
+
+            if (!groupedMovements[exercise_id]) {
+              groupedMovements[exercise_id] = {
+                id: exercise_id,
+                name: exercise_name,
+                updated: updated,
+                movements: [],
+              };
+            }
+
+            groupedMovements[exercise_id].movements.push({
+              id: id,
+              name: movement_name,
+              reps: reps,
+              weight: weight,
+            });
+          });
+
+          setWorkoutMovements(Object.values(groupedMovements));
+        } catch (error) {
+          console.log("Error fetching workout movements: ", error);
+        }
+      };
+
+      fetchData();
+    }, [])
+  );
 
   useFocusEffect(
     useCallback(() => {
@@ -127,14 +185,19 @@ const HomeScreen = () => {
   }, []);
 
   const handleProgress = () => {
-    // testauksen vuoksi tässä nämä
-    //exercisesWithMovements();
-    //console.log(workoutMovements);
     navigation.navigate("Goals");
   };
 
+  const getWorkoutMovements = async (id) => {
+    try {
+      await exercisesWithMovements();
+    } catch (error) {
+      console.log("Error fetching workout movements: ", error);
+    }
+    return null;
+  };
+
   const getworkoutInformation = async (id) => {
-    console.log("Getting workout information for id: ", id);
     try {
       const res = await fetch(BACKEND_URL + "exercise/" + id, {
         method: "GET",
@@ -153,7 +216,7 @@ const HomeScreen = () => {
   };
 
   const handleLog = () => {
-    console.log("Log button pressed");
+    console.log(workoutMovements);
   };
 
   const handleNewWorkout = () => {
@@ -182,19 +245,18 @@ const HomeScreen = () => {
     }
   }, []);
 
-  const Workout = ({ name, date, id }) => {
+  const Workout = ({ name, date, id, exercise_id }) => {
     return (
       <TouchableOpacity
         style={styles.singleWorkout}
         onPress={async () => {
-          console.log(`${name} workout pressed with id: ${id}`);
-          setSelectedWorkout(await getworkoutInformation(id));
+          setSelectedWorkout(await getWorkoutMovements(id));
           setIsModalVisible(true);
         }}
       >
         <Text style={styles.workoutName}>{name}</Text>
         <Text style={styles.workoutDate}>{date}</Text>
-        <Text>Days since last: -</Text>
+        <Text>Days since last: {exercise_id}</Text>
       </TouchableOpacity>
     );
   };
@@ -404,6 +466,7 @@ const HomeScreen = () => {
                 id={item.id}
                 name={item.name}
                 date={item.updated}
+                exercise_id={item.exercise_id}
               />
             )}
             keyExtractor={(item) => item.id}
@@ -425,6 +488,7 @@ const HomeScreen = () => {
                 id={item.id}
                 name={item.name}
                 date={item.updated}
+                exercise_id={item.exercise_id}
               />
             )}
             keyExtractor={(item) => item.id}

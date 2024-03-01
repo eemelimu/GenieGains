@@ -19,10 +19,11 @@ import { Ionicons } from "@expo/vector-icons";
 // - Video
 // - Dropdown menun fonttia selkeemmäks
 // - Finish Workout -nappi, joka lähettää tiedot serverille ja navigoi takaisin etusivulle
-// - Bug fix: Jos lisää kaksi liikettä ja lisää toiseen liikkeeseen lisää sarjoja,
+// - Bug: Jos lisää kaksi liikettä ja lisää toiseen liikkeeseen lisää sarjoja,
 //   niin toisen liikkeen päälle ilmestyy tyhjää tilaa.
 //   COPILOTIN rakaisu: Tämä johtuu siitä, että molemmat liikkeet käyttävät samaa statea sarjojen lisäämiseen.
 //   Ratkaisu: Jokaiselle liikkeelle oma state sarjojen lisäämiseen.
+// BUG: Kun lisäät liikkeeksi "penkkipunnerrus" niin maastaveto katoaa listasta.
 // - Workout automaattinen nimen luonti: Ottaa jokaisen liikkeen kategorian ja listaa sen nimeen
 
 export const Workout = () => {
@@ -145,6 +146,19 @@ export const Workout = () => {
       console.log("Error fetching movements: ", error);
     }
   }, []);
+
+  const NoMovements = () => {
+    const handleLoadMovements = () => {
+      console.log("Loading movements");
+    };
+    return (
+      <View>
+        <TouchableOpacity onPress={handleLoadMovements}>
+          <Text>No movements available</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  };
 
   return (
     <SafeAreaView style={styles.container}>

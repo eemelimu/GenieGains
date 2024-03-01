@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useAuth } from "./AuthContext";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import {
   View,
@@ -28,31 +29,34 @@ import { epochToDate, lightOrDark } from "../assets/utils/utils";
 import DropDownPicker from "react-native-dropdown-picker";
 import { Text as TextSVG, Svg } from "react-native-svg";
 import { ThemeColors } from "../assets/ThemeColors";
-
+import { BACKEND_URL } from "../assets/config";
 const CHART_HEIGHT = Dimensions.get("window").height / 2.6 - 20;
 const CHART_WIDTH = Dimensions.get("window").width - 40;
 
 const calculateRemainingData = (target) => {
   const data = target.data;
-  const latestEntry = data[0];
-  console.log("latestEntry", latestEntry?.date);
+  const latestEntry = target;
+  console.log("latestEntry", latestEntry?.created);
   let sum = 0;
   for (i in data) {
-    sum += data[i].value;
+    sum += data[i].number;
   }
-  const difference = target.target; //-sum
+  const difference = target.number; //-sum
   const daysDifference =
-    (target?.date - latestEntry?.date) / (1000 * 3600 * 24);
+    (target?.end - latestEntry?.created) / (1000 * 3600 * 24);
   const remainingProgressPerDay = difference / daysDifference;
   return [remainingProgressPerDay, difference - sum];
 };
 
 const getDataByDateAndValue = (date, value, goal) => {
+  console.log("date", date);
+  console.log("value", value);
+  console.log("goal", goal);
   console.log(
-    goal.data.find((entry) => entry.date === date && entry.value === value)
+    goal.data.find((entry) => entry.created === date && entry.number === value)
   );
   return goal.data.find(
-    (entry) => entry.date === date && entry.value === value
+    (entry) => entry.created === date && entry.number === value
   );
 };
 
@@ -72,8 +76,8 @@ const calculateCombinedValueBetweenDates = (
   }
 
   for (const entry of data) {
-    if (entry?.date >= start && entry?.date <= end) {
-      combinedValue += entry.value;
+    if (entry?.created >= start && entry?.created <= end) {
+      combinedValue += entry.number;
     }
   }
 
@@ -81,8 +85,10 @@ const calculateCombinedValueBetweenDates = (
 };
 
 const GoalsPage = () => {
+  const [openAdditionPicker, setOpenAdditionPicker] = useState(false);
   const [goalName, setGoalName] = useState("");
-
+  const { state: authState } = useAuth();
+  const token = authState.token;
   const [units, setUnits] = useState("");
   const [additionUnits, setAdditionUnits] = useState("");
   const [additionTargetAmount, setAdditionTargetAmount] = useState("");
@@ -96,67 +102,86 @@ const GoalsPage = () => {
   const [open, setOpen] = useState(false);
   const [date, setDate] = useState(new Date());
   const [value, setValue] = useState(null);
+  const [additionValue, setAdditionValue] = useState([]);
   const [items, setItems] = useState([]);
+  const [additionItems, setAdditionItems] = useState([]);
   const [selectedGoal, setSelectedGoal] = useState(null);
   const font = useFont(DMSansBold, 15);
   const { state, isActive } = useChartPressState({
     x: 0,
-    y: { value: 0, target: 0 },
+    y: { number: 0, target: 0 },
   });
   const { state: secondState, isActive: secondIsActive } = useChartPressState({
     x: 0,
-    y: { value: 0, target: 0 },
+    y: { number: 0, target: 0 },
   });
   const [initialXPosition, setInitialXPosition] = useState(null);
   const [SecondinitialXPosition, setSecondInitialXPosition] = useState(null);
 
+  const getGoalsData = async (id) => {
+    try {
+      const res = await fetch(BACKEND_URL + `goal/${id}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Auth-Token": token,
+        },
+      });
+      const data = await res.json();
+      console.log("data", data);
+      if (res.ok) {
+        console.log(data);
+        const additions = data.data;
+        const additionsCopy = additions.map((addition, index) => {
+          return { ...addition, created: addition.created + index };
+        });
+        additionsCopy.push({ number: 0, created: data.end });
+        additionsCopy.push({ number: 0, created: data.created - 1 });
+        setSelectedGoal({ ...data, data: additionsCopy });
+      } else {
+        throw new Error("Failed to fetch goals");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  const getGoalsDataList = async () => {
+    try {
+      const res = await fetch(BACKEND_URL + "goal", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Auth-Token": token,
+        },
+      });
+      const data = await res.json();
+      console.log("data", data);
+      if (res.ok) {
+        setGoalsData(data.goal_list);
+      } else {
+        throw new Error("Failed to fetch goals");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
   useEffect(() => {
-    // Mocking goals data for demonstration
-    const data = [
-      {
-        id: 1,
-        name: "Workout",
-        date: 1736928000000,
-        unit: "steps",
-        target: 1000000,
-        data: [
-          { value: 3, note: "Was lazy", unit: "steps", date: 1736028000000 },
-          {
-            value: 3400,
-            note: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam vestibulum sapien vitae magna condimentum, at ultricies neque sollicitudin. Maecenas tincidunt purus nec fermentum ultricies. Ut et gravida nisi. Sed at felis sit amet nulla maximus con",
-            unit: "steps",
-            date: 1736114400000,
-          },
-          { value: 34, note: "Was lazy", unit: "steps", date: 1736200800000 },
-          { value: 3, note: "Was lazy", unit: "steps", date: 1736287200000 },
-          { value: 34, note: "Was lazy", unit: "steps", date: 1736373600000 },
-          { value: 6, note: "Was lazy", unit: "steps", date: 1736460000000 },
-          { value: 324, note: "Was lazy", unit: "steps", date: 1736546400000 },
-          { value: 234, note: "Was lazy", unit: "steps", date: 1736632800000 },
-          { value: 343, note: "Was lazy", unit: "steps", date: 1736719200000 },
-          { value: 156, note: "Was lazy", unit: "steps", date: 1736805600000 },
-        ],
-      },
-      {
-        id: 2,
-        name: "Weight",
-        date: 1767218400000,
-        unit: "kg",
-        target: -100,
-        data: [],
-      },
-      // Rest of the goals
-    ];
-    setGoalsData(data);
+    getGoalsDataList();
+    //setGoalsData(data);
   }, []);
 
   useEffect(() => {
     setItems(goalsData.map((goal) => ({ label: goal.name, value: goal.id })));
+    setAdditionItems(
+      goalsData.map((goal) => ({ label: goal.name, value: goal.id }))
+    );
   }, [goalsData]);
 
   useEffect(() => {
     if (isActive) {
-      console.log("set the position", state.x.position.value);
+      console.log("set the position", state.x.position?.value);
       setInitialXPosition(state.x.position);
     } else {
       setInitialXPosition(null);
@@ -166,7 +191,7 @@ const GoalsPage = () => {
   }, [isActive]);
   useEffect(() => {
     if (secondIsActive) {
-      console.log("set the second position", secondState.x.position.value);
+      console.log("set the second position", secondState.x.position?.value);
       setSecondInitialXPosition(secondState.x.position);
     } else {
       setSecondInitialXPosition(null);
@@ -176,40 +201,86 @@ const GoalsPage = () => {
 
   useEffect(() => {
     if (value) {
-      setSelectedGoal(goalsData.find((goal) => goal.id === value));
+      getGoalsData(value);
+      //setSelectedGoal(goalsData.find((goal) => goal.id === value));
     }
   }, [value, goalsData]);
 
-  const handleCreateGoal = () => {
+  const handleCreateGoal = async () => {
     console.log("Goal Name:", goalName);
     console.log("Units:", units);
     console.log("Target Amount:", targetAmount);
+    console.log("Date:", date);
+    try {
+      const res = await fetch(BACKEND_URL + "goal", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Auth-Token": token,
+        },
+        body: JSON.stringify({
+          name: goalName,
+          unit: units,
+          number: targetAmount,
+          end: date,
+        }),
+      });
+      const data = await res.json();
+      console.log(data);
+      if (res.ok) {
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
     setIsModalVisible(false);
     setDate(new Date());
     setGoalName("");
     setUnits("");
     setTargetAmount("");
+    getGoalsDataList();
   };
 
-  const addAdditionalData = () => {
+  const addAdditionalData = async () => {
     console.log("Addition Units:", additionUnits);
     console.log("Addition Target Amount:", additionTargetAmount);
     console.log("Addition Date:", additionDate);
     console.log("Addition Note:", additionNote);
+    console.log(additionValue);
     const noteWithoutNewLines = additionNote.replace("/\r?\n|\r/g", " ");
+    for (i in additionValue) {
+      try {
+        const res = await fetch(BACKEND_URL + "addition", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Auth-Token": token,
+          },
+          body: JSON.stringify({
+            goal_id: additionValue[i],
+            number: additionTargetAmount,
+            unit: additionUnits,
+            note: noteWithoutNewLines,
+          }),
+        });
+        getGoalsData(value);
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    }
     setIsAdditionModalVisible(false);
     setAdditionUnits("");
     setAdditionTargetAmount("");
     setAdditionDate(new Date());
     setAdditionNote("");
+    setAdditionValue([]);
   };
 
   const formatXLabel = (epochDate) => {
     return epochToDate(epochDate);
   };
 
-  const formatYLabel = (value) => {
-    return `   ${value} ${selectedGoal.unit}`;
+  const formatYLabel = (number) => {
+    return `   ${number} ${selectedGoal.unit}`;
   };
 
   return (
@@ -217,9 +288,9 @@ const GoalsPage = () => {
       {selectedGoal ? (
         <View>
           <Text style={styles.goalHeader}>
-            {`${selectedGoal.name} Goal of ${selectedGoal.target} ${
+            {`${selectedGoal.name} Goal of ${selectedGoal.number} ${
               selectedGoal.unit
-            } by ${epochToDate(selectedGoal?.date)}`}
+            } by ${epochToDate(selectedGoal?.end)}`}
           </Text>
 
           <View style={styles.chartContainer}>
@@ -232,8 +303,8 @@ const GoalsPage = () => {
             ) : (
               <CartesianChart
                 data={selectedGoal.data}
-                xKey="date"
-                yKeys={["value"]}
+                xKey="created"
+                yKeys={["number"]}
                 axisOptions={{ font, formatXLabel, formatYLabel }}
                 chartPressState={[state, secondState]}
                 gestureLongPressDelay={1}
@@ -245,13 +316,13 @@ const GoalsPage = () => {
                 {({ points }) => (
                   <>
                     <Line
-                      points={points.value}
+                      points={points.number}
                       color={ThemeColors.quaternary}
                       strokeWidth={3}
                     />
                     {isActive && initialXPosition !== null && (
                       <Rect
-                        x={initialXPosition.value}
+                        x={initialXPosition?.value}
                         y={0}
                         width={1}
                         height={CHART_HEIGHT}
@@ -264,18 +335,18 @@ const GoalsPage = () => {
                       SecondinitialXPosition !== null && (
                         <>
                           <Rect
-                            x={SecondinitialXPosition.value}
+                            x={SecondinitialXPosition?.value}
                             y={0}
                             width={1}
                             height={CHART_HEIGHT}
                             color="rgba(0, 0, 0, 0.9)"
                           />
                           <Rect
-                            x={SecondinitialXPosition.value}
+                            x={SecondinitialXPosition?.value}
                             y={0}
                             width={
-                              initialXPosition.value -
-                              SecondinitialXPosition.value
+                              initialXPosition?.value -
+                              SecondinitialXPosition?.value
                             }
                             height={CHART_HEIGHT}
                             color="rgba(0, 0, 0, 0.3)"
@@ -296,18 +367,18 @@ const GoalsPage = () => {
                 <Text
                   style={styles.informationText}
                 >{`You have selected dates between ${epochToDate(
-                  state.x.value.value
-                )}-${epochToDate(secondState.x.value.value)}`}</Text>
+                  state.x?.value?.value
+                )}-${epochToDate(secondState.x?.value?.value)}`}</Text>
                 <Text
                   style={styles.informationText}
                 >{`You have achieved ${calculateCombinedValueBetweenDates(
-                  state.x.value.value,
-                  secondState.x.value.value,
+                  state.x?.value?.value,
+                  secondState.x?.value?.value,
                   selectedGoal
                 )} ${selectedGoal.unit} between these dates`}</Text>
               </>
             ) : null}
-            {state.y.value.value.value === 0 ? (
+            {state.y?.number?.value?.value === 0 ? (
               <Text style={styles.informationText}>No data selected</Text>
             ) : (
               <>
@@ -315,16 +386,16 @@ const GoalsPage = () => {
                   <>
                     <Text
                       style={styles.informationText}
-                    >{`Selected value is:${state.y.value.value.value} ${selectedGoal.unit}`}</Text>
+                    >{`Selected value is:${state.y?.number?.value?.value} ${selectedGoal.unit}`}</Text>
                     <Text style={styles.informationText}>
-                      {"On Date:" + epochToDate(state.x.value.value)}
+                      {"On Date:" + epochToDate(state.x?.value?.value)}
                     </Text>
                     <Text style={styles.informationText}>{`Note: ${
                       getDataByDateAndValue(
-                        state.x.value.value,
-                        state.y.value.value.value,
+                        state.x?.value?.value,
+                        state.y?.number?.value?.value,
                         selectedGoal
-                      ).note
+                      )?.note
                     }`}</Text>
                     <Text style={styles.informationText}>{`${
                       calculateRemainingData(selectedGoal)[0]
@@ -369,6 +440,7 @@ const GoalsPage = () => {
             <Text style={styles.modalTitle}>Create New Workout Goal</Text>
             <Text style={styles.informationText}>Goal's name:</Text>
             <TextInput
+              maxLength={100}
               style={styles.input}
               placeholder="Goal Name"
               value={goalName}
@@ -379,6 +451,7 @@ const GoalsPage = () => {
               style={styles.input}
               placeholder="Units (e.g., steps, kilograms)"
               value={units}
+              maxLength={10}
               onChangeText={(text) => setUnits(text)}
             />
             <Text style={styles.informationText}>Goal's target:</Text>
@@ -433,7 +506,9 @@ const GoalsPage = () => {
       </Modal>
       <Pressable
         style={styles.button}
-        onPress={() => setIsAdditionModalVisible(true)}
+        onPress={() => {
+          setIsAdditionModalVisible(true);
+        }}
       >
         <Text style={styles.boldText}>Add progress</Text>
       </Pressable>
@@ -464,8 +539,9 @@ const GoalsPage = () => {
             ></TextInput>
             <Text style={styles.informationText}>Unit:</Text>
             <TextInput
+              maxLength={10}
               style={styles.input}
-              placeholder="Units (e.g., steps, kilograms)"
+              placeholder="Units (e.g., steps, kg)"
               value={additionUnits}
               onChangeText={(val) => setAdditionUnits(val)}
             />
@@ -476,6 +552,22 @@ const GoalsPage = () => {
               value={additionTargetAmount}
               onChangeText={(val) => setAdditionTargetAmount(val)}
               keyboardType="numeric"
+            />
+            <DropDownPicker
+              mode="BADGE"
+              multiple={true}
+              min={1}
+              max={5}
+              open={openAdditionPicker}
+              value={additionValue}
+              items={additionItems}
+              setOpen={setOpenAdditionPicker}
+              setValue={setAdditionValue}
+              setItems={setAdditionItems}
+              placeholder={"Choose goal or goals to add progress to"}
+              theme={
+                lightOrDark(ThemeColors.primary).toUpperCase() || "DEFAULT"
+              }
             />
             <Pressable style={styles.createButton} onPress={addAdditionalData}>
               <Text style={styles.buttonText}>Add</Text>
@@ -488,6 +580,7 @@ const GoalsPage = () => {
                 setAdditionUnits("");
                 setAdditionTargetAmount("");
                 setAdditionNote("");
+                setAdditionValue([]);
               }}
             >
               <Text style={styles.cancelButtonText}>Cancel</Text>
@@ -572,6 +665,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   createButton: {
+    marginTop: 10,
     backgroundColor: "blue",
     padding: 10,
     borderRadius: 5,

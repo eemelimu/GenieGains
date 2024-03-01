@@ -12,6 +12,7 @@ import { StyleSheet } from "react-native";
 import { useFonts } from "expo-font";
 import { ThemeColors } from "../assets/ThemeColors";
 import { useAuth } from "./AuthContext";
+import { BACKEND_URL } from "../assets/config";
 const Login = () => {
   const { dispatch } = useAuth();
   const navigation = useNavigation();
@@ -27,7 +28,7 @@ const Login = () => {
 
   const handleLogin = async () => {
     try {
-      const res = await fetch("http://localhost:8000/login", {
+      const res = await fetch(BACKEND_URL+"login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

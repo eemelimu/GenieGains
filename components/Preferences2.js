@@ -12,6 +12,7 @@ import { StyleSheet } from "react-native";
 import { useFonts } from "expo-font";
 import CheckBox from "expo-checkbox";
 import { ThemeColors } from "../assets/ThemeColors";
+import { BACKEND_URL } from "../assets/config";
 
 const Preferences = ({ route }) => {
   const navigation = useNavigation();
@@ -19,7 +20,7 @@ const Preferences = ({ route }) => {
   console.log("data from register and preferences?", route.params);
   const registerUser = async () => {
     try {
-      const response = await fetch("http://localhost:8000/register", {
+      const response = await fetch(BACKEND_URL + "register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

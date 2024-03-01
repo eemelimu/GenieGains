@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
+import { BACKEND_URL } from "../assets/config";
 import {
   StyleSheet,
   View,
@@ -7,6 +8,9 @@ import {
   TouchableOpacity,
   ScrollView,
   TextInput,
+  FlatList,
+  Modal,
+  Pressable,
 } from "react-native";
 import { ThemeColors } from "../assets/ThemeColors";
 import { AntDesign } from "@expo/vector-icons";
@@ -20,9 +24,11 @@ import { useAuth } from "./AuthContext";
 // Search barin hightlightaus (aktivointi) kun painaa search iconia
 
 const HomeScreen = () => {
+  const [isModalVisible, setIsModalVisible] = useState(false);
   const [date] = useState(new Date());
   const [greeting, setGreeting] = useState("");
   const [name, setName] = useState("name");
+  const [selectedWorkout, setSelectedWorkout] = useState({});
   const [workouts, setWorkouts] = useState([]);
   const { state } = useAuth();
   const token = state.token;
@@ -38,6 +44,11 @@ const HomeScreen = () => {
     month: "short",
     day: "numeric",
   });
+
+  const handleWorkoutClose = () => {
+    setIsModalVisible(false);
+    setSelectedWorkout({});
+  };
 
   const exercisesWithMovements = async () => {
     try {
@@ -90,7 +101,7 @@ const HomeScreen = () => {
 
   useEffect(() => {
     try {
-      fetch("http://localhost:8000/user", {
+      fetch(BACKEND_URL + "user", {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -111,6 +122,25 @@ const HomeScreen = () => {
     // testauksen vuoksi tässä nämä
     exercisesWithMovements();
     console.log(workoutMovements);
+  };
+
+  const getworkoutInformation = async (id) => {
+    console.log("Getting workout information for id: ", id);
+    try {
+      const res = await fetch(BACKEND_URL + "exercise/" + id, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Auth-Token": token,
+        },
+      });
+      const data = await res.json();
+      console.log("Workout information: ", data);
+      return data;
+    } catch (error) {
+      console.log("Error fetching workout information: ", error);
+    }
+    return null;
   };
 
   const handleLog = () => {
@@ -142,6 +172,23 @@ const HomeScreen = () => {
       setGreeting("Good evening");
     }
   }, []);
+
+  const Workout = ({ name, date, id }) => {
+    return (
+      <TouchableOpacity
+        style={styles.singleWorkout}
+        onPress={async () => {
+          console.log(`${name} workout pressed with id: ${id}`);
+          setSelectedWorkout(await getworkoutInformation(id));
+          setIsModalVisible(true);
+        }}
+      >
+        <Text style={styles.workoutName}>{name}</Text>
+        <Text style={styles.workoutDate}>{date}</Text>
+        <Text>Days since last: -</Text>
+      </TouchableOpacity>
+    );
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -233,6 +280,35 @@ const HomeScreen = () => {
           <Text>Progress</Text>
         </TouchableOpacity>
       </View>
+      <Modal
+        visible={isModalVisible}
+        transparent={true}
+        animationType="slide"
+        onRequestClose={() => {
+          handleWorkoutClose();
+        }}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalHeaderText}>{selectedWorkout.name}</Text>
+            {selectedWorkout.update === selectedWorkout.created ? (
+              <Text
+                style={styles.regularText}
+              >{`Last updated ${selectedWorkout.updated}`}</Text>
+            ) : (
+              <Text
+                style={styles.regularText}
+              >{`Created ${selectedWorkout.created}`}</Text>
+            )}
+            <Text
+              style={styles.regularText}
+            >{`Note:${selectedWorkout.note}`}</Text>
+            <Pressable onPress={handleWorkoutClose}>
+              <Text style={styles.closeBtnText}>Close</Text>
+            </Pressable>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 };
@@ -322,6 +398,9 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 100,
   },
+  flatListStyle: {
+    width: "90%",
+  },
   date: {
     color: "#02075d",
     fontSize: 10,
@@ -354,6 +433,39 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     width: 150, // Fixed width for all buttons
     alignItems: "center", // Center button content horizontally
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: ThemeColors.primary,
+    opacity: 0.9,
+  },
+  modalHeaderText: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginBottom: 20,
+    color: ThemeColors.tertiary,
+  },
+  regularText: {
+    fontSize: 16,
+    color: ThemeColors.tertiary,
+  },
+  closeBtnText: {
+    fontSize: 21,
+    fontWeight: "bold",
+    color: ThemeColors.tertiary,
+  },
+  modalContent: {
+    flexDirection: "column",
+    justifyContent: "center",
+    alignContent: "center",
+    alignItems: "center",
+    gap: 20,
+    backgroundColor: ThemeColors.secondary,
+    borderRadius: 10,
+    padding: 20,
+    width: "80%",
   },
 });
 

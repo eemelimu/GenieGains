@@ -18,6 +18,7 @@ import Preferences from "./components/Preferences";
 import Preferences2 from "./components/Preferences2";
 import Register from "./components/Register";
 import { useAuth } from "./components/AuthContext";
+import LoadingPage from "./components/LoadingPage";
 import { Workout } from "./components/Workout";
 import Toast from "react-native-toast-message";
 import { createDrawerNavigator } from "@react-navigation/drawer";

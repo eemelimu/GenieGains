@@ -6,6 +6,13 @@ import {
   SafeAreaView,
   TouchableOpacity,
 } from "react-native";
+import Tos from "./components/Tos";
+import ColorSettings from "./components/ColorSettings";
+import AccountSettings from "./components/AccountSettings";
+import NotificationsPreferences from "./components/NotificationsPreferences";
+import SettingsScreen from "./components/SettingsScreen";
+import PreferencesSettings from "./components/PreferencesSettings";
+import { ThemeProvider } from "./components/ThemeContext";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { SimpleLineIcons } from "@expo/vector-icons";
@@ -82,11 +89,23 @@ const HomeStack = () => {
     >
       <Stack.Screen name="Home" component={HomeScreen} />
       <Stack.Screen name="Workout" component={Workout} />
-      <Stack.Screen name="Goals" component={GoalsPage} />
       <Stack.Screen name="Login" component={Login} />
       <Stack.Screen name="Preferences" component={Preferences} />
       <Stack.Screen name="Preferences2" component={Preferences2} />
       <Stack.Screen name="Register" component={Register} />
+      <Stack.Screen name="Settings" component={SettingsScreen} />
+      <Stack.Screen
+        name="Preferences Settings"
+        component={PreferencesSettings}
+      />
+      <Stack.Screen name="Account Settings" component={AccountSettings} />
+      <Stack.Screen name="Terms of Service" component={Tos} />
+      <Stack.Screen name="Appearance" component={ColorSettings} />
+      <Stack.Screen
+        name="Notification Settings"
+        component={NotificationsPreferences}
+      />
+      <Stack.Screen name="Goals" component={GoalsPage} />
     </Stack.Navigator>
   );
 };
@@ -96,15 +115,17 @@ export default function App() {
     <SafeAreaView style={styles.container}>
       <NavigationContainer>
         <AuthProvider>
-          <Drawer.Navigator
-            drawerContent={(props) => <DrawerContent {...props} />}
-          >
-            <Drawer.Screen
-              options={{ headerShown: false }}
-              name=" "
-              component={HomeStack}
-            />
-          </Drawer.Navigator>
+          <ThemeProvider>
+            <Drawer.Navigator
+              drawerContent={(props) => <DrawerContent {...props} />}
+            >
+              <Drawer.Screen
+                options={{ headerShown: false }}
+                name=" "
+                component={HomeStack}
+              />
+            </Drawer.Navigator>
+          </ThemeProvider>
         </AuthProvider>
       </NavigationContainer>
     </SafeAreaView>

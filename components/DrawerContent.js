@@ -32,7 +32,7 @@ export const DrawerContent = () => {
       type: "LOGOUT",
     });
   };
-  
+
   const handleSendFeedback = () => {
     if (feedbackText.length > 0) {
       // Luo toiminnallisuus lähettää palautetta
@@ -66,7 +66,10 @@ export const DrawerContent = () => {
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.drawerItem}
-        onPress={() => console.log("Navigoi aseukset sivulle.")}
+        onPress={() => {
+          console.log("Navigoi aseukset sivulle.");
+          navigation.navigate("Settings");
+        }}
       >
         <Feather
           name="settings"
@@ -123,7 +126,10 @@ export const DrawerContent = () => {
       {feedbackInputVisible && (
         <View style={styles.sendFeedBackItem}>
           <TextInput
-            style={[styles.sendFeedbackInput, feedbackWarning && { borderWidth: 1, borderColor: "red"}]}
+            style={[
+              styles.sendFeedbackInput,
+              feedbackWarning && { borderWidth: 1, borderColor: "red" },
+            ]}
             placeholder="What's on your mind?"
             onChangeText={setFeedbackText}
           />
@@ -162,6 +168,7 @@ export const DrawerContent = () => {
 
 const styles = StyleSheet.create({
   drawerContainer: {
+    marginTop: 50,
     flex: 1,
     backgroundColor: "#fff",
   },

@@ -141,7 +141,7 @@ const SettingsScreen = () => {
           />
         </SettingsButton>
         <SettingsButton
-          navigationPage={"Notification Options"}
+          navigationPage={"Notification Settings"}
           color={ThemeColors.tertiary}
           text="Notifications"
         >

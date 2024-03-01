@@ -33,6 +33,9 @@ export const DrawerContent = () => {
     });
   };
 
+  const handleAbout = () => {
+    navigation.navigate("About");
+  };
   const handleSendFeedback = () => {
     if (feedbackText.length > 0) {
       // Luo toiminnallisuus lähettää palautetta
@@ -95,14 +98,7 @@ export const DrawerContent = () => {
         />
         <Text>Help and Support / FAQ</Text>
       </TouchableOpacity>
-      <TouchableOpacity
-        style={styles.drawerItem}
-        onPress={() =>
-          console.log(
-            "Navigoi sivulle, jossa on TOS ja sovelluksen versio yms."
-          )
-        }
-      >
+      <TouchableOpacity style={styles.drawerItem} onPress={() => handleAbout()}>
         <Entypo
           name="help"
           size={24}

@@ -1,4 +1,5 @@
 import React, { useState, useContext } from "react";
+import { useAuth } from "./AuthContext";
 import {
   View,
   Text,
@@ -12,6 +13,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { ThemeContext } from "./ThemeContext";
 
 const AccountSettings = () => {
+  const { dispatch } = useAuth();
   const [username, setUsername] = useState("Username"); //fetch the username from the database
   const [emailModalVisible, setEmailModalVisible] = useState(false);
   const [passwordModalVisible, setPasswordModalVisible] = useState(false);
@@ -40,7 +42,7 @@ const AccountSettings = () => {
     setPasswordModalVisible(false);
   };
   const handleLogout = () => {
-    // Logic to logout
+    dispatch({ type: "LOGOUT" });
   };
 
   const styles = StyleSheet.create({

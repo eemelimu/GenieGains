@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import Tos from "./components/Tos";
+import About from "./components/About";
 import ColorSettings from "./components/ColorSettings";
 import AccountSettings from "./components/AccountSettings";
 import NotificationsPreferences from "./components/NotificationsPreferences";
@@ -88,6 +89,7 @@ const HomeStack = () => {
       })}
     >
       <Stack.Screen name="Home" component={HomeScreen} />
+      <Stack.Screen name="About" component={About} />
       <Stack.Screen name="Workout" component={Workout} />
       <Stack.Screen name="Login" component={Login} />
       <Stack.Screen name="Preferences" component={Preferences} />

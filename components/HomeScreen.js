@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback, useContext } from "react";
 import { BACKEND_URL } from "../assets/config";
 import { ThemeContext } from "./ThemeContext";
 import {
+  BackHandler,
   StyleSheet,
   View,
   Text,
@@ -18,7 +19,6 @@ import { Entypo } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { useAuth } from "./AuthContext";
-import { ThemeColors } from "../assets/ThemeColors";
 
 // TODO
 // Search bar styles paremmaksi
@@ -146,6 +146,15 @@ const HomeScreen = () => {
 
   useFocusEffect(
     useCallback(() => {
+      const backAction = () => {
+        return true;
+      };
+
+      const backHandler = BackHandler.addEventListener(
+        "hardwareBackPress",
+        backAction
+      );
+
       try {
         fetch(BACKEND_URL + "exercise", {
           method: "GET",
@@ -162,6 +171,9 @@ const HomeScreen = () => {
       } catch (error) {
         console.log("Error fetching workouts: ", error);
       }
+      return () => {
+        backHandler.remove();
+      };
     }, [])
   );
 

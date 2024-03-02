@@ -212,9 +212,12 @@ const HomeScreen = () => {
   };
 
   const styles = StyleSheet.create({
+    column:{
+      flexDirection:"column",
+    },
     searchItem: {
       position: "absolute",
-      right: 10,
+      right:20,
     },
     searchItemInput: {
       position: "absolute",
@@ -278,8 +281,10 @@ const HomeScreen = () => {
       paddingHorizontal: 20,
     },
     header: {
+      flexDirection:"row",
+      gap:50,
       paddingVertical: 10,
-      paddingHorizontal: 100,
+      paddingHorizontal: "5%",
     },
     flatListStyle: {
       width: "90%",
@@ -369,9 +374,9 @@ const HomeScreen = () => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.date}>{dateToString.toUpperCase()}</Text>
+      <View style={styles.column}><Text style={styles.date}>{dateToString.toUpperCase()}</Text>
         <Text style={styles.greetings}>
-          {greeting}, {name}!
+          {greeting}, {name}!</Text></View>
           {searchMenuVisible ? (
             <View style={styles.searchItem}>
               <TextInput
@@ -396,7 +401,7 @@ const HomeScreen = () => {
               onPress={() => setSearchMenuVisible(!searchMenuVisible)}
             />
           )}
-        </Text>
+        
       </View>
       <View style={styles.main}>
         {searchText || searchMenuVisible ? (

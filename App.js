@@ -31,6 +31,7 @@ import { Workout } from "./components/Workout";
 import Toast from "react-native-toast-message";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { DrawerContent } from "./components/DrawerContent";
+import { ViewWorkout } from "./components/ViewWorkout";
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -91,6 +92,7 @@ const HomeStack = () => {
       <Stack.Screen name="Home" component={HomeScreen} />
       <Stack.Screen name="About" component={About} />
       <Stack.Screen name="Workout" component={Workout} />
+      <Stack.Screen name="ViewWorkout" component={ViewWorkout} />
       <Stack.Screen name="Login" component={Login} />
       <Stack.Screen name="Preferences" component={Preferences} />
       <Stack.Screen name="Preferences2" component={Preferences2} />

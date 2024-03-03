@@ -161,10 +161,6 @@ const HomeScreen = () => {
     }
   }, []);
 
-  const handleProgress = () => {
-    navigation.navigate("Goals");
-  };
-
   const getWorkoutMovements = async (id) => {
     try {
       await exercisesWithMovements();
@@ -193,10 +189,6 @@ const HomeScreen = () => {
 
   const handleLog = () => {
     console.log(workoutMovements);
-  };
-
-  const handleNewWorkout = () => {
-    navigation.navigate("Workout");
   };
 
   const handleFromRoutines = () => {
@@ -232,8 +224,7 @@ const HomeScreen = () => {
         notes: getNotesById["note"],
       });
     };
-    
-    
+
     return (
       <TouchableOpacity
         style={styles.singleWorkout}
@@ -419,7 +410,11 @@ const HomeScreen = () => {
                 name="remove"
                 size={24}
                 color={ThemeColors.secondary}
-                onPress={() => setSearchMenuVisible(!searchMenuVisible)}
+                onPress={() => {
+                  setSearchMenuVisible(!searchMenuVisible);
+                  setSearchText("");
+                  setSearchedWorkouts(workouts);
+                }}
               />
             </View>
           ) : (
@@ -482,7 +477,10 @@ const HomeScreen = () => {
       </View>
       {menuVisible && (
         <View style={styles.workoutMenu}>
-          <TouchableOpacity style={styles.menuItem} onPress={handleNewWorkout}>
+          <TouchableOpacity
+            style={styles.menuItem}
+            onPress={() => navigation.navigate("Workout")}
+          >
             <Text>New</Text>
           </TouchableOpacity>
           <TouchableOpacity
@@ -513,7 +511,10 @@ const HomeScreen = () => {
             Start Workout
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.footerButton} onPress={handleProgress}>
+        <TouchableOpacity
+          style={styles.footerButton}
+          onPress={() => navigation.navigate("Goals")}
+        >
           <Ionicons name="stats-chart" size={24} color={ThemeColors.tertiary} />
           <Text>Progress</Text>
         </TouchableOpacity>

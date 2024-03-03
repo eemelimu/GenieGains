@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   StyleSheet,
   View,
@@ -14,6 +14,7 @@ import ModalDropdown from "react-native-modal-dropdown";
 import { useAuth } from "./AuthContext";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
+import { ThemeColors } from "../assets/ThemeColors";
 
 // TODO:
 // - Video
@@ -37,6 +38,8 @@ export const Workout = () => {
   const [dropdownKey, setDropdownKey] = useState(0);
   const [workoutData, setWorkoutData] = useState([]);
   const navigation = useNavigation();
+  const [inProgress, setInProgress] = useState(false);
+  const [timeOfDay, setTimeOfDay] = useState("");
 
   const handleAddMovement = () => {
     const selectedMovementFilter = movements.filter(
@@ -83,6 +86,19 @@ export const Workout = () => {
     }
   };
 
+  useEffect(() => {
+    const allWorkoutsHaveSets = workoutData.every((workout) => {
+      return (
+        Array.isArray(workout.sets) &&
+        workout.sets.every((set) => set.weight !== "" && set.reps !== "")
+      );
+    });
+    console.log(allWorkoutsHaveSets);
+    workoutData.length > 0 && allWorkoutsHaveSets
+      ? setInProgress(true)
+      : setInProgress(false);
+  }, [workoutData]);
+
   const addSetsToExercise = async (exerciseId, sets, movement) => {
     try {
       const res = await fetch(
@@ -111,21 +127,24 @@ export const Workout = () => {
   };
 
   const handleFinishWorkout = async () => {
-    try {
-      const exerciseId = await createExercise(name, notes);
-      await Promise.all(
-        workoutData.map(async (movement) => {
-          await Promise.all(
-            movement.sets.map(async (set) => {
-              await addSetsToExercise(exerciseId, set, movement);
-            })
-          );
-        })
-      );
-    } catch (error) {
-      console.log("Error: ", error);
+    if (inProgress) {
+      // name === "" && setName(`${timeOfDay} Workout`);
+      try {
+        const exerciseId = await createExercise(name, notes);
+        await Promise.all(
+          workoutData.map(async (movement) => {
+            await Promise.all(
+              movement.sets.map(async (set) => {
+                await addSetsToExercise(exerciseId, set, movement);
+              })
+            );
+          })
+        );
+      } catch (error) {
+        console.log("Error: ", error);
+      }
+      navigation.navigate("Home");
     }
-    navigation.navigate("Home");
   };
 
   useEffect(() => {
@@ -159,6 +178,17 @@ export const Workout = () => {
       </View>
     );
   };
+
+  useEffect(() => {
+    const currentTime = new Date().getHours();
+    if (currentTime < 12) {
+      setTimeOfDay("Morning");
+    } else if (currentTime < 18) {
+      setTimeOfDay("Afternoon");
+    } else {
+      setTimeOfDay("Evening");
+    }
+  }, []);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -225,8 +255,14 @@ export const Workout = () => {
         </View>
       </ScrollView>
       <View style={styles.footer}>
-        <TouchableOpacity style={styles.footerButton}>
-          <Button title="Finish Workout" onPress={handleFinishWorkout} />
+        <TouchableOpacity
+          style={{
+            ...styles.finishWorkout,
+            visibility: inProgress ? "visible" : "hidden",
+          }}
+          onPress={handleFinishWorkout}
+        >
+          <Text>Finish Workout</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -500,5 +536,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginTop: 20,
     bottom: 5,
+  },
+  finishWorkout: {
+    backgroundColor: ThemeColors.secondary,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+    alignItems: "center",
+    justifyContent: "center",
   },
 });

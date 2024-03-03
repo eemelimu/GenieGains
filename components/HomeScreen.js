@@ -11,7 +11,7 @@ import {
   ScrollView,
   TextInput,
   FlatList,
-  Modal,
+  Button,
   Pressable,
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
@@ -23,6 +23,7 @@ import { useAuth } from "./AuthContext";
 // TODO
 // Search bar styles paremmaksi
 // Search barin hightlightaus (aktivointi) kun painaa search iconia
+// Workout notet ja movementit näkyviin SingleWorkoutissa
 
 const HomeScreen = () => {
   const { theme: ThemeColors } = useContext(ThemeContext);
@@ -51,45 +52,6 @@ const HomeScreen = () => {
     setIsModalVisible(false);
     setSelectedWorkout({});
   };
-
-  // const exercisesWithMovements = async () => {
-  //   try {
-  //     const res = await fetch(BACKEND_URL + "exercisemovementconnection", {
-  //       method: "GET",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //         "Auth-Token": token,
-  //       },
-  //     });
-  //     const data = await res.json();
-
-  //     const groupedMovements = {};
-
-  //     data.exercisemovementconnection_list.forEach((workout) => {
-  //       const { exercise_id, id, exercise_name, updated, movement_name, reps, weight } = workout;
-
-  //       if (!groupedMovements[exercise_id]) {
-  //         groupedMovements[exercise_id] = {
-  //           id: exercise_id,
-  //           name: exercise_name,
-  //           updated: updated,
-  //           movements: [],
-  //         };
-  //       }
-
-  //       groupedMovements[exercise_id].movements.push({
-  //         id: id,
-  //         name: movement_name,
-  //         reps: reps,
-  //         weight: weight,
-  //       });
-  //     });
-
-  //     setWorkoutMovements(Object.values(groupedMovements));
-  //   } catch (error) {
-  //     console.log("Error fetching workout movements: ", error);
-  //   }
-  // };
 
   useFocusEffect(
     useCallback(() => {
@@ -222,7 +184,6 @@ const HomeScreen = () => {
         },
       });
       const data = await res.json();
-      // console.log("Workout information: ", data);
       return data;
     } catch (error) {
       console.log("Error fetching workout information: ", error);
@@ -244,12 +205,9 @@ const HomeScreen = () => {
 
   const handleSearchTextChange = (text) => {
     setSearchText(text);
-    const regex = new RegExp(text, 'i');
-    setSearchedWorkouts(
-      workouts.filter((workout) => regex.test(workout.name))
-    );
+    const regex = new RegExp(text, "i");
+    setSearchedWorkouts(workouts.filter((workout) => regex.test(workout.name)));
   };
-  
 
   useEffect(() => {
     const currentTime = new Date().getHours();
@@ -262,18 +220,20 @@ const HomeScreen = () => {
     }
   }, []);
 
-  const Workout = ({ name, date, id }) => {
+  const SingleWorkout = ({ name, date, id }) => {
     const handleWorkoutPress = async () => {
       const clickedWorkout = workoutMovements.find(
         (workout) => workout.exercise_id == id
       );
+
       const getNotesById = await getworkoutInformation(id);
       navigation.navigate("ViewWorkout", {
         workout: clickedWorkout,
         notes: getNotesById["note"],
       });
     };
-
+    
+    
     return (
       <TouchableOpacity
         style={styles.singleWorkout}
@@ -486,7 +446,7 @@ const HomeScreen = () => {
               </>
             )}
             renderItem={({ item }) => (
-              <Workout
+              <SingleWorkout
                 key={item.id}
                 id={item.id}
                 name={item.name}
@@ -508,7 +468,7 @@ const HomeScreen = () => {
               </>
             )}
             renderItem={({ item }) => (
-              <Workout
+              <SingleWorkout
                 key={item.id}
                 id={item.id}
                 name={item.name}

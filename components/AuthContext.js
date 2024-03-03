@@ -58,11 +58,13 @@ export const AuthProvider = ({ children }) => {
             dispatch({ type: "STOPPED_LOADING" });
           } else {
             await AsyncStorage.removeItem("token");
-            throw new Error("Invalid token");
+            dispatch({ type: "STOPPED_LOADING" });
+            console.log("Invalid token");
           }
         } else {
           dispatch({ type: "STOPPED_LOADING" });
-          throw new Error("No token in local db");
+          dispatch({ type: "LOGOUT" });
+          console.log("No token in local db");
         }
       } catch (error) {
         dispatch({ type: "STOPPED_LOADING" });

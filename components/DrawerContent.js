@@ -33,9 +33,6 @@ export const DrawerContent = () => {
     });
   };
 
-  const handleAbout = () => {
-    navigation.navigate("About");
-  };
   const handleSendFeedback = () => {
     if (feedbackText.length > 0) {
       // Luo toiminnallisuus lähettää palautetta
@@ -57,7 +54,9 @@ export const DrawerContent = () => {
     <View style={styles.drawerContainer}>
       <TouchableOpacity
         style={styles.drawerItem}
-        onPress={() => console.log("Navigoi profiili sivulle.")}
+        onPress={() => {
+          navigation.navigate("Account Settings");
+        }}
       >
         <AntDesign
           name="user"
@@ -70,7 +69,6 @@ export const DrawerContent = () => {
       <TouchableOpacity
         style={styles.drawerItem}
         onPress={() => {
-          console.log("Navigoi aseukset sivulle.");
           navigation.navigate("Settings");
         }}
       >
@@ -84,21 +82,20 @@ export const DrawerContent = () => {
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.drawerItem}
-        onPress={() =>
-          console.log(
-            "Päättäkää onko FAQ vai Help and Support. Uuden sivun luonti ja navigointi sinne."
-          )
-        }
+        onPress={() => navigation.navigate("Troubleshooting")}
       >
         <MaterialIcons
-          name="support-agent"
+          name="troubleshoot"
           size={24}
           color="black"
           style={styles.drawerItemIcon}
         />
-        <Text>Help and Support / FAQ</Text>
+        <Text>Troubleshooting</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.drawerItem} onPress={() => handleAbout()}>
+      <TouchableOpacity
+        style={styles.drawerItem}
+        onPress={() => navigation.navigate("About")}
+      >
         <Entypo
           name="help"
           size={24}

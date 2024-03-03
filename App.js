@@ -32,6 +32,7 @@ import Toast from "react-native-toast-message";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { DrawerContent } from "./components/DrawerContent";
 import { ViewWorkout } from "./components/ViewWorkout";
+import { Troubleshooting } from "./components/Troubleshooting";
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -98,6 +99,7 @@ const HomeStack = () => {
       <Stack.Screen name="Preferences2" component={Preferences2} />
       <Stack.Screen name="Register" component={Register} />
       <Stack.Screen name="Settings" component={SettingsScreen} />
+      <Stack.Screen name="Troubleshooting" component={Troubleshooting} />
       <Stack.Screen
         name="Preferences Settings"
         component={PreferencesSettings}

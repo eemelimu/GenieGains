@@ -164,7 +164,10 @@ const HomeScreen = () => {
           },
         })
           .then((response) => response.json())
-          .then((data) => setWorkouts(data.exercise_list))
+          .then((data) => {
+            setWorkouts(data.exercise_list);
+            setSearchedWorkouts(data.exercise_list);
+          })
           .catch((error) => {
             console.log("Error fetching workouts: ", error);
           });
@@ -241,10 +244,12 @@ const HomeScreen = () => {
 
   const handleSearchTextChange = (text) => {
     setSearchText(text);
+    const regex = new RegExp(text, 'i');
     setSearchedWorkouts(
-      workouts.filter((workout) => workout.name.includes(text))
+      workouts.filter((workout) => regex.test(workout.name))
     );
   };
+  
 
   useEffect(() => {
     const currentTime = new Date().getHours();

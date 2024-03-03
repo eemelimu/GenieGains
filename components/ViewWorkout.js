@@ -51,7 +51,9 @@ export const ViewWorkout = ({ route }) => {
         </View>
         <View style={styles.inputContainer}>
           <Text style={styles.label}>Notes</Text>
-          <TextInput style={styles.input} value={notes} />
+          <TextInput style={styles.input} value={notes} 
+            placeholder="Notes"
+          />
         </View>
       </View>
       <View style={styles.line} />

@@ -119,7 +119,7 @@ const HomeScreen = () => {
 
             if (!groupedMovements[exercise_id]) {
               groupedMovements[exercise_id] = {
-                id: exercise_id,
+                exercise_id: exercise_id,
                 name: exercise_name,
                 updated: updated,
                 movements: [],
@@ -219,7 +219,7 @@ const HomeScreen = () => {
         },
       });
       const data = await res.json();
-      console.log("Workout information: ", data);
+      // console.log("Workout information: ", data);
       return data;
     } catch (error) {
       console.log("Error fetching workout information: ", error);
@@ -257,21 +257,43 @@ const HomeScreen = () => {
     }
   }, []);
 
-  const Workout = ({ name, date, id, exercise_id }) => {
+  const Workout = ({ name, date, id }) => {
+    const handleWorkoutPress = async () => {
+      const clickedWorkout = workoutMovements.find(
+        (workout) => workout.exercise_id == id
+      );
+      const getNotesById = await getworkoutInformation(id);
+      navigation.navigate("ViewWorkout", {
+        workout: clickedWorkout,
+        notes: getNotesById["note"],
+      });
+    };
+
     return (
       <TouchableOpacity
         style={styles.singleWorkout}
-        onPress={async () => {
-          setSelectedWorkout(await getWorkoutMovements(id));
-          setIsModalVisible(true);
-        }}
+        onPress={handleWorkoutPress}
       >
         <Text style={styles.workoutName}>{name}</Text>
         <Text style={styles.workoutDate}>{date}</Text>
-        <Text>Days since last: {exercise_id}</Text>
       </TouchableOpacity>
     );
   };
+
+  // const Workout = ({ name, date, movements }) => {
+  //   const handleWorkoutPress = () => {
+  // setSelectedWorkout(await getWorkoutMovements(id));
+  // setIsModalVisible(true);
+  //   };
+
+  //   return (
+  //     <TouchableOpacity style={styles.singleWorkout} onPress={handleWorkoutPress}>
+  //       <Text style={styles.workoutName}>{name}</Text>
+  //       <Text style={styles.workoutDate}>{date}</Text>
+  //       <Text>Days since last: -</Text>
+  //     </TouchableOpacity>
+  //   );
+  // };
 
   const styles = StyleSheet.create({
     searchItem: {
@@ -369,15 +391,15 @@ const HomeScreen = () => {
       borderRadius: 5,
       paddingVertical: 10,
       paddingHorizontal: 20,
-      width: 150, // Fixed width for all buttons
-      alignItems: "center", // Center button content horizontally
+      width: 150,
+      alignItems: "center",
     },
     footerButton: {
       paddingVertical: 5,
       paddingHorizontal: 10,
       borderRadius: 5,
-      width: 150, // Fixed width for all buttons
-      alignItems: "center", // Center button content horizontally
+      width: 150,
+      alignItems: "center",
     },
     modalContainer: {
       flex: 1,
@@ -413,20 +435,6 @@ const HomeScreen = () => {
       width: "80%",
     },
   });
-
-  // const Workout = ({ name, date, movements }) => {
-  //   const handleWorkoutPress = () => {
-  //     console.log("Workout pressed");
-  //   };
-
-  //   return (
-  //     <TouchableOpacity style={styles.singleWorkout} onPress={handleWorkoutPress}>
-  //       <Text style={styles.workoutName}>{name}</Text>
-  //       <Text style={styles.workoutDate}>{date}</Text>
-  //       <Text>Days since last: -</Text>
-  //     </TouchableOpacity>
-  //   );
-  // };
 
   return (
     <SafeAreaView style={styles.container}>

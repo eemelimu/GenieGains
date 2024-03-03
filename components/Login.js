@@ -5,7 +5,7 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  Image,
+  Image,Modal, Pressable
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { StyleSheet } from "react-native";
@@ -18,6 +18,7 @@ const Login = () => {
   const navigation = useNavigation();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [openModal,setOpenModal]=useState(false);
   let [fontsLoaded] = useFonts({
     DMBold: require("../assets/fonts/DMSans-Bold.ttf"),
     DMRegular: require("../assets/fonts/DMSans-Regular.ttf"),
@@ -46,6 +47,7 @@ const Login = () => {
           payload: { token: data.token },
         });
       } else {
+        setOpenModal(true);
         throw new Error("Failed to login");
       }
     } catch (error) {
@@ -86,6 +88,14 @@ const Login = () => {
       >
         <Text style={styles.registerBtnText}>Register</Text>
       </TouchableOpacity>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={openModal}
+        onRequestClose={() => {
+          setOpenModal(!openModal);
+        }}><View style={styles.modalContainer}><Text style={styles.errorText}>Wrong username or password</Text><Pressable style={styles.button} onPress={()=>{setOpenModal(false);}}>
+          <Text style={styles.ok}>Close</Text></Pressable></View></Modal>
     </View>
   );
 };
@@ -112,7 +122,10 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
     fontFamily: "DMBold",
   },
-
+  errorText:{
+    fontSize:25,
+    color:"red"
+  },
   password: {
     paddingTop: 40,
     fontSize: 35,
@@ -149,6 +162,26 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontFamily: "DMRegular",
   },
+  modalContainer:{
+    flex:1,
+    justifyContent:"center",
+    alignItems:"center",
+    opacity:0.9,
+    gap:50,
+    backgroundColor:"grey"
+  },
+  button:{
+    backgroundColor:"black",
+    paddingTop:10,
+    paddingBottom:10,
+    paddingLeft:20,
+    paddingRight:20,
+    borderRadius:10,
+  },
+  ok:{
+    color:"white",
+    fontSize:20,
+  }
 });
 {
   /* <Button

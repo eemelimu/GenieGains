@@ -136,7 +136,7 @@ const GoalsPage = () => {
           return { ...addition, created: addition.created + index };
         });
         additionsCopy.push({ number: 0, created: data.end });
-        additionsCopy.push({ number: 0, created: data.created - 1 });
+        //additionsCopy.push({ number: 0, created: data.created - 1 });
         setSelectedGoal({ ...data, data: additionsCopy });
       } else {
         throw new Error("Failed to fetch goals");
@@ -305,7 +305,7 @@ const GoalsPage = () => {
                 data={selectedGoal.data}
                 xKey="created"
                 yKeys={["number"]}
-                axisOptions={{ font, formatXLabel, formatYLabel }}
+                axisOptions={{ font, formatXLabel, formatYLabel,tickCount:{y:7,x:3} }}
                 chartPressState={[state, secondState]}
                 gestureLongPressDelay={1}
                 labelOffset={{
@@ -398,7 +398,7 @@ const GoalsPage = () => {
                       )?.note
                     }`}</Text>
                     <Text style={styles.informationText}>{`${
-                      calculateRemainingData(selectedGoal)[0]
+                      calculateRemainingData(selectedGoal)[0].toFixed(2)
                     } is your daily ${
                       selectedGoal.unit
                     } amount based on the goal you have set`}</Text>

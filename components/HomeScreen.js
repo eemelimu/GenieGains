@@ -212,12 +212,14 @@ const HomeScreen = () => {
   };
 
   const styles = StyleSheet.create({
-    column:{
-      flexDirection:"column",
+    column: {
+      flexDirection: "column",
     },
     searchItem: {
+      marginTop: 10,
       position: "absolute",
-      right:20,
+      right: 20,
+      color: ThemeColors.tertiary,
     },
     searchItemInput: {
       position: "absolute",
@@ -281,8 +283,8 @@ const HomeScreen = () => {
       paddingHorizontal: 20,
     },
     header: {
-      flexDirection:"row",
-      gap:50,
+      flexDirection: "row",
+      gap: 50,
       paddingVertical: 10,
       paddingHorizontal: "5%",
     },
@@ -374,34 +376,36 @@ const HomeScreen = () => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-      <View style={styles.column}><Text style={styles.date}>{dateToString.toUpperCase()}</Text>
-        <Text style={styles.greetings}>
-          {greeting}, {name}!</Text></View>
-          {searchMenuVisible ? (
-            <View style={styles.searchItem}>
-              <TextInput
-                style={styles.searchItemInput}
-                placeholder="Search..."
-                value={searchText}
-                onChangeText={handleSearchTextChange}
-              />
-              <Ionicons
-                name="remove"
-                size={24}
-                color={ThemeColors.secondary}
-                onPress={() => setSearchMenuVisible(!searchMenuVisible)}
-              />
-            </View>
-          ) : (
-            <AntDesign
-              name="search1"
+        <View style={styles.column}>
+          <Text style={styles.date}>{dateToString.toUpperCase()}</Text>
+          <Text style={styles.greetings}>
+            {greeting}, {name}!
+          </Text>
+        </View>
+        {searchMenuVisible ? (
+          <View style={styles.searchItem}>
+            <TextInput
+              style={styles.searchItemInput}
+              placeholder="Search..."
+              value={searchText}
+              onChangeText={handleSearchTextChange}
+            />
+            <Ionicons
+              name="remove"
               size={24}
               color={ThemeColors.secondary}
-              style={styles.searchItem}
               onPress={() => setSearchMenuVisible(!searchMenuVisible)}
             />
-          )}
-        
+          </View>
+        ) : (
+          <AntDesign
+            name="search1"
+            size={24}
+            color={ThemeColors.secondary}
+            style={styles.searchItem}
+            onPress={() => setSearchMenuVisible(!searchMenuVisible)}
+          />
+        )}
       </View>
       <View style={styles.main}>
         {searchText || searchMenuVisible ? (
@@ -412,7 +416,7 @@ const HomeScreen = () => {
             data={searchedWorkouts}
             ListEmptyComponent={() => (
               <>
-                <Text>No Workouts found</Text>
+                <Text style={styles.regularText}>No Workouts found</Text>
               </>
             )}
             renderItem={({ item }) => (
@@ -433,7 +437,7 @@ const HomeScreen = () => {
             data={workouts}
             ListEmptyComponent={() => (
               <>
-                <Text>No Workouts</Text>
+                <Text style={styles.regularText}>No Workouts</Text>
               </>
             )}
             renderItem={({ item }) => (
@@ -451,23 +455,23 @@ const HomeScreen = () => {
       {menuVisible && (
         <View style={styles.workoutMenu}>
           <TouchableOpacity style={styles.menuItem} onPress={handleNewWorkout}>
-            <Text>New</Text>
+            <Text style={styles.regularText}>New</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.menuItem}
             onPress={handleFromRoutines}
           >
-            <Text>From routines</Text>
+            <Text style={styles.regularText}>From routines</Text>
           </TouchableOpacity>
         </View>
       )}
       <View style={styles.footer}>
         <TouchableOpacity style={styles.footerButton} onPress={handleLog}>
           <Entypo name="back-in-time" size={24} color={ThemeColors.tertiary} />
-          <Text>Log</Text>
+          <Text style={styles.regularText}>Log</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={[styles.footerButton, styles.startWorkoutButton]}
+          style={[styles.startWorkoutButton, styles.footerButton]}
           onPress={() => setMenuVisible(!menuVisible)}
         >
           <AntDesign name="plus" size={24} color={ThemeColors.secondary} />
@@ -483,7 +487,7 @@ const HomeScreen = () => {
         </TouchableOpacity>
         <TouchableOpacity style={styles.footerButton} onPress={handleProgress}>
           <Ionicons name="stats-chart" size={24} color={ThemeColors.tertiary} />
-          <Text>Progress</Text>
+          <Text style={styles.regularText}>Progress</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>

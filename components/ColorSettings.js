@@ -6,7 +6,7 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
 } from "react-native-reanimated";
-
+import { getData, storeData } from "../assets/utils/utils";
 import ColorPicker, {
   LuminanceSlider,
   OpacitySlider,
@@ -16,26 +16,6 @@ import ColorPicker, {
   colorKit,
 } from "reanimated-color-picker";
 import { ThemeContext } from "./ThemeContext";
-
-//import { ThemeColors } from "../assets/ThemeColors";
-const storeData = async (key, value) => {
-  try {
-    const jsonValue = JSON.stringify(value);
-    await AsyncStorage.setItem(key, jsonValue);
-  } catch (e) {
-    // saving error
-  }
-};
-const getData = async (key) => {
-  try {
-    const jsonValue = await AsyncStorage.getItem(key);
-    console.log(jsonValue);
-    return jsonValue != null ? JSON.parse(jsonValue) : null;
-  } catch (e) {
-    console.log(jsonValue);
-    console.log(e);
-  }
-};
 
 export default function ColorSettings({}) {
   const [showModal, setShowModal] = useState(false);

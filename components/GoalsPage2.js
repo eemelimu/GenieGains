@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useAuth } from "./AuthContext";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import {
@@ -16,6 +16,7 @@ import {
   ScrollView,
 } from "react-native";
 import { CartesianChart, Line, useChartPressState } from "victory-native";
+import { ThemeContext } from "./ThemeContext";
 import {
   Canvas,
   Text as CanvasText,
@@ -28,7 +29,7 @@ import DMSansBold from "../assets/fonts/DMSans-Bold.ttf";
 import { epochToDate, lightOrDark } from "../assets/utils/utils";
 import DropDownPicker from "react-native-dropdown-picker";
 import { Text as TextSVG, Svg } from "react-native-svg";
-import { ThemeColors } from "../assets/ThemeColors";
+//import { ThemeColors } from "../assets/ThemeColors";
 import { BACKEND_URL } from "../assets/config";
 const CHART_HEIGHT = Dimensions.get("window").height / 2.6 - 20;
 const CHART_WIDTH = Dimensions.get("window").width - 40;
@@ -85,6 +86,7 @@ const calculateCombinedValueBetweenDates = (
 };
 
 const GoalsPage = () => {
+  const { theme: ThemeColors } = useContext(ThemeContext);
   const [openAdditionPicker, setOpenAdditionPicker] = useState(false);
   const [goalName, setGoalName] = useState("");
   const { state: authState } = useAuth();
@@ -282,6 +284,119 @@ const GoalsPage = () => {
   const formatYLabel = (number) => {
     return `   ${number} ${selectedGoal.unit}`;
   };
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: ThemeColors.primary,
+      alignItems: "center",
+      justifyContent: "center",
+      paddingHorizontal: 20,
+    },
+    dataContainer: {
+      backgroundColor: ThemeColors.secondary,
+      alignItems: "center",
+      justifyContent: "center",
+      minHeight: 110,
+      borderRadius: 10,
+      marginBottom: 20,
+    },
+    chartPlaceHolder: {
+      height: CHART_HEIGHT,
+      width: CHART_WIDTH,
+      backgroundColor: ThemeColors.secondary,
+      justifyContent: "center",
+      alignItems: "center",
+      borderRadius: 10,
+    },
+    boldText: {
+      fontWeight: "bold",
+      fontSize: 22,
+      color: ThemeColors.tertiary,
+    },
+    goalHeader: {
+      fontSize: 18,
+      fontWeight: "bold",
+      marginBottom: 10,
+      color: ThemeColors.tertiary,
+    },
+    chartContainer: {
+      height: CHART_HEIGHT,
+      width: CHART_WIDTH,
+      marginBottom: 10,
+      borderRadius: 20,
+      backgroundColor: ThemeColors.secondary,
+    },
+    informationText: {
+      fontSize: 16,
+      color: ThemeColors.tertiary,
+    },
+    modalContainer: {
+      flex: 1,
+      justifyContent: "center",
+      alignItems: "center",
+      backgroundColor: "rgba(0, 0, 0, 0.5)",
+    },
+    modalContent: {
+      backgroundColor: "white",
+      padding: 20,
+      borderRadius: 10,
+      width: "80%",
+    },
+    modalTitle: {
+      fontSize: 18,
+      fontWeight: "bold",
+      marginBottom: 10,
+      textAlign: "center",
+    },
+    input: {
+      marginTop: 10,
+      borderWidth: 1,
+      borderColor: "#ccc",
+      borderRadius: 5,
+      padding: 10,
+      marginBottom: 10,
+    },
+    createButton: {
+      marginTop: 10,
+      backgroundColor: "blue",
+      padding: 10,
+      borderRadius: 5,
+      alignItems: "center",
+    },
+    cancelButton: {
+      padding: 10,
+      borderRadius: 5,
+      alignItems: "center",
+    },
+    buttonText: {
+      color: "white",
+      fontSize: 16,
+    },
+    cancelButtonText: {
+      color: ThemeColors.quaternary,
+      fontSize: 16,
+    },
+    button: {
+      marginTop: 10,
+      backgroundColor: ThemeColors.secondary,
+      width: "100%",
+      marginBottom: 10,
+      padding: 15,
+      borderRadius: 10,
+      alignItems: "center",
+      alignSelf: "center",
+    },
+    buttonSmall: {
+      marginTop: 10,
+      backgroundColor: ThemeColors.secondary,
+      width: "50%",
+      marginBottom: 10,
+      padding: 15,
+      borderRadius: 10,
+      alignItems: "center",
+      alignSelf: "center",
+    },
+  });
 
   return (
     <View style={styles.container}>
@@ -305,7 +420,12 @@ const GoalsPage = () => {
                 data={selectedGoal.data}
                 xKey="created"
                 yKeys={["number"]}
-                axisOptions={{ font, formatXLabel, formatYLabel,tickCount:{y:7,x:3} }}
+                axisOptions={{
+                  font,
+                  formatXLabel,
+                  formatYLabel,
+                  tickCount: { y: 7, x: 3 },
+                }}
                 chartPressState={[state, secondState]}
                 gestureLongPressDelay={1}
                 labelOffset={{
@@ -397,9 +517,11 @@ const GoalsPage = () => {
                         selectedGoal
                       )?.note
                     }`}</Text>
-                    <Text style={styles.informationText}>{`${
-                      calculateRemainingData(selectedGoal)[0].toFixed(2)
-                    } is your daily ${
+                    <Text
+                      style={styles.informationText}
+                    >{`${calculateRemainingData(selectedGoal)[0].toFixed(
+                      2
+                    )} is your daily ${
                       selectedGoal.unit
                     } amount based on the goal you have set`}</Text>
                     <Text style={styles.informationText}>{`You have ${
@@ -591,119 +713,5 @@ const GoalsPage = () => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: ThemeColors.primary,
-    alignItems: "center",
-    justifyContent: "center",
-    paddingHorizontal: 20,
-  },
-  dataContainer: {
-    backgroundColor: ThemeColors.secondary,
-    alignItems: "center",
-    justifyContent: "center",
-    minHeight: 110,
-    borderRadius: 10,
-    marginBottom: 20,
-  },
-  chartPlaceHolder: {
-    height: CHART_HEIGHT,
-    width: CHART_WIDTH,
-    backgroundColor: ThemeColors.secondary,
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: 10,
-  },
-  boldText: {
-    fontWeight: "bold",
-    fontSize: 22,
-    color: ThemeColors.tertiary,
-  },
-  goalHeader: {
-    fontSize: 18,
-    fontWeight: "bold",
-    marginBottom: 10,
-    color: ThemeColors.tertiary,
-  },
-  chartContainer: {
-    height: CHART_HEIGHT,
-    width: CHART_WIDTH,
-    marginBottom: 10,
-    borderRadius: 20,
-    backgroundColor: ThemeColors.secondary,
-  },
-  informationText: {
-    fontSize: 16,
-    color: ThemeColors.tertiary,
-  },
-  modalContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-  },
-  modalContent: {
-    backgroundColor: "white",
-    padding: 20,
-    borderRadius: 10,
-    width: "80%",
-  },
-  modalTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    marginBottom: 10,
-    textAlign: "center",
-  },
-  input: {
-    marginTop: 10,
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 5,
-    padding: 10,
-    marginBottom: 10,
-  },
-  createButton: {
-    marginTop: 10,
-    backgroundColor: "blue",
-    padding: 10,
-    borderRadius: 5,
-    alignItems: "center",
-  },
-  cancelButton: {
-    padding: 10,
-    borderRadius: 5,
-    alignItems: "center",
-  },
-  buttonText: {
-    color: "white",
-    fontSize: 16,
-  },
-  cancelButtonText: {
-    color: ThemeColors.quaternary,
-    fontSize: 16,
-  },
-  button: {
-    marginTop: 10,
-    backgroundColor: ThemeColors.secondary,
-    width: "100%",
-    marginBottom: 10,
-    padding: 15,
-    borderRadius: 10,
-    alignItems: "center",
-    alignSelf: "center",
-  },
-  buttonSmall: {
-    marginTop: 10,
-    backgroundColor: ThemeColors.secondary,
-    width: "50%",
-    marginBottom: 10,
-    padding: 15,
-    borderRadius: 10,
-    alignItems: "center",
-    alignSelf: "center",
-  },
-});
 
 export default GoalsPage;

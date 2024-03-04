@@ -119,7 +119,7 @@ export default function App() {
         <AuthProvider>
           <ThemeProvider>
             <Drawer.Navigator
-              drawerContent={(props) => <DrawerContent {...props} />}
+              drawerContent={(props) =><DrawerContent {...props} />}
             >
               <Drawer.Screen
                 options={{ headerShown: false }}

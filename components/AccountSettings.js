@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { useAuth } from "./AuthContext";
 import {
   View,
@@ -11,16 +11,18 @@ import {
 import { MaterialIcons } from "@expo/vector-icons";
 //import { ThemeColors } from "../assets/ThemeColors";
 import { ThemeContext } from "./ThemeContext";
+import { BACKEND_URL } from "../assets/config";
 
 const AccountSettings = () => {
   const { dispatch } = useAuth();
-  const [username, setUsername] = useState("Username"); //fetch the username from the database
+  const [username, setUsername] = useState(""); 
   const [emailModalVisible, setEmailModalVisible] = useState(false);
   const [passwordModalVisible, setPasswordModalVisible] = useState(false);
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [email, setEmail] = useState("");
-
+  const { state } = useAuth();
+  const token = state.token;
   const { theme: ThemeColors } = useContext(ThemeContext);
 
   const handleEmailChange = () => {
@@ -45,6 +47,25 @@ const AccountSettings = () => {
     dispatch({ type: "LOGOUT" });
   };
 
+  useEffect(() => {
+    try {
+      fetch(BACKEND_URL + "user", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Auth-Token": token,
+        },
+      })
+        .then((response) => response.json())
+        .then((data) => setUsername(data.username))
+        .catch((error) => {
+          console.log("Error fetching workouts: ", error);
+        });
+    } catch (error) {
+      console.log("Error fetching workouts: ", error);
+    }
+  }, []);
+  
   const styles = StyleSheet.create({
     container: {
       flex: 1,
@@ -109,7 +130,7 @@ const AccountSettings = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.username}>Username: {username}</Text>
+      <Text style={styles.username}>{username}</Text>
 
       <Pressable style={styles.button} onPress={handleEmailChange}>
         <MaterialIcons name="email" size={24} color={ThemeColors.tertiary} />

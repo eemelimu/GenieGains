@@ -191,10 +191,6 @@ const HomeScreen = () => {
     console.log(workoutMovements);
   };
 
-  const handleFromRoutines = () => {
-    console.log("From routines button pressed");
-  };
-
   const handleSearchTextChange = (text) => {
     setSearchText(text);
     const regex = new RegExp(text, "i");
@@ -235,21 +231,6 @@ const HomeScreen = () => {
       </TouchableOpacity>
     );
   };
-
-  // const Workout = ({ name, date, movements }) => {
-  //   const handleWorkoutPress = () => {
-  // setSelectedWorkout(await getWorkoutMovements(id));
-  // setIsModalVisible(true);
-  //   };
-
-  //   return (
-  //     <TouchableOpacity style={styles.singleWorkout} onPress={handleWorkoutPress}>
-  //       <Text style={styles.workoutName}>{name}</Text>
-  //       <Text style={styles.workoutDate}>{date}</Text>
-  //       <Text>Days since last: -</Text>
-  //     </TouchableOpacity>
-  //   );
-  // };
 
   const styles = StyleSheet.create({
     searchItem: {
@@ -485,7 +466,7 @@ const HomeScreen = () => {
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.menuItem}
-            onPress={handleFromRoutines}
+            onPress={() => console.log("From routines button pressed")}
           >
             <Text>From routines</Text>
           </TouchableOpacity>

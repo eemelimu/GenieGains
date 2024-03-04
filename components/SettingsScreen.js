@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { View, Text, Button, StyleSheet, Pressable } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 //import { ThemeColors } from "../assets/ThemeColors";
@@ -8,6 +8,8 @@ import { AntDesign } from "@expo/vector-icons";
 import { ThemeContext } from "./ThemeContext";
 import { FontAwesome } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
+import { BACKEND_URL } from "../assets/config";
+import { useAuth } from "./AuthContext";
 
 const SettingsButton = ({ color, text, children, navigationPage }) => {
   const navigation = useNavigation();
@@ -71,11 +73,33 @@ const SettingsButton = ({ color, text, children, navigationPage }) => {
 
 const SettingsScreen = () => {
   const navigation = useNavigation();
+  const [name, setName] = useState("");
+  const { state } = useAuth();
+  const token = state.token;
   const {
     theme: ThemeColors,
     resetTheme,
     changeThemeColor,
   } = useContext(ThemeContext);
+
+  useEffect(() => {
+    try {
+      fetch(BACKEND_URL + "user", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Auth-Token": token,
+        },
+      })
+        .then((response) => response.json())
+        .then((data) => setName(data.username))
+        .catch((error) => {
+          console.log("Error fetching workouts: ", error);
+        });
+    } catch (error) {
+      console.log("Error fetching workouts: ", error);
+    }
+  }, []);
 
   const styles = StyleSheet.create({
     container: {
@@ -118,9 +142,9 @@ const SettingsScreen = () => {
         size={200}
         color={ThemeColors.secondary}
       />
-      <Text style={styles.boldText}>Username</Text>
+      <Text style={styles.boldText}>{name}</Text>
       <ScrollView style={styles.scrollView}>
-        <SettingsButton
+        {/* <SettingsButton
           navigationPage={"Account Settings"}
           color={ThemeColors.tertiary}
           text="Account"
@@ -130,7 +154,7 @@ const SettingsScreen = () => {
             size={24}
             color={ThemeColors.tertiary}
           />
-        </SettingsButton>
+        </SettingsButton> */}
         <SettingsButton
           navigationPage={"Appearance"}
           color={ThemeColors.tertiary}
@@ -140,6 +164,7 @@ const SettingsScreen = () => {
             name="paint-brush"
             size={24}
             color={ThemeColors.tertiary}
+            style={{ paddingRight: 15 }}
           />
         </SettingsButton>
         <SettingsButton
@@ -151,6 +176,7 @@ const SettingsScreen = () => {
             name="notifications"
             size={24}
             color={ThemeColors.tertiary}
+            style={{ paddingRight: 15 }}
           />
         </SettingsButton>
         <SettingsButton
@@ -158,16 +184,26 @@ const SettingsScreen = () => {
           color={ThemeColors.tertiary}
           text="Preferences"
         >
-          <FontAwesome name="wrench" size={24} color={ThemeColors.tertiary} />
+          <FontAwesome
+            name="wrench"
+            size={24}
+            color={ThemeColors.tertiary}
+            style={{ paddingRight: 15 }}
+          />
         </SettingsButton>
         <SettingsButton
           navigationPage={"Terms of Service"}
           color={ThemeColors.tertiary}
           text="Terms of Service"
         >
-          <FontAwesome name="legal" size={24} color={ThemeColors.tertiary} />
+          <FontAwesome
+            name="legal"
+            size={24}
+            color={ThemeColors.tertiary}
+            style={{ paddingRight: 15 }}
+          />
         </SettingsButton>
-        <SettingsButton
+        {/* <SettingsButton
           navigationPage={"About"}
           color={ThemeColors.tertiary}
           text="About"
@@ -177,7 +213,7 @@ const SettingsScreen = () => {
             size={24}
             color={ThemeColors.tertiary}
           />
-        </SettingsButton>
+        </SettingsButton> */}
       </ScrollView>
     </View>
   );

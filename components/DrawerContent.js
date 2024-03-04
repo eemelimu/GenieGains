@@ -1,5 +1,6 @@
 import React, { useState, useContext } from "react";
 import { LinearGradient } from "expo-linear-gradient";
+import { storeData } from "../assets/utils/utils";
 import {
   StyleSheet,
   View,
@@ -26,6 +27,12 @@ const ThemeBtn = ({ colors, name }) => {
 
   const handleThemeChange = (colors) => {
     console.log("changing theme");
+    storeData("theme", {
+      primary: colors[0],
+      secondary: colors[1],
+      tertiary: colors[2],
+      quaternary: colors[3],
+    });
     changeThemeColor({
       primary: colors[0],
       secondary: colors[1],
@@ -290,19 +297,18 @@ export const DrawerContent = () => {
           name="Light"
         />
         <ThemeBtn
-  colors={["#fffacd", "#ffffe0", "#e6d150", "#e6b800"]}
-  name="Lemon Sorbet"
-/>
+          colors={["#fffacd", "#ffffe0", "#e6d150", "#e6b800"]}
+          name="Lemon Sorbet"
+        />
 
         <ThemeBtn
           colors={["#f5f5f5", "#ffe4e1", "#ffc0cb", "#ffb6c1"]}
           name="Rose Quartz"
         />
         <ThemeBtn
-  colors={["#fff8dc", "#fffacd", "#d4b996", "#ffb6c1"]}
-  name="Buttercream"
-/>
-
+          colors={["#fff8dc", "#fffacd", "#d4b996", "#ffb6c1"]}
+          name="Buttercream"
+        />
       </View>
       {feedbackSent && (
         <View style={styles.sendFeedBackItemSent}>

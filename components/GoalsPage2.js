@@ -137,7 +137,7 @@ const GoalsPage = () => {
         const additionsCopy = additions.map((addition, index) => {
           return { ...addition, created: addition.created + index };
         });
-        additionsCopy.push({ number: 0, created: data.end });
+        //additionsCopy.push({ number: 0, created: data.end });
         //additionsCopy.push({ number: 0, created: data.created - 1 });
         setSelectedGoal({ ...data, data: additionsCopy });
       } else {
@@ -337,7 +337,7 @@ const GoalsPage = () => {
       backgroundColor: "rgba(0, 0, 0, 0.5)",
     },
     modalContent: {
-      backgroundColor: "white",
+      backgroundColor: ThemeColors.primary,
       padding: 20,
       borderRadius: 10,
       width: "80%",
@@ -351,14 +351,15 @@ const GoalsPage = () => {
     input: {
       marginTop: 10,
       borderWidth: 1,
-      borderColor: "#ccc",
+      borderColor: ThemeColors.quaternary,
       borderRadius: 5,
       padding: 10,
       marginBottom: 10,
+      color: ThemeColors.tertiary,
     },
     createButton: {
       marginTop: 10,
-      backgroundColor: "blue",
+      backgroundColor: ThemeColors.secondary,
       padding: 10,
       borderRadius: 5,
       alignItems: "center",
@@ -369,7 +370,7 @@ const GoalsPage = () => {
       alignItems: "center",
     },
     buttonText: {
-      color: "white",
+      color: ThemeColors.tertiary,
       fontSize: 16,
     },
     cancelButtonText: {
@@ -409,10 +410,10 @@ const GoalsPage = () => {
           </Text>
 
           <View style={styles.chartContainer}>
-            {selectedGoal.data.length === 0 ? (
+            {selectedGoal.data.length < 2 ? (
               <View style={styles.chartPlaceHolder}>
                 <Text style={styles.boldText}>
-                  No data available for selected goal
+                  Not enough data to plot for selected goal
                 </Text>
               </View>
             ) : (
@@ -425,6 +426,11 @@ const GoalsPage = () => {
                   formatXLabel,
                   formatYLabel,
                   tickCount: { y: 7, x: 3 },
+                  lineColor: ThemeColors.quaternary,
+                  labelColor: {
+                    x:  ThemeColors.tertiary,
+                    y: ThemeColors.tertiary,
+                  },
                 }}
                 chartPressState={[state, secondState]}
                 gestureLongPressDelay={1}
@@ -446,7 +452,11 @@ const GoalsPage = () => {
                         y={0}
                         width={1}
                         height={CHART_HEIGHT}
-                        color="rgba(0, 0, 0, 0.9)"
+                        color={
+                          lightOrDark(ThemeColors.primary) === "light"
+                            ? "rgba(0, 0, 0, 0.9)"
+                            : "rgba(255, 255, 255, 0.9)"
+                        }
                       />
                     )}
                     {secondIsActive &&
@@ -459,7 +469,11 @@ const GoalsPage = () => {
                             y={0}
                             width={1}
                             height={CHART_HEIGHT}
-                            color="rgba(0, 0, 0, 0.9)"
+                            color={
+                              lightOrDark(ThemeColors.primary) === "light"
+                                ? "rgba(0, 0, 0, 0.9)"
+                                : "rgba(255, 255, 255, 0.9)"
+                            }
                           />
                           <Rect
                             x={SecondinitialXPosition?.value}
@@ -469,7 +483,11 @@ const GoalsPage = () => {
                               SecondinitialXPosition?.value
                             }
                             height={CHART_HEIGHT}
-                            color="rgba(0, 0, 0, 0.3)"
+                            color={
+                              lightOrDark(ThemeColors.primary) === "light"
+                                ? "rgba(0, 0, 0, 0.3)"
+                                : "rgba(255, 255, 255, 0.3)"
+                            }
                           />
                         </>
                       )}
@@ -567,9 +585,11 @@ const GoalsPage = () => {
               placeholder="Goal Name"
               value={goalName}
               onChangeText={(text) => setGoalName(text)}
+              placeholderTextColor={ThemeColors.quaternary}
             />
             <Text style={styles.informationText}>Goal's unit:</Text>
             <TextInput
+              placeholderTextColor={ThemeColors.quaternary}
               style={styles.input}
               placeholder="Units (e.g., steps, kilograms)"
               value={units}
@@ -583,6 +603,7 @@ const GoalsPage = () => {
               value={targetAmount}
               onChangeText={(text) => setTargetAmount(text)}
               keyboardType="numeric"
+              placeholderTextColor={ThemeColors.quaternary}
             />
             <Pressable
               style={styles.button}
@@ -658,6 +679,7 @@ const GoalsPage = () => {
               onChangeText={(val) => {
                 setAdditionNote(val);
               }}
+              placeholderTextColor={ThemeColors.quaternary}
             ></TextInput>
             <Text style={styles.informationText}>Unit:</Text>
             <TextInput
@@ -666,6 +688,7 @@ const GoalsPage = () => {
               placeholder="Units (e.g., steps, kg)"
               value={additionUnits}
               onChangeText={(val) => setAdditionUnits(val)}
+              placeholderTextColor={ThemeColors.quaternary}
             />
             <Text style={styles.informationText}>Amount:</Text>
             <TextInput
@@ -674,6 +697,7 @@ const GoalsPage = () => {
               value={additionTargetAmount}
               onChangeText={(val) => setAdditionTargetAmount(val)}
               keyboardType="numeric"
+              placeholderTextColor={ThemeColors.quaternary}
             />
             <DropDownPicker
               mode="BADGE"

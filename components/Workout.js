@@ -15,20 +15,26 @@ import { useAuth } from "./AuthContext";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { ThemeColors } from "../assets/ThemeColors";
+import { Entypo } from "@expo/vector-icons";
+import { Feather } from "@expo/vector-icons";
+import ImagePicker from "react-native-image-picker";
 
 // TODO:
-// - Video
+// - Video: Fiksumpi visualisuus
 // - Dropdown menun fonttia selkeemmäks
-// - Finish Workout -nappi, joka lähettää tiedot serverille ja navigoi takaisin etusivulle
 // - Bug: Jos lisää kaksi liikettä ja lisää toiseen liikkeeseen lisää sarjoja,
 //   niin toisen liikkeen päälle ilmestyy tyhjää tilaa.
 //   COPILOTIN rakaisu: Tämä johtuu siitä, että molemmat liikkeet käyttävät samaa statea sarjojen lisäämiseen.
 //   Ratkaisu: Jokaiselle liikkeelle oma state sarjojen lisäämiseen.
-// BUG: Kun lisäät liikkeeksi "penkkipunnerrus" niin maastaveto katoaa listasta.
-// - Workout automaattinen nimen luonti: Ottaa jokaisen liikkeen kategorian ja listaa sen nimeen
 
 export const Workout = () => {
-  const [name, setName] = useState("");
+  const [name, setName] = useState(
+    `Workout of ${new Date().toLocaleDateString(undefined, {
+      month: "short",
+      day: "numeric",
+    })}`
+  );
+
   const [notes, setNotes] = useState("");
   const [selectedMovement, setSelectedMovement] = useState(null);
   const [movements, setMovements] = useState([]);
@@ -93,7 +99,6 @@ export const Workout = () => {
         workout.sets.every((set) => set.weight !== "" && set.reps !== "")
       );
     });
-    console.log(allWorkoutsHaveSets);
     workoutData.length > 0 && allWorkoutsHaveSets
       ? setInProgress(true)
       : setInProgress(false);
@@ -114,7 +119,7 @@ export const Workout = () => {
             movement_id: movement.id,
             weight: sets.weight,
             reps: sets.reps,
-            video: "",
+            video: sets.video,
             time: 0,
           }),
         }
@@ -128,7 +133,6 @@ export const Workout = () => {
 
   const handleFinishWorkout = async () => {
     if (inProgress) {
-      // name === "" && setName(`${timeOfDay} Workout`);
       try {
         const exerciseId = await createExercise(name, notes);
         await Promise.all(
@@ -165,19 +169,6 @@ export const Workout = () => {
       console.log("Error fetching movements: ", error);
     }
   }, []);
-
-  const NoMovements = () => {
-    const handleLoadMovements = () => {
-      console.log("Loading movements");
-    };
-    return (
-      <View>
-        <TouchableOpacity onPress={handleLoadMovements}>
-          <Text>No movements available</Text>
-        </TouchableOpacity>
-      </View>
-    );
-  };
 
   useEffect(() => {
     const currentTime = new Date().getHours();
@@ -275,10 +266,12 @@ const SingleMovement = ({
   workoutData,
   setWorkoutData,
 }) => {
-  const [sets, setSets] = useState([{ weight: "", reps: "" }]);
+  const [sets, setSets] = useState([{ weight: "", reps: "", video: "" }]);
+  const [includeVideo, setIncludeVideo] = useState(false);
+  const [videoUri, setVideoUri] = useState(null);
 
   const handleAddSet = () => {
-    setSets([...sets, { weight: "", reps: "" }]);
+    setSets([...sets, { weight: "", reps: "", video: "" }]);
     if (workoutData.includes(movement)) {
       const index = workoutData.indexOf(movement);
       const newWorkoutData = [...workoutData];
@@ -322,10 +315,64 @@ const SingleMovement = ({
     setSets(newSets);
   };
 
+  const handleAddVideo = async (index) => {
+    const newSets = [...sets];
+    newSets[index].video = videoUri;
+    setSets(newSets);
+  };
+
+  const selectVideo = () => {
+    const options = {
+      mediaType: "video",
+      videoQuality: "high",
+    };
+
+    ImagePicker.launchImageLibrary(options, (response) => {
+      if (response.didCancel) {
+        console.log("User cancelled video picker");
+      } else if (response.error) {
+        console.log("ImagePicker Error: ", response.error);
+      } else if (response.customButton) {
+        console.log("User tapped custom button: ", response.customButton);
+      } else {
+        setVideoUri(response.uri);
+      }
+    });
+  };
+
+  const recordVideo = () => {
+    const options = {
+      mediaType: "video",
+      videoQuality: "high",
+    };
+
+    ImagePicker.launchCamera(options, (response) => {
+      if (response.didCancel) {
+        console.log("User cancelled video recording");
+      } else if (response.error) {
+        console.log("ImagePicker Error: ", response.error);
+      } else if (response.customButton) {
+        console.log("User tapped custom button: ", response.customButton);
+      } else {
+        setVideoUri(response.uri);
+      }
+    });
+  };
+
   return (
     <View style={styles.singleMovementContainer}>
       <Text style={styles.singleMovementTitle}>
         {movement.name}
+        <TouchableOpacity
+          onPress={() => setIncludeVideo(!includeVideo)}
+          style={styles.videoOnOffIcon}
+        >
+          {includeVideo ? (
+            <Feather name="video-off" size={24} color="black" />
+          ) : (
+            <Feather name="video" size={24} color="black" />
+          )}
+        </TouchableOpacity>
         <TouchableOpacity
           onPress={() => handleRemoveMovement(movement)}
           style={styles.removeIcon}
@@ -342,6 +389,10 @@ const SingleMovement = ({
           setNumber={index + 1}
           handleRemoveSet={() => handleRemoveSet(index)}
           handleSetOnChange={() => handleSetOnChange(index)}
+          includeVideo={includeVideo}
+          handleAddVideo={() => handleAddVideo(index)}
+          selectVideo={selectVideo}
+          recordVideo={recordVideo}
         />
       ))}
       <View>
@@ -349,6 +400,7 @@ const SingleMovement = ({
           title="Add set"
           onPress={handleAddSet}
           style={styles.addSetButton}
+          color={ThemeColors.secondary}
         />
       </View>
     </View>
@@ -362,40 +414,98 @@ const SingleSet = ({
   setNumber,
   handleRemoveSet,
   handleSetOnChange,
+  handleAddVideo,
+  includeVideo,
+  selectVideo,
+  recordVideo,
 }) => {
   const { weight, reps } = set;
+  const [videoSelected, setVideoSelected] = useState(false);
+  const [hideVideoIcon, setHideVideoIcon] = useState(false);
+
+  const handleVideoIconPress = () => {
+    setVideoSelected(!videoSelected);
+    setHideVideoIcon(!hideVideoIcon);
+  };
 
   return (
-    <View style={styles.singleMovementRow}>
-      <Text style={styles.singleMovementLabel}>{setNumber}.</Text>
-      <Text style={styles.singleMovementLabel}>Weight</Text>
-      <TextInput
-        style={styles.singleMovementInput}
-        value={weight}
-        onChangeText={(text) => setWeight(text)}
-        placeholder="Weight"
-        keyboardType="numeric"
-        placeholderTextColor="rgba(0, 0, 0, 0.5)"
-        onChange={handleSetOnChange}
-      />
-      <Text style={styles.singleMovementLabel}>Reps</Text>
-      <TextInput
-        style={styles.singleMovementInput}
-        value={reps}
-        onChangeText={(text) => setReps(text)}
-        placeholder="Reps"
-        keyboardType="numeric"
-        placeholderTextColor="rgba(0, 0, 0, 0.5)"
-        onChange={handleSetOnChange}
-      />
-      <TouchableOpacity onPress={handleRemoveSet}>
-        <Ionicons name="remove" size={24} color="black" />
-      </TouchableOpacity>
+    <View>
+      <View style={styles.singleMovementRow}>
+        <Text style={styles.singleMovementLabel}>{setNumber}.</Text>
+        <Text style={styles.singleMovementLabel}>Weight</Text>
+        <TextInput
+          style={styles.singleMovementInput}
+          value={weight}
+          onChangeText={(text) => setWeight(text)}
+          placeholder="Weight"
+          keyboardType="numeric"
+          placeholderTextColor="rgba(0, 0, 0, 0.5)"
+          onChange={handleSetOnChange}
+        />
+        <Text style={styles.singleMovementLabel}>Reps</Text>
+        <TextInput
+          style={styles.singleMovementInput}
+          value={reps}
+          onChangeText={(text) => setReps(text)}
+          placeholder="Reps"
+          keyboardType="numeric"
+          placeholderTextColor="rgba(0, 0, 0, 0.5)"
+          onChange={handleSetOnChange}
+        />
+        <TouchableOpacity onPress={handleRemoveSet}>
+          <Ionicons name="remove" size={24} color="black" />
+        </TouchableOpacity>
+      </View>
+      {includeVideo && !hideVideoIcon && (
+        <TouchableOpacity
+          style={styles.videoContainer}
+          onPress={handleAddVideo}
+        >
+          <Entypo
+            name="video"
+            size={24}
+            color="black"
+            onPress={handleVideoIconPress}
+          />
+        </TouchableOpacity>
+      )}
+      {videoSelected && includeVideo && (
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-evenly",
+          }}
+        >
+          <TouchableOpacity style={styles.videoTypeButton} onPress={selectVideo}>
+            <Text>Select Video</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.videoTypeButton} onPress={recordVideo}>
+            <Text>Record Video</Text>
+          </TouchableOpacity>
+        </View>
+      )}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  videoTypeButton: {
+    borderRadius: 5,
+    overflow: "hidden",
+    padding: 7,
+    backgroundColor: ThemeColors.secondary,
+  },
+  videoOnOffIcon: {
+    position: "absolute",
+    right: 50,
+  },
+  videoContainer: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 2,
+    marginBottom: 5,
+  },
   // Single Movement Styles
   singleMovementContainer: {
     flex: 1,
@@ -457,7 +567,7 @@ const styles = StyleSheet.create({
   },
   removeIcon: {
     position: "absolute",
-    right: 0,
+    right: 10,
   },
   // Add Movement Styles
   addMenu: {

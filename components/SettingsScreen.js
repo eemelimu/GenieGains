@@ -1,6 +1,6 @@
-import React, { useContext } from "react";
+import React, { useContext, useState, useCallback } from "react";
 import { View, Text, Button, StyleSheet, Pressable } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
 //import { ThemeColors } from "../assets/ThemeColors";
 import { MaterialIcons } from "@expo/vector-icons";
 import { ScrollView } from "react-native-gesture-handler";
@@ -8,6 +8,8 @@ import { AntDesign } from "@expo/vector-icons";
 import { ThemeContext } from "./ThemeContext";
 import { FontAwesome } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
+import { useAuth } from "./AuthContext";
+import { BACKEND_URL } from "../assets/config";
 
 const SettingsButton = ({ color, text, children, navigationPage }) => {
   const navigation = useNavigation();
@@ -16,6 +18,7 @@ const SettingsButton = ({ color, text, children, navigationPage }) => {
     resetTheme,
     changeThemeColor,
   } = useContext(ThemeContext);
+
   const styles = StyleSheet.create({
     container: {
       flex: 1,
@@ -70,12 +73,40 @@ const SettingsButton = ({ color, text, children, navigationPage }) => {
 };
 
 const SettingsScreen = () => {
+  const { state } = useAuth();
+  const token = state.token;
+  const [username, setUsername] = useState("");
   const navigation = useNavigation();
   const {
     theme: ThemeColors,
     resetTheme,
     changeThemeColor,
   } = useContext(ThemeContext);
+
+  const getUsername = async () => {
+    try {
+      const response = await fetch(BACKEND_URL + "user", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Auth-Token": `${token}`,
+        },
+      });
+      if (!response.ok) {
+        throw new Error("HTTP status " + response.status);
+      }
+      const data = await response.json();
+      setUsername(data.username);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      getUsername();
+    }, [])
+  );
 
   const styles = StyleSheet.create({
     container: {
@@ -118,7 +149,7 @@ const SettingsScreen = () => {
         size={200}
         color={ThemeColors.secondary}
       />
-      <Text style={styles.boldText}>Username</Text>
+      <Text style={styles.boldText}>{username}</Text>
       <ScrollView style={styles.scrollView}>
         <SettingsButton
           navigationPage={"Account Settings"}

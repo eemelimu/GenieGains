@@ -196,7 +196,7 @@ export const DrawerContent = () => {
     <View style={styles.drawerContainer}>
       <TouchableOpacity
         style={styles.drawerItem}
-        onPress={() => console.log("Navigoi profiili sivulle.")}
+        onPress={() => navigation.navigate("Account Settings")}
       >
         <AntDesign
           name="user"
@@ -281,7 +281,7 @@ export const DrawerContent = () => {
       )}
       <View style={styles.row}>
         <ThemeBtn
-          colors={["#000000", "#090b0e", "#b8bfc9", "#797979"]}
+          colors={["#000000", "#141313", "#b8bfc9", "#797979"]}
           name="Midnight"
         />
         <ThemeBtn
@@ -296,7 +296,7 @@ export const DrawerContent = () => {
           colors={["#f8f9fa", "#e9ecef", "#212529", "#495057"]}
           name="Light"
         />
-        <ThemeBtn
+        {/* <ThemeBtn
           colors={["#fffacd", "#ffffe0", "#e6d150", "#e6b800"]}
           name="Lemon Sorbet"
         />
@@ -308,7 +308,7 @@ export const DrawerContent = () => {
         <ThemeBtn
           colors={["#fff8dc", "#fffacd", "#d4b996", "#ffb6c1"]}
           name="Buttercream"
-        />
+        /> */}
       </View>
       {feedbackSent && (
         <View style={styles.sendFeedBackItemSent}>

@@ -88,6 +88,22 @@ const HomeScreen = () => {
 
   useFocusEffect(
     useCallback(() => {
+      try {
+        fetch(BACKEND_URL + "user", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "Auth-Token": token,
+          },
+        })
+          .then((response) => response.json())
+          .then((data) => setName(data.username))
+          .catch((error) => {
+            console.log("Error fetching workouts: ", error);
+          });
+      } catch (error) {
+        console.log("Error fetching workouts: ", error);
+      }
       const backAction = () => {
         return true;
       };
@@ -119,24 +135,6 @@ const HomeScreen = () => {
     }, [])
   );
 
-  useEffect(() => {
-    try {
-      fetch(BACKEND_URL + "user", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          "Auth-Token": token,
-        },
-      })
-        .then((response) => response.json())
-        .then((data) => setName(data.username))
-        .catch((error) => {
-          console.log("Error fetching workouts: ", error);
-        });
-    } catch (error) {
-      console.log("Error fetching workouts: ", error);
-    }
-  }, []);
 
   const handleProgress = () => {
     // testauksen vuoksi tässä nämä

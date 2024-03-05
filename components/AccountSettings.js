@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useCallback } from "react";
 import { useAuth } from "./AuthContext";
 import {
   View,
@@ -11,39 +11,95 @@ import {
 import { MaterialIcons } from "@expo/vector-icons";
 //import { ThemeColors } from "../assets/ThemeColors";
 import { ThemeContext } from "./ThemeContext";
+import { BACKEND_URL } from "../assets/config";
+import { useFocusEffect } from "@react-navigation/native";
 
 const AccountSettings = () => {
-  const { dispatch } = useAuth();
+  const { dispatch, state } = useAuth();
+  const token = state.token;
   const [username, setUsername] = useState("Username"); //fetch the username from the database
   const [emailModalVisible, setEmailModalVisible] = useState(false);
   const [passwordModalVisible, setPasswordModalVisible] = useState(false);
-  const [oldPassword, setOldPassword] = useState("");
-  const [newPassword, setNewPassword] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [email, setEmail] = useState("");
 
   const { theme: ThemeColors } = useContext(ThemeContext);
 
-  const handleEmailChange = () => {
-    setEmailModalVisible(true);
+  const getUserData = async () => {
+    try {
+      const response = await fetch(BACKEND_URL + "user", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Auth-Token": `${token}`,
+        },
+      });
+      if (!response.ok) {
+        console.log(token);
+        throw new Error("HTTP status " + response.status);
+      }
+      const data = await response.json();
+      setUsername(data.username);
+      setEmail(data.email);
+    } catch (error) {
+      console.error("Error:", error);
+    }
   };
 
-  const handlePasswordChange = () => {
-    setPasswordModalVisible(true);
-  };
-
-  const saveEmailChange = () => {
-    // Logic to save email change
+  const handleEmailChange = async () => {
     setEmailModalVisible(false);
+    try {
+      const response = await fetch(BACKEND_URL + "user", {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          "Auth-Token": `${token}`,
+        },
+        body: JSON.stringify({ email: email }),
+      });
+      if (!response.ok) {
+        console.log(JSON.stringify({ email: email }));
+        console.log(token);
+        throw new Error("HTTP status " + response.status);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
   };
 
-  const savePasswordChange = () => {
-    // Logic to save password change
-    //check the old password is actually the old password
+  const handlePasswordChange = async () => {
+    if (password !== confirmPassword) {
+      console.log("Passwords do not match");
+      return;
+    }
     setPasswordModalVisible(false);
+    try {
+      const response = await fetch(BACKEND_URL + "user", {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          "Auth-Token": `${token}`,
+        },
+        body: JSON.stringify({ password: password }),
+      });
+      if (!response.ok) {
+        throw new Error("HTTP status " + response.status);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
   };
+
   const handleLogout = () => {
     dispatch({ type: "LOGOUT" });
   };
+
+  useFocusEffect(
+    useCallback(() => {
+      getUserData();
+    }, [])
+  );
 
   const styles = StyleSheet.create({
     container: {
@@ -111,12 +167,18 @@ const AccountSettings = () => {
     <View style={styles.container}>
       <Text style={styles.username}>Username: {username}</Text>
 
-      <Pressable style={styles.button} onPress={handleEmailChange}>
+      <Pressable
+        style={styles.button}
+        onPress={() => setEmailModalVisible(true)}
+      >
         <MaterialIcons name="email" size={24} color={ThemeColors.tertiary} />
         <Text style={styles.buttonText}>Change Email</Text>
       </Pressable>
 
-      <Pressable style={styles.button} onPress={handlePasswordChange}>
+      <Pressable
+        style={styles.button}
+        onPress={() => setPasswordModalVisible(true)}
+      >
         <MaterialIcons name="lock" size={24} color={ThemeColors.tertiary} />
         <Text style={styles.buttonText}>Change Password</Text>
       </Pressable>
@@ -125,28 +187,34 @@ const AccountSettings = () => {
         <Text style={styles.buttonText}>Logout</Text>
       </Pressable>
 
-      {/* Email Modal */}
       <Modal
         animationType="slide"
         transparent={true}
         visible={emailModalVisible}
-        onRequestClose={() => setEmailModalVisible(false)}
+        onRequestClose={() => {
+          getUserData();
+          setEmailModalVisible(false);
+        }}
       >
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            {/* Email change form */}
             <TextInput
               value={email}
               onChangeText={setEmail}
               style={styles.input}
-              placeholder={email ? email : "New Email"}
+              placeholder={email}
+              color={ThemeColors.tertiary}
+              placeholderTextColor={ThemeColors.tertiary}
             />
-            <Pressable style={styles.saveButton} onPress={saveEmailChange}>
+            <Pressable style={styles.saveButton} onPress={handleEmailChange}>
               <Text style={styles.saveButtonText}>Save</Text>
             </Pressable>
             <Pressable
               style={styles.cancelButton}
-              onPress={() => setEmailModalVisible(false)} //fetch the old email back and set it as the email
+              onPress={() => {
+                getUserData();
+                setEmailModalVisible(false);
+              }}
             >
               <Text style={styles.cancelButtonText}>Cancel</Text>
             </Pressable>
@@ -163,24 +231,25 @@ const AccountSettings = () => {
       >
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            {/* Password change form */}
             <TextInput
               style={styles.input}
+              color={ThemeColors.tertiary}
               placeholderTextColor={ThemeColors.tertiary}
-              placeholder="Old Password"
-              secureTextEntry
-              value={oldPassword}
-              onChangeText={setOldPassword}
-            />
-            <TextInput
-              placeholderTextColor={ThemeColors.tertiary}
-              style={styles.input}
               placeholder="New Password"
               secureTextEntry
-              value={newPassword}
-              onChangeText={setNewPassword}
+              value={password}
+              onChangeText={setPassword}
             />
-            <Pressable style={styles.saveButton} onPress={savePasswordChange}>
+            <TextInput
+              placeholderTextColor={ThemeColors.tertiary}
+              color={ThemeColors.tertiary}
+              style={styles.input}
+              placeholder="Confirm Password"
+              secureTextEntry
+              value={confirmPassword}
+              onChangeText={setConfirmPassword}
+            />
+            <Pressable style={styles.saveButton} onPress={handlePasswordChange}>
               <Text style={styles.saveButtonText}>Save</Text>
             </Pressable>
             <Pressable

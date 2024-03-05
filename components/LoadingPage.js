@@ -1,5 +1,5 @@
 import React from "react";
-import { View, StyleSheet, Image, ActivityIndicator } from "react-native";
+import { View, StyleSheet, Image, ActivityIndicator, Text } from "react-native";
 import { ThemeColors } from "../assets/ThemeColors";
 
 const LoadingPage = () => {

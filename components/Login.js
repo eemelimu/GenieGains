@@ -1,14 +1,16 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import {
   View,
   Button,
   Text,
   TextInput,
   TouchableOpacity,
-  Image,Modal, Pressable
+  Image,
+  Modal,
+  Pressable,
 } from "react-native";
-import { useNavigation } from "@react-navigation/native";
-import { StyleSheet } from "react-native";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
+import { StyleSheet, BackHandler } from "react-native";
 import { useFonts } from "expo-font";
 import { ThemeColors } from "../assets/ThemeColors";
 import { useAuth } from "./AuthContext";
@@ -18,18 +20,32 @@ const Login = () => {
   const navigation = useNavigation();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [openModal,setOpenModal]=useState(false);
+  const [openModal, setOpenModal] = useState(false);
   let [fontsLoaded] = useFonts({
     DMBold: require("../assets/fonts/DMSans-Bold.ttf"),
     DMRegular: require("../assets/fonts/DMSans-Regular.ttf"),
   });
+  useFocusEffect(
+    useCallback(() => {
+      const backAction = () => {
+        return true;
+      };
+      const backHandler = BackHandler.addEventListener(
+        "hardwareBackPress",
+        backAction
+      );
+      return () => {
+        backHandler.remove();
+      };
+    }, [])
+  );
   if (!fontsLoaded) {
     return null;
   }
 
   const handleLogin = async () => {
     try {
-      const res = await fetch(BACKEND_URL+"login", {
+      const res = await fetch(BACKEND_URL + "login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -94,8 +110,20 @@ const Login = () => {
         visible={openModal}
         onRequestClose={() => {
           setOpenModal(!openModal);
-        }}><View style={styles.modalContainer}><Text style={styles.errorText}>Wrong username or password</Text><Pressable style={styles.button} onPress={()=>{setOpenModal(false);}}>
-          <Text style={styles.ok}>Close</Text></Pressable></View></Modal>
+        }}
+      >
+        <View style={styles.modalContainer}>
+          <Text style={styles.errorText}>Wrong username or password</Text>
+          <Pressable
+            style={styles.button}
+            onPress={() => {
+              setOpenModal(false);
+            }}
+          >
+            <Text style={styles.ok}>Close</Text>
+          </Pressable>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -122,9 +150,9 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
     fontFamily: "DMBold",
   },
-  errorText:{
-    fontSize:25,
-    color:"red"
+  errorText: {
+    fontSize: 25,
+    color: "red",
   },
   password: {
     paddingTop: 40,
@@ -162,26 +190,26 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontFamily: "DMRegular",
   },
-  modalContainer:{
-    flex:1,
-    justifyContent:"center",
-    alignItems:"center",
-    opacity:0.9,
-    gap:50,
-    backgroundColor:"grey"
+  modalContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    opacity: 0.9,
+    gap: 50,
+    backgroundColor: "grey",
   },
-  button:{
-    backgroundColor:"black",
-    paddingTop:10,
-    paddingBottom:10,
-    paddingLeft:20,
-    paddingRight:20,
-    borderRadius:10,
+  button: {
+    backgroundColor: "black",
+    paddingTop: 10,
+    paddingBottom: 10,
+    paddingLeft: 20,
+    paddingRight: 20,
+    borderRadius: 10,
   },
-  ok:{
-    color:"white",
-    fontSize:20,
-  }
+  ok: {
+    color: "white",
+    fontSize: 20,
+  },
 });
 {
   /* <Button

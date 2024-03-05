@@ -77,6 +77,7 @@ const HomeScreen = () => {
               movement_name,
               reps,
               weight,
+              video,
             } = workout;
 
             if (!groupedMovements[exercise_id]) {
@@ -93,6 +94,7 @@ const HomeScreen = () => {
               name: movement_name,
               reps: reps,
               weight: weight,
+              video: video,
             });
           });
 

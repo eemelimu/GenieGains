@@ -31,6 +31,9 @@ import { Workout } from "./components/Workout";
 import Toast from "react-native-toast-message";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { DrawerContent } from "./components/DrawerContent";
+import  Routines  from "./components/Routines";
+import InspectRoutine from "./components/InspectRoutine";
+import CreateRoutine from "./components/CreateRoutine";
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -100,6 +103,9 @@ const HomeStack = () => {
         name="Preferences Settings"
         component={PreferencesSettings}
       />
+      <Stack.Screen name="Routines" component = {Routines} />
+      <Stack.Screen name="InspectRoutine" component = {InspectRoutine} />
+      <Stack.Screen name="CreateRoutine" component = {CreateRoutine} />
       <Stack.Screen name="Account Settings" component={AccountSettings} />
       <Stack.Screen name="Terms of Service" component={Tos} />
       <Stack.Screen name="Appearance" component={ColorSettings} />

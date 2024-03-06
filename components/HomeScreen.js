@@ -25,10 +25,13 @@ import { useAuth } from "./AuthContext";
 // Search barin hightlightaus (aktivointi) kun painaa search iconia
 
 const HomeScreen = () => {
+  const seed =
+    new Date().getDate() + new Date().getMonth() + new Date().getFullYear();
   const { theme: ThemeColors } = useContext(ThemeContext);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [date] = useState(new Date());
   const [greeting, setGreeting] = useState("");
+  const [experience, setExperience] = useState("beginner");
   const [name, setName] = useState("name");
   const [selectedWorkout, setSelectedWorkout] = useState({});
   const [workouts, setWorkouts] = useState([]);
@@ -40,6 +43,33 @@ const HomeScreen = () => {
   const [searchText, setSearchText] = useState("");
   const [searchedWorkouts, setSearchedWorkouts] = useState(workouts);
   const [workoutMovements, setWorkoutMovements] = useState(null);
+
+  const beginnerTips = [
+    "Start Slow and Steady: Don't rush into intense workouts. Begin with light exercises to condition your body and avoid injury.",
+    "Focus on Form: Proper form is crucial to prevent injury and maximize results. Take time to learn the correct techniques for each exercise.",
+    "Listen to Your Body: Pay attention to how your body feels during workouts. If something doesn't feel right, stop and reassess rather than pushing through.",
+    "Stay Hydrated: Drink water before, during, and after your workouts to stay hydrated and maintain performance.",
+    "Consistency Over Intensity: Consistent workouts are more beneficial than occasional intense sessions. Aim for regular exercise routines.",
+    "Rest and Recovery: Allow your body time to rest and recover between workouts. Overtraining can lead to burnout and injuries.",
+  ];
+
+  const intermediateTips = [
+    "Progressive Overload: Continuously challenge yourself by increasing weights, reps, or intensity to stimulate muscle growth and strength gains.",
+    "Vary Your Workouts: Incorporate a variety of exercises to target different muscle groups and prevent plateaus.",
+    "Warm Up Properly: Spend at least 5-10 minutes warming up before each workout to increase blood flow and flexibility, reducing the risk of injury.",
+    "Nutrition Matters: Pay attention to your diet, ensuring you're getting enough protein, carbohydrates, and healthy fats to support your fitness goals.",
+    "Track Your Progress: Keep a workout log or use fitness apps to track your progress and adjust your routines accordingly.",
+    "Don't Skip Recovery Days: Scheduled rest days are essential for muscle repair and growth. Use these days for light activity, stretching, or active recovery.",
+  ];
+
+  const expertTips = [
+    "Periodize Your Training: Implement periodization techniques to vary intensity and volume over time for optimal performance and adaptation.",
+    "Incorporate Mobility Work: Focus on mobility exercises and flexibility training to improve joint health and range of motion.",
+    "Experiment with Advanced Techniques: Explore advanced training methods like supersets, drop sets, and pyramids to challenge your body in new ways.",
+    "Listen to Your Body Again: As an expert, you may be tempted to push through discomfort, but it's crucial to recognize when to back off to prevent overuse injuries.",
+    "Mental Conditioning: Develop mental resilience and focus through techniques like visualization, meditation, and mindfulness practices.",
+    "Continual Learning: Stay updated on the latest research and trends in fitness and nutrition to refine your training methods and stay ahead in your field.",
+  ];
 
   const dateToString = date.toLocaleDateString(undefined, {
     weekday: "short",
@@ -97,7 +127,10 @@ const HomeScreen = () => {
           },
         })
           .then((response) => response.json())
-          .then((data) => setName(data.username))
+          .then((data) => {
+            setName(data.username);
+            setExperience(data.experience);
+          })
           .catch((error) => {
             console.log("Error fetching workouts: ", error);
           });
@@ -134,7 +167,6 @@ const HomeScreen = () => {
       };
     }, [])
   );
-
 
   const handleProgress = () => {
     // testauksen vuoksi tässä nämä
@@ -378,6 +410,14 @@ const HomeScreen = () => {
           <Text style={styles.date}>{dateToString.toUpperCase()}</Text>
           <Text style={styles.greetings}>
             {greeting}, {name}!
+          </Text>
+          <Text style={styles.regularText}>
+            Your {experience} tip for today:{"\n"}
+            {experience === "beginner"
+              ? beginnerTips[(seed * 1337) % beginnerTips.length]
+              : experience === "intermediate"
+              ? intermediateTips[(seed * 1337) % intermediateTips.length]
+              : expertTips[(seed * 1337) % expertTips.length]}
           </Text>
         </View>
         {searchMenuVisible ? (

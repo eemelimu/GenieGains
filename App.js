@@ -7,6 +7,8 @@ import {
   TouchableOpacity,
 } from "react-native";
 import Tos from "./components/Tos";
+import Notification from "./components/Notification";
+import { NotificationProvider } from "./components/NotificationContext";
 import About from "./components/About";
 import ColorSettings from "./components/ColorSettings";
 import AccountSettings from "./components/AccountSettings";
@@ -35,7 +37,13 @@ import { DrawerContent } from "./components/DrawerContent";
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 
-const CustomHeader = ({ navigation, title, showMenuButton,showNothing, route }) => {
+const CustomHeader = ({
+  navigation,
+  title,
+  showMenuButton,
+  showNothing,
+  route,
+}) => {
   const [clickCounter, setClickCounter] = useState(0);
   const handleDrawer = () => {
     navigation.openDrawer();
@@ -122,37 +130,25 @@ export default function App() {
     <>
       <SafeAreaView style={styles.container}>
         <NavigationContainer>
-          <AuthProvider>
-            <ThemeProvider>
-              <Drawer.Navigator
-                drawerContent={(props) => <DrawerContent {...props} />}
-              >
-                <Drawer.Screen
-                  options={{ headerShown: false }}
-                  name=" "
-                  component={HomeStack}
-                />
-              </Drawer.Navigator>
-            </ThemeProvider>
-          </AuthProvider>
+          <NotificationProvider>
+            <AuthProvider>
+              <ThemeProvider>
+                <Drawer.Navigator
+                  drawerContent={(props) => <DrawerContent {...props} />}
+                >
+                  <Drawer.Screen
+                    options={{ headerShown: false }}
+                    name=" "
+                    component={HomeStack}
+                  />
+                </Drawer.Navigator>
+              </ThemeProvider>
+              <Notification />
+            </AuthProvider>
+          </NotificationProvider>
         </NavigationContainer>
       </SafeAreaView>
-      <Toast
-        config={{
-          error: (props) => (
-            <ErrorToast
-              style={{ marginTop: 50 }}
-              {...props}
-              text1Style={{
-                fontSize: 17,
-              }}
-              text2Style={{
-                fontSize: 10,
-              }}
-            />
-          ),
-        }}
-      />
+      <Toast />
     </>
   );
 }
@@ -166,7 +162,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     paddingHorizontal: 20,
-    paddingTop: 50,
+    paddingTop: 30,
+    height: 110,
   },
   headerTitle: {
     fontSize: 20,

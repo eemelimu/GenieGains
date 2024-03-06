@@ -15,7 +15,9 @@ import { useFonts } from "expo-font";
 import { ThemeColors } from "../assets/ThemeColors";
 import { useAuth } from "./AuthContext";
 import { BACKEND_URL } from "../assets/config";
+import { useNotification } from "./NotificationContext";
 const Login = () => {
+  const { setError, setSuccess, startLoading, stopLoading } = useNotification();
   const { dispatch } = useAuth();
   const navigation = useNavigation();
   const [username, setUsername] = useState("");
@@ -44,6 +46,7 @@ const Login = () => {
   }
 
   const handleLogin = async () => {
+    startLoading();
     try {
       const res = await fetch(BACKEND_URL + "login", {
         method: "POST",
@@ -58,15 +61,16 @@ const Login = () => {
       const data = await res.json();
       console.log(data);
       if (res.ok) {
+        setSuccess("Logged in");
         dispatch({
           type: "LOGIN",
           payload: { token: data.token },
         });
       } else {
-        setOpenModal(true);
-        throw new Error("Failed to login");
+        setError("Wrong username or password");
       }
     } catch (error) {
+      setError("Check your internet connection");
       console.error("Error:", error);
     }
   };

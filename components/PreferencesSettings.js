@@ -5,9 +5,11 @@ import { useFocusEffect } from "@react-navigation/native";
 import { ThemeContext } from "./ThemeContext";
 import { useAuth } from "./AuthContext";
 import { BACKEND_URL } from "../assets/config";
+import { useNotification } from "./NotificationContext";
 
 const Preferences = () => {
   const { dispatch, state } = useAuth();
+  const { setError, setSuccess, startLoading, stopLoading } = useNotification();
   const token = state.token;
   const [isUnitModalVisible, setIsUnitModalVisible] = useState(false);
   const [isExperienceModalVisible, setIsExperienceModalVisible] =
@@ -18,6 +20,7 @@ const Preferences = () => {
   const { theme: ThemeColors } = useContext(ThemeContext);
 
   const getUserData = async () => {
+    startLoading();
     try {
       const response = await fetch(BACKEND_URL + "user", {
         method: "GET",
@@ -34,8 +37,10 @@ const Preferences = () => {
       setSelectedUnit(data.unit);
       setSelectedExperience(data.experience);
     } catch (error) {
+      setError("Check your internet connection");
       console.error("Error:", error);
     }
+    stopLoading();
   };
   useFocusEffect(
     useCallback(() => {
@@ -69,11 +74,14 @@ const Preferences = () => {
         body: JSON.stringify({ unit: selectedUnit.toLowerCase() }),
       });
       if (!response.ok) {
-        throw new Error("HTTP status " + response.status);
+        setError("Something went wrong");
+      } else {
+        console.log("Selected unit:", selectedUnit);
+        setIsUnitModalVisible(false);
+        setSuccess("Unit updated successfully");
       }
-      console.log("Selected unit:", selectedUnit);
-      setIsUnitModalVisible(false);
     } catch (error) {
+      setError("Check your internet connection");
       console.error("Error:", error);
     }
   };
@@ -89,11 +97,14 @@ const Preferences = () => {
         body: JSON.stringify({ experience: selectedExperience.toLowerCase() }),
       });
       if (!response.ok) {
-        throw new Error("HTTP status " + response.status);
+        setError("Something went wrong");
+      } else {
+        console.log("Selected experience:", selectedExperience);
+        setSuccess("Experience updated successfully");
+        setIsExperienceModalVisible(false);
       }
-      console.log("Selected experience:", selectedExperience);
-      setIsExperienceModalVisible(false);
     } catch (error) {
+      setError("Check your internet connection");
       console.error("Error:", error);
     }
   };
@@ -117,9 +128,14 @@ const Preferences = () => {
     },
     modalContainer: {
       flex: 1,
+      position: "absolute",
+      top: 60,
+      left: 0,
+      right: 0,
+      bottom: 0,
       justifyContent: "center",
       alignItems: "center",
-      backgroundColor: ThemeColors.secondary,
+      backgroundColor: ThemeColors.primary,
       opacity: 0.8,
     },
     modalContent: {

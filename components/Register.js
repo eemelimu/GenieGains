@@ -4,8 +4,11 @@ import { useNavigation } from "@react-navigation/native";
 import { StyleSheet } from "react-native";
 import { useFonts } from "expo-font";
 import { ThemeColors } from "../assets/ThemeColors";
+import { useNotification } from "./NotificationContext";
+import { BACKEND_URL } from "../assets/config";
 
 const Register = () => {
+  const { setError, setSuccess, startLoading, stopLoading } = useNotification();
   const navigation = useNavigation();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -14,8 +17,51 @@ const Register = () => {
   // add unit & experience
   // add password2
 
-  
-  const moveToPreferences = () => {
+  //check if user already exists from /register/username
+  const usernameExists = async () => {
+    startLoading();
+    try {
+      const response = await fetch(BACKEND_URL + "register/username", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username: username,
+        }),
+      });
+      if (!response.ok) {
+        return true;
+      }
+      stopLoading();
+      return false;
+    } catch (error) {
+      setError("Check your internet connection");
+      console.error("Error:", error);
+    }
+  };
+
+  const moveToPreferences = async () => {
+    if (password !== password2) {
+      setError("Passwords do not match");
+      return;
+    }
+    if (username === "" || password === "" || email === "") {
+      setError("Please fill in all fields");
+      return;
+    }
+    if (await usernameExists()) {
+      setError("Username already exists");
+      return;
+    }
+    if (password.length < 5) {
+      setError("Password must be at least 6 characters long");
+      return;
+    }
+    if (!email.includes("@")) {
+      setError("Invalid email");
+      return;
+    }
     navigation.navigate("Preferences", {
       data: {
         password: password,

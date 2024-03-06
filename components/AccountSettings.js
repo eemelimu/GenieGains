@@ -13,8 +13,10 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { ThemeContext } from "./ThemeContext";
 import { BACKEND_URL } from "../assets/config";
 import { useFocusEffect } from "@react-navigation/native";
+import { useNotification } from "./NotificationContext";
 
 const AccountSettings = () => {
+  const { setError, setSuccess, startLoading, stopLoading } = useNotification();
   const { dispatch, state } = useAuth();
   const token = state.token;
   const [username, setUsername] = useState("Username"); //fetch the username from the database
@@ -27,6 +29,7 @@ const AccountSettings = () => {
   const { theme: ThemeColors } = useContext(ThemeContext);
 
   const getUserData = async () => {
+    //startLoading();
     try {
       const response = await fetch(BACKEND_URL + "user", {
         method: "GET",
@@ -39,16 +42,18 @@ const AccountSettings = () => {
         console.log(token);
         throw new Error("HTTP status " + response.status);
       }
+      stopLoading();
+      //setSuccess("User data fetched successfully");
       const data = await response.json();
       setUsername(data.username);
       setEmail(data.email);
     } catch (error) {
+      setError("Check your internet connection");
       console.error("Error:", error);
     }
   };
 
   const handleEmailChange = async () => {
-    setEmailModalVisible(false);
     try {
       const response = await fetch(BACKEND_URL + "user", {
         method: "PATCH",
@@ -61,16 +66,25 @@ const AccountSettings = () => {
       if (!response.ok) {
         console.log(JSON.stringify({ email: email }));
         console.log(token);
-        throw new Error("HTTP status " + response.status);
+        const data = await response.json();
+        console.log(data);
+        setError("Invalid email or email already taken");
+      } else {
+        getUserData();
+        setEmailModalVisible(false);
+        setSuccess("Email changed successfully");
       }
     } catch (error) {
       console.error("Error:", error);
+      setError("Check your internet connection");
     }
   };
 
   const handlePasswordChange = async () => {
+    startLoading();
     if (password !== confirmPassword) {
       console.log("Passwords do not match");
+      setError("Passwords do not match");
       return;
     }
     setPasswordModalVisible(false);
@@ -84,9 +98,15 @@ const AccountSettings = () => {
         body: JSON.stringify({ password: password }),
       });
       if (!response.ok) {
+        setError("Invalid password");
         throw new Error("HTTP status " + response.status);
+      } else {
+        setSuccess("Password changed successfully");
+        setPassword("");
+        setConfirmPassword("");
       }
     } catch (error) {
+      setError("Check your internet connection");
       console.error("Error:", error);
     }
   };
@@ -125,9 +145,14 @@ const AccountSettings = () => {
     },
     modalContainer: {
       flex: 1,
+      position: "absolute",
+      top: 60,
+      left: 0,
+      right: 0,
+      bottom: 0,
       justifyContent: "center",
       alignItems: "center",
-      backgroundColor: ThemeColors.secondary,
+      backgroundColor: ThemeColors.primary,
       opacity: 0.8,
     },
     modalContent: {
@@ -254,7 +279,11 @@ const AccountSettings = () => {
             </Pressable>
             <Pressable
               style={styles.cancelButton}
-              onPress={() => setPasswordModalVisible(false)}
+              onPress={() => {
+                setPasswordModalVisible(false);
+                setPassword("");
+                setConfirmPassword("");
+              }}
             >
               <Text style={styles.cancelButtonText}>Cancel</Text>
             </Pressable>

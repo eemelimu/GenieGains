@@ -31,6 +31,8 @@ import DropDownPicker from "react-native-dropdown-picker";
 import { Text as TextSVG, Svg } from "react-native-svg";
 //import { ThemeColors } from "../assets/ThemeColors";
 import { BACKEND_URL } from "../assets/config";
+import { useNotification } from "./NotificationContext";
+
 const CHART_HEIGHT = Dimensions.get("window").height / 2.6 - 20;
 const CHART_WIDTH = Dimensions.get("window").width - 40;
 
@@ -86,6 +88,7 @@ const calculateCombinedValueBetweenDates = (
 };
 
 const GoalsPage = () => {
+  const { setError, setSuccess, startLoading, stopLoading } = useNotification();
   const { theme: ThemeColors } = useContext(ThemeContext);
   const [openAdditionPicker, setOpenAdditionPicker] = useState(false);
   const [goalName, setGoalName] = useState("");
@@ -141,9 +144,11 @@ const GoalsPage = () => {
         //additionsCopy.push({ number: 0, created: data.created - 1 });
         setSelectedGoal({ ...data, data: additionsCopy });
       } else {
+        setError("Something went wrong");
         throw new Error("Failed to fetch goals");
       }
     } catch (error) {
+      setError("Check your internet connection");
       console.error("Error:", error);
     }
   };
@@ -162,9 +167,11 @@ const GoalsPage = () => {
       if (res.ok) {
         setGoalsData(data.goal_list);
       } else {
+        setError("Something went wrong");
         throw new Error("Failed to fetch goals");
       }
     } catch (error) {
+      setError("Check your internet connection");
       console.error("Error:", error);
     }
   };
@@ -240,6 +247,7 @@ const GoalsPage = () => {
     setUnits("");
     setTargetAmount("");
     getGoalsDataList();
+    setSuccess("Goal created successfully");
   };
 
   const addAdditionalData = async () => {
@@ -248,6 +256,7 @@ const GoalsPage = () => {
     console.log("Addition Date:", additionDate);
     console.log("Addition Note:", additionNote);
     console.log(additionValue);
+
     const noteWithoutNewLines = additionNote.replace("/\r?\n|\r/g", " ");
     for (i in additionValue) {
       try {
@@ -264,17 +273,23 @@ const GoalsPage = () => {
             note: noteWithoutNewLines,
           }),
         });
-        getGoalsData(value);
+        if (res.ok) {
+          console.log("Addition successful");
+        } else {
+          console.error("Addition failed");
+        }
       } catch (error) {
         console.error("Error:", error);
       }
     }
+    getGoalsData(value);
     setIsAdditionModalVisible(false);
     setAdditionUnits("");
     setAdditionTargetAmount("");
     setAdditionDate(new Date());
     setAdditionNote("");
     setAdditionValue([]);
+    setSuccess("Progress added successfully");
   };
 
   const formatXLabel = (epochDate) => {
@@ -332,12 +347,18 @@ const GoalsPage = () => {
     },
     modalContainer: {
       flex: 1,
+      position: "absolute",
+      top: 60,
+      left: 0,
+      right: 0,
+      bottom: 0,
       justifyContent: "center",
       alignItems: "center",
-      backgroundColor: "rgba(0, 0, 0, 0.5)",
+      backgroundColor: ThemeColors.primary,
+      opacity: 0.8,
     },
     modalContent: {
-      backgroundColor: ThemeColors.primary,
+      backgroundColor: ThemeColors.secondary,
       padding: 20,
       borderRadius: 10,
       width: "80%",
@@ -428,7 +449,7 @@ const GoalsPage = () => {
                   tickCount: { y: 7, x: 3 },
                   lineColor: ThemeColors.quaternary,
                   labelColor: {
-                    x:  ThemeColors.tertiary,
+                    x: ThemeColors.tertiary,
                     y: ThemeColors.tertiary,
                   },
                 }}

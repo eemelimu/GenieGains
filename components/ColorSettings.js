@@ -16,8 +16,10 @@ import ColorPicker, {
   colorKit,
 } from "reanimated-color-picker";
 import { ThemeContext } from "./ThemeContext";
+import { useNotification } from "./NotificationContext";
 
 export default function ColorSettings({}) {
+  const { setError, setSuccess, startLoading, stopLoading } = useNotification();
   const [showModal, setShowModal] = useState(false);
   const {
     theme: ThemeColors,
@@ -228,6 +230,7 @@ export default function ColorSettings({}) {
             resetTheme();
             //setColors(ThemeColors);
             storeData("theme", ThemeColors);
+            setSuccess("Theme reset to default");
           }}
         >
           <Text style={styles.buttonText}>Reset to default</Text>
@@ -285,6 +288,8 @@ export default function ColorSettings({}) {
                   [selectedButton]: selectedColor.value,
                 });
                 console.log("stored data:", await getData("theme"));
+                setSuccess("Theme updated");
+                //startLoading();
               }}
             >
               <Text style={{ color: ThemeColors.tertiary, fontWeight: "bold" }}>

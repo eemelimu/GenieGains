@@ -118,7 +118,7 @@ const InspectRoutine = ({route}) => {
             flex: 1,
         },
         header: {
-            backgroundColor: ThemeColors.tertiary,
+            backgroundColor: ThemeColors.primary,
             height: 100,
             justifyContent: "center",
             alignItems: "center",
@@ -154,7 +154,7 @@ const InspectRoutine = ({route}) => {
           },
             movementName: {
                 fontSize: 20,
-                fontFamily: "DMBold",
+                fontFamily: "DMRegular",
                 bottom: 20,
             },
             movementNumbers: {

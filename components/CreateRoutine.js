@@ -35,6 +35,42 @@ const CreateRoutine = () => {
       const token = state.token;
       const [selectedRoutineMovements, setSelectedMovements] = useState([]);
       const [menuMovements, setMenuMovements] = useState([]);
+      const [routineName, setRoutineName] = useState("");
+
+
+      const saveRoutine = async () => {
+        try { 
+          if (!routineName) {
+            console.log("Routine name is required");
+            return;
+            
+        }
+        
+          const res = await fetch(BACKEND_URL + "trainingplan", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "Auth-Token": token,
+            },
+            body: JSON.stringify({
+              name: routineName,
+              movements: selectedRoutineMovements.map((movement) => movement.id),
+            }),
+          });
+          
+          if (res.status === 200) {
+            navigation.navigate("Routines");
+            console.log("Routine created");
+          } else {
+            console.log("Error: ", res.status);
+          }
+        } catch (error) {
+          console.log("Fetch error: ", error);
+        }
+      };
+
+
+
       
       
 
@@ -96,9 +132,12 @@ const CreateRoutine = () => {
 
       return (
         <SafeAreaView style={styles.container}>
-          <View></View>
+          
           <ScrollView style={{ flex: 1 }}>
             <View style={styles.main}>
+              <TextInput placeholder="Routine name" 
+              style={styles.nameInput}
+              onChangeText={(text) => setRoutineName(text)} />
 
 
 
@@ -124,16 +163,19 @@ const CreateRoutine = () => {
                 dropdownStyle={styles.dropdown}
                 defaultValue="Select movement"
               />
-              <Movement name="Deadlift" />
+              
               {selectedRoutineMovements.map((movement) => (
-                <View key={movement.id}>
-                  <Movement name={movement.name} />
-                </View>
+                
+                  <Movement key = {movement.id} name={movement.name} />
+                
               ))}
             </View>
           </ScrollView>
+          <TouchableOpacity style={styles.finishRoutine} onPress={saveRoutine}>
+            <Text style={{ fontWeight: "bold", fontSize: 15 }}>Finish routine</Text>
+          </TouchableOpacity>
     
-          <View style={styles.footer}></View>
+          {/* <View style={styles.footer}></View> */}
         </SafeAreaView>
       );
     };
@@ -160,6 +202,32 @@ const CreateRoutine = () => {
         borderRadius: 15,
         paddingHorizontal: 10,
         position: "relative",
+      },
+      finishRoutine: {
+        width: "20%",
+        height: 50,
+        backgroundColor: ThemeColors.tertiary,
+        marginVertical: 7,
+        justifyContent: "center",
+        alignItems: "center",
+        borderRadius: 15,
+        paddingHorizontal: 10,
+        position: "relative",
+        alignSelf: "center",
+        fontFamily: "DMRegular",
+      },
+      nameInput: {
+        width: "20%",
+        height: 50,
+        backgroundColor: ThemeColors.primary,
+        marginVertical: 7,
+        justifyContent: "center",
+        alignItems: "center",
+        borderRadius: 15,
+        paddingHorizontal: 10,
+        position: "relative",
+        alignSelf: "center",
+        fontFamily: "DMRegular",
       },
       dropdownText: {
         fontSize: 16,

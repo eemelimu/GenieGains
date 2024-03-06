@@ -51,9 +51,7 @@ export const ViewWorkout = ({ route }) => {
         </View>
         <View style={styles.inputContainer}>
           <Text style={styles.label}>Notes</Text>
-          <TextInput style={styles.input} value={notes} 
-            placeholder="Notes"
-          />
+          <TextInput style={styles.input} value={notes} placeholder="Notes" />
         </View>
       </View>
       <View style={styles.line} />
@@ -103,34 +101,49 @@ const SingleMovement = ({ movement }) => {
   );
 };
 
-const SingleSet = ({
-  set,
-  setNumber,
-}) => {
-  const { weight, reps } = set;
+const SingleSet = ({ set, setNumber }) => {
+  const { weight, reps, video } = set;
 
   return (
-    <View style={styles.singleMovementRow}>
-      <Text style={styles.singleMovementLabel}>{setNumber}.</Text>
-      <Text style={styles.singleMovementLabel}>Weight</Text>
-      <TextInput
-        style={styles.singleMovementInput}
-        value={parseFloat(weight).toString()}
-        keyboardType="numeric"
-        editable={false}
-      />
-      <Text style={styles.singleMovementLabel}>Reps</Text>
-      <TextInput
-        style={styles.singleMovementInput}
-        value={reps}
-        keyboardType="numeric"
-        editable={false}
-      />
+    <View>
+      <View style={styles.singleMovementRow}>
+        <Text style={styles.singleMovementLabel}>{setNumber}.</Text>
+        <Text style={styles.singleMovementLabel}>Weight</Text>
+        <TextInput
+          style={styles.singleMovementInput}
+          value={parseFloat(weight).toString()}
+          keyboardType="numeric"
+          editable={false}
+        />
+        <Text style={styles.singleMovementLabel}>Reps</Text>
+        <TextInput
+          style={styles.singleMovementInput}
+          value={reps}
+          keyboardType="numeric"
+          editable={false}
+        />
+      </View>
+      {video && video !== '' && (
+        <View style={styles.videoContainer}>
+          <View style={styles.videoImageContainer}>
+            <Text>{video}</Text>
+          </View>
+        </View>
+      )}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  videoImageContainer: {
+    width: 75,
+    height: 75,
+    backgroundColor: "#ccc",
+  },
+  videoContainer: {
+    alignItems: "center",
+    justifyContent: "center",
+  },
   singleMovementInput: {
     borderWidth: 1,
     borderColor: "#ccc",

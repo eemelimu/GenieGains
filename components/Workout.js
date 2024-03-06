@@ -20,7 +20,7 @@ import { Feather } from "@expo/vector-icons";
 import ImagePicker from "react-native-image-picker";
 
 // TODO:
-// - Video: Fiksumpi visualisuus
+// - Video: Vaihda recordVideo & selectVideo ja handleAddVideo paikat, niin että handlevideo ottaa urin.
 // - Dropdown menun fonttia selkeemmäks
 // - Bug: Jos lisää kaksi liikettä ja lisää toiseen liikkeeseen lisää sarjoja,
 //   niin toisen liikkeen päälle ilmestyy tyhjää tilaa.
@@ -321,42 +321,47 @@ const SingleMovement = ({
     setSets(newSets);
   };
 
-  const selectVideo = () => {
+  const selectVideo = (index) => {
     const options = {
       mediaType: "video",
       videoQuality: "high",
     };
-
-    ImagePicker.launchImageLibrary(options, (response) => {
-      if (response.didCancel) {
-        console.log("User cancelled video picker");
-      } else if (response.error) {
-        console.log("ImagePicker Error: ", response.error);
-      } else if (response.customButton) {
-        console.log("User tapped custom button: ", response.customButton);
-      } else {
-        setVideoUri(response.uri);
-      }
-    });
+    setVideoUri("select video uri");
+    handleAddVideo(index);
+    console.log(videoUri);
+    // ImagePicker.launchImageLibrary(options, (response) => {
+    //   if (response.didCancel) {
+    //     console.log("User cancelled video picker");
+    //   } else if (response.error) {
+    //     console.log("ImagePicker Error: ", response.error);
+    //   } else if (response.customButton) {
+    //     console.log("User tapped custom button: ", response.customButton);
+    //   } else {
+    //     setVideoUri(response.uri);
+    //   }
+    // });
   };
 
-  const recordVideo = () => {
+  const recordVideo = (index) => {
     const options = {
       mediaType: "video",
       videoQuality: "high",
     };
 
-    ImagePicker.launchCamera(options, (response) => {
-      if (response.didCancel) {
-        console.log("User cancelled video recording");
-      } else if (response.error) {
-        console.log("ImagePicker Error: ", response.error);
-      } else if (response.customButton) {
-        console.log("User tapped custom button: ", response.customButton);
-      } else {
-        setVideoUri(response.uri);
-      }
-    });
+    setVideoUri("record video uri");
+    handleAddVideo(index);
+    console.log(videoUri);
+    // ImagePicker.launchCamera(options, (response) => {
+    //   if (response.didCancel) {
+    //     console.log("User cancelled video recording");
+    //   } else if (response.error) {
+    //     console.log("ImagePicker Error: ", response.error);
+    //   } else if (response.customButton) {
+    //     console.log("User tapped custom button: ", response.customButton);
+    //   } else {
+    //     setVideoUri(response.uri);
+    //   }
+    // });
   };
 
   return (
@@ -390,9 +395,9 @@ const SingleMovement = ({
           handleRemoveSet={() => handleRemoveSet(index)}
           handleSetOnChange={() => handleSetOnChange(index)}
           includeVideo={includeVideo}
-          handleAddVideo={() => handleAddVideo(index)}
-          selectVideo={selectVideo}
-          recordVideo={recordVideo}
+          // handleAddVideo={() => handleAddVideo(index)}
+          selectVideo={() => selectVideo(index)}
+          recordVideo={() => recordVideo(index)}
         />
       ))}
       <View>
@@ -414,7 +419,7 @@ const SingleSet = ({
   setNumber,
   handleRemoveSet,
   handleSetOnChange,
-  handleAddVideo,
+  // handleAddVideo,
   includeVideo,
   selectVideo,
   recordVideo,
@@ -459,7 +464,7 @@ const SingleSet = ({
       {includeVideo && !hideVideoIcon && (
         <TouchableOpacity
           style={styles.videoContainer}
-          onPress={handleAddVideo}
+          // onPress={handleAddVideo}
         >
           <Entypo
             name="video"
@@ -476,10 +481,16 @@ const SingleSet = ({
             justifyContent: "space-evenly",
           }}
         >
-          <TouchableOpacity style={styles.videoTypeButton} onPress={selectVideo}>
+          <TouchableOpacity
+            style={styles.videoTypeButton}
+            onPress={selectVideo}
+          >
             <Text>Select Video</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.videoTypeButton} onPress={recordVideo}>
+          <TouchableOpacity
+            style={styles.videoTypeButton}
+            onPress={recordVideo}
+          >
             <Text>Record Video</Text>
           </TouchableOpacity>
         </View>

@@ -55,7 +55,7 @@ const Register = () => {
       return;
     }
     if (password.length < 5) {
-      setError("Password must be at least 6 characters long");
+      setError("Password must be at least 5 characters long");
       return;
     }
     if (!email.includes("@")) {

@@ -21,6 +21,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { useAuth } from "./AuthContext";
 import { useNotification } from "./NotificationContext";
+
 // TODO
 // Search bar styles paremmaksi
 // Search barin hightlightaus (aktivointi) kun painaa search iconia
@@ -41,7 +42,6 @@ const HomeScreen = () => {
   const { state } = useAuth();
   const token = state.token;
   const navigation = useNavigation();
-  const [menuVisible, setMenuVisible] = useState(false);
   const [searchMenuVisible, setSearchMenuVisible] = useState(false);
   const [searchText, setSearchText] = useState("");
   const [searchedWorkouts, setSearchedWorkouts] = useState(workouts);
@@ -237,8 +237,7 @@ const HomeScreen = () => {
   };
 
   const handleLog = () => {
-    navigation.navigate("Routines");
-    console.log(workoutMovements);
+    navigation.navigate("Routines", { token: token });
   };
 
   const handleSearchTextChange = (text) => {
@@ -504,7 +503,7 @@ const HomeScreen = () => {
             data={searchedWorkouts}
             ListEmptyComponent={() => (
               <>
-                <Text style={styles.regularText}>No Workouts found</Text>
+                <Text style={styles.regularText}>No Workouts</Text>
               </>
             )}
             renderItem={({ item }) => (
@@ -542,22 +541,6 @@ const HomeScreen = () => {
           />
         )}
       </View>
-      {menuVisible && (
-        <View style={styles.workoutMenu}>
-          <TouchableOpacity
-            style={styles.menuItem}
-            onPress={() => navigation.navigate("Workout")}
-          >
-            <Text style={styles.regularText}>New</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.menuItem}
-            onPress={() => navigation.navigate("Workout", { workout: 123, userName: "John" })}
-          >
-            <Text style={styles.regularText}>From routines</Text>
-          </TouchableOpacity>
-        </View>
-      )}
       <View style={styles.footer}>
         <TouchableOpacity style={styles.footerButton} onPress={handleLog}>
           <SimpleLineIcons
@@ -569,7 +552,7 @@ const HomeScreen = () => {
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.startWorkoutButton, styles.footerButton]}
-          onPress={() => setMenuVisible(!menuVisible)}
+          onPress={() => navigation.navigate("Workout")}
         >
           <AntDesign name="plus" size={24} color={ThemeColors.secondary} />
           <Text

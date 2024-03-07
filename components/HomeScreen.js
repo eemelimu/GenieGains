@@ -294,10 +294,11 @@ const HomeScreen = () => {
       position: "absolute",
       right: 30,
       width: 125,
-      backgroundColor: "lightgrey",
+      backgroundColor: ThemeColors.secondary,
       borderRadius: 5,
       paddingVertical: 5,
       paddingHorizontal: 10,
+      color: ThemeColors.tertiary,
     },
     workoutMenu: {
       position: "absolute",
@@ -333,6 +334,7 @@ const HomeScreen = () => {
       position: "absolute",
       top: 10,
       left: 10,
+      color: ThemeColors.tertiary,
     },
     workoutDate: {
       fontSize: 14,
@@ -456,7 +458,7 @@ const HomeScreen = () => {
             <Ionicons
               name="remove"
               size={24}
-              color={ThemeColors.secondary}
+              color={ThemeColors.tertiary}
               onPress={() => {
                 setSearchMenuVisible(!searchMenuVisible);
                 setSearchText("");
@@ -468,7 +470,7 @@ const HomeScreen = () => {
           <AntDesign
             name="search1"
             size={24}
-            color={ThemeColors.secondary}
+            color={ThemeColors.tertiary}
             style={styles.searchItem}
             onPress={() => setSearchMenuVisible(!searchMenuVisible)}
           />

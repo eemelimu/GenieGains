@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   Button,
   ScrollView,
+  Pressable,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import ModalDropdown from "react-native-modal-dropdown";
@@ -17,9 +18,9 @@ import { Ionicons } from "@expo/vector-icons";
 import { ThemeColors } from "../assets/ThemeColors";
 import { Entypo } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
-import { Camera } from "react-native-vision-camera";
+//import { Camera } from "react-native-vision-camera";
 import { BACKEND_URL } from "../assets/config";
-
+import { ThemeContext } from "./ThemeContext";
 // TODO:
 // - Video: Vaihda recordVideo & selectVideo ja handleAddVideo paikat, niin että handlevideo ottaa urin.
 // - Dropdown menun fonttia selkeemmäks
@@ -29,19 +30,204 @@ import { BACKEND_URL } from "../assets/config";
 //   Ratkaisu: Jokaiselle liikkeelle oma state sarjojen lisäämiseen.
 
 export const Workout = () => {
-  const [cameraPermission, setCameraPermission] = useState();
+  const { theme: ThemeColors } = useContext(ThemeContext);
+  //styles dont move
 
-  useEffect(() => {
-    (async () => {
-      const cameraPermissionStatus = await Camera.requestCameraPermission();
-      setCameraPermission(cameraPermissionStatus);
-    })();
-  }, []);
+  const styles = StyleSheet.create({
+    videoTypeButton: {
+      borderRadius: 5,
+      overflow: "hidden",
+      padding: 7,
+      backgroundColor: ThemeColors.secondary,
+    },
+    videoOnOffIcon: {
+      position: "absolute",
+      right: 50,
+    },
+    videoContainer: {
+      flexDirection: "row",
+      justifyContent: "center",
+      alignItems: "center",
+      marginTop: 2,
+      marginBottom: 5,
+    },
+    // Single Movement Styles
+    singleMovementContainer: {
+      flex: 1,
+      padding: 20,
+      marginBottom: 20,
+    },
+    singleMovementRow: {
+      flexDirection: "row",
+      alignItems: "center",
+      paddingHorizontal: 10,
+      marginBottom: 5,
+    },
+    singleMovementColumn: {
+      flexDirection: "column",
+    },
+    singleMovementLabel: {
+      // width: 60,
+      marginBottom: 2,
+      top: 5,
+      paddingLeft: 5,
+      paddingRight: 5,
+    },
+    singleMovementInput: {
+      borderWidth: 1,
+      borderColor: ThemeColors.quaternary,
+      borderRadius: 5,
+      padding: 7,
+      textAlign: "center",
+      marginTop: 5,
+      width: 60,
+    },
+    singleMovementTitle: {
+      fontSize: 18,
+      fontWeight: "bold",
+    },
+    singleMovementReps: {
+      fontSize: 14,
+      marginBottom: 5,
+      alignSelf: "center",
+      position: "absolute",
+      top: 40,
+      left: 10,
+    },
+    singleMovementSets: {
+      fontSize: 14,
+      marginBottom: 5,
+      alignSelf: "center",
+      position: "absolute",
+      top: 70,
+      left: 10,
+    },
+    addSetButton: {
+      backgroundColor: ThemeColors.secondary,
+      paddingVertical: 10,
+      paddingHorizontal: 20,
+      borderRadius: 8,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    removeIcon: {
+      position: "absolute",
+      right: 10,
+      color: ThemeColors.tertiary,
+    },
+    // Add Movement Styles
+    addMenu: {
+      flexDirection: "row",
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    addMenuItem: {
+      marginHorizontal: 10,
+    },
+    addedMovements: {
+      marginTop: 20,
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    header: {
+      flexDirection: "row",
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    container: {
+      flex: 1,
+      backgroundColor: ThemeColors.primary,
+      padding: 20,
+    },
+    inputContainer: {
+      alignItems: "center",
+      paddingHorizontal: 20,
+    },
+    label: {
+      marginBottom: 20,
+      top: 15,
+      paddingHorizontal: 10,
+      color: ThemeColors.tertiary,
+    },
+    input: {
+      borderWidth: 1,
+      borderColor: ThemeColors.quaternary,
+      borderRadius: 5,
+      padding: 10,
+      textAlign: "center",
+      placeholderTextColor: ThemeColors.tertiary,
+      color: ThemeColors.tertiary,
+    },
+    line: {
+      borderBottomWidth: 1,
+      borderBottomColor: ThemeColors.quaternary,
+      width: "100%",
+      marginBottom: 20,
+      paddingBottom: 20,
+    },
+    dropdownText: {
+      fontSize: 16,
+      padding: 10,
+      borderWidth: 1,
+      color: ThemeColors.tertiary,
+      borderColor: ThemeColors.quaternary,
+      borderRadius: 5,
+      backgroundColor: ThemeColors.secondary,
+      textAlign: "center",
+    },
+    dropdown: {
+      marginTop: 2,
+      borderRadius: 3,
+      borderWidth: 1,
+      borderColor: ThemeColors.quaternary,
+      width: 144,
+      backgroundColor: ThemeColors.secondary,
+    },
+    addExercise: {
+      backgroundColor: ThemeColors.secondary,
+      paddingVertical: 10,
+      paddingHorizontal: 20,
+      borderRadius: 8,
+      alignItems: "center",
+      justifyContent: "center",
+      borderColor: ThemeColors.quaternary,
+      borderWidth: 3,
+    },
+    footer: {
+      flexDirection: "row",
+      justifyContent: "center",
+      alignItems: "center",
+      marginTop: 20,
+      bottom: 5,
+    },
+    finishWorkout: {
+      backgroundColor: ThemeColors.secondary,
+      paddingVertical: 10,
+      paddingHorizontal: 20,
+      borderRadius: 8,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    regularText: {
+      color: ThemeColors.tertiary,
+    },
+  });
 
-  console.log(`Camera permission status: ${cameraPermission}`);
+  //end of styles dont move
 
-  const devices = useCameraDevices();
-  const cameraDevice = devices.back;
+  // // // const [cameraPermission, setCameraPermission] = useState();
+
+  // // // useEffect(() => {
+  // // //   (async () => {
+  // // //     const cameraPermissionStatus = await Camera.requestCameraPermission();
+  // // //     setCameraPermission(cameraPermissionStatus);
+  // // //   })();
+  // // // }, []);
+
+  // // // console.log(`Camera permission status: ${cameraPermission}`);
+
+  // // // const devices = useCameraDevices();
+  // // // const cameraDevice = devices.back;
   const [name, setName] = useState(
     `Workout of ${new Date().toLocaleDateString(undefined, {
       month: "short",
@@ -202,7 +388,7 @@ export const Workout = () => {
             value={name}
             onChangeText={(text) => setName(text)}
             placeholder="Workout name"
-            placeholderTextColor="rgba(0, 0, 0, 0.5)"
+            placeholderTextColor={ThemeColors.tertiary}
           />
         </View>
         <View style={styles.inputContainer}>
@@ -212,7 +398,7 @@ export const Workout = () => {
             value={notes}
             onChangeText={(text) => setNotes(text)}
             placeholder="Notes"
-            placeholderTextColor="rgba(0, 0, 0, 0.5)"
+            placeholderTextColor={ThemeColors.tertiary}
           />
         </View>
       </View>
@@ -228,6 +414,15 @@ export const Workout = () => {
             defaultValue="Select Movement"
             textStyle={styles.dropdownText}
             dropdownStyle={styles.dropdown}
+            dropdownTextStyle={{
+              color: ThemeColors.tertiary,
+              backgroundColor: ThemeColors.primary,
+              fontSize: 16,
+            }}
+            dropdownTextHighlightStyle={{
+              color: ThemeColors.tertiary,
+              backgroundColorThemeColors: ThemeColors.quaternary,
+            }}
           />
         </View>
         <View style={styles.addMenuItem}>
@@ -235,7 +430,7 @@ export const Workout = () => {
             style={styles.addExercise}
             onPress={handleAddMovement}
           >
-            <Text>Add exercise</Text>
+            <Text style={styles.regularText}>Add exercise</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -252,7 +447,7 @@ export const Workout = () => {
               />
             ))
           ) : (
-            <Text>No exercises added</Text>
+            <Text style={styles.regularText}>No exercises added</Text>
           )}
         </View>
       </ScrollView>
@@ -264,7 +459,7 @@ export const Workout = () => {
           }}
           onPress={handleFinishWorkout}
         >
-          <Text>Finish Workout</Text>
+          <Text style={styles.regularText}>Finish Workout</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -277,9 +472,87 @@ const SingleMovement = ({
   workoutData,
   setWorkoutData,
 }) => {
+  //styles dont move
+  const { theme: ThemeColors } = useContext(ThemeContext);
+  const styles = StyleSheet.create({
+    // Single Movement Styles
+    singleMovementContainer: {
+      backgroundColor: ThemeColors.secondary,
+      borderRadius: 5,
+      flex: 1,
+      padding: 20,
+      marginBottom: 20,
+    },
+    singleMovementRow: {
+      flexDirection: "row",
+      alignItems: "center",
+      paddingHorizontal: 10,
+      marginBottom: 5,
+      color: ThemeColors.tertiary,
+    },
+    singleMovementColumn: {
+      flexDirection: "column",
+    },
+    singleMovementLabel: {
+      // width: 60,
+      marginBottom: 2,
+      top: 5,
+      paddingLeft: 5,
+      paddingRight: 5,
+    },
+    singleMovementInput: {
+      borderWidth: 1,
+      borderColor: "#ccc",
+      borderRadius: 5,
+      padding: 7,
+      textAlign: "center",
+      marginTop: 5,
+      width: 60,
+    },
+    singleMovementTitle: {
+      fontSize: 18,
+      fontWeight: "bold",
+      color: ThemeColors.tertiary,
+    },
+    singleMovementReps: {
+      fontSize: 14,
+      marginBottom: 5,
+      alignSelf: "center",
+      position: "absolute",
+      top: 40,
+      left: 10,
+    },
+    singleMovementSets: {
+      fontSize: 14,
+      marginBottom: 5,
+      alignSelf: "center",
+      position: "absolute",
+      top: 70,
+      left: 10,
+    },
+    addSetButton: {
+      backgroundColor: ThemeColors.secondary,
+      borderColor: ThemeColors.quaternary,
+      borderWidth: 3,
+      paddingVertical: 10,
+      paddingHorizontal: 20,
+      borderRadius: 8,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    addSetButtonText: {
+      color: ThemeColors.tertiary,
+      fontWeight: "bold",
+      fontSize: 16,
+    },
+    deleteMovementIcon: {
+      marginLeft: 100,
+    },
+  });
+
+  //end of styles dont move
+
   const [sets, setSets] = useState([{ weight: "", reps: "", video: "" }]);
-  const [includeVideo, setIncludeVideo] = useState(false);
-  const [videoUri, setVideoUri] = useState(null);
 
   const handleAddSet = () => {
     setSets([...sets, { weight: "", reps: "", video: "" }]);
@@ -326,76 +599,19 @@ const SingleMovement = ({
     setSets(newSets);
   };
 
-  const handleAddVideo = async (index) => {
-    const newSets = [...sets];
-    newSets[index].video = videoUri;
-    setSets(newSets);
-  };
-
-  const selectVideo = (index) => {
-    const options = {
-      mediaType: "video",
-      videoQuality: "high",
-    };
-    //setVideoUri("select video uri");
-
-    console.log(videoUri);
-    ImagePicker.launchImageLibrary(options, (response) => {
-      if (response.didCancel) {
-        console.log("User cancelled video picker");
-      } else if (response.error) {
-        console.log("ImagePicker Error: ", response.error);
-      } else if (response.customButton) {
-        console.log("User tapped custom button: ", response.customButton);
-      } else {
-        setVideoUri(response.uri);
-        handleAddVideo(index);
-      }
-    });
-  };
-
-  const recordVideo = async (index) => {
-    const options = {
-      mediaType: "video",
-      videoQuality: "high",
-    };
-
-    //setVideoUri("record video uri");
-
-    ImagePicker.launchCamera(options, (response) => {
-      if (response.didCancel) {
-        console.log("User cancelled video recording");
-      } else if (response.error) {
-        console.log("ImagePicker Error: ", response.error);
-      } else if (response.customButton) {
-        console.log("User tapped custom button: ", response.customButton);
-      } else {
-        setVideoUri(response.uri);
-        handleAddVideo(index);
-        console.log(videoUri);
-      }
-    });
-  };
-
   return (
     <View style={styles.singleMovementContainer}>
       <Text style={styles.singleMovementTitle}>
         {movement.name}
         <TouchableOpacity
-          onPress={() => setIncludeVideo(!includeVideo)}
-          style={styles.videoOnOffIcon}
-        >
-          {includeVideo ? (
-            <Feather name="video-off" size={24} color="black" />
-          ) : (
-            <Feather name="video" size={24} color="black" />
-          )}
-        </TouchableOpacity>
-        <TouchableOpacity
           onPress={() => handleRemoveMovement(movement)}
-          style={styles.removeIcon}
+          style={styles.deleteMovementIcon}
         >
-          <MaterialIcons name="delete-outline" size={24} color="black" />
+          <MaterialIcons
+            name="delete-outline"
+            size={24}
+            color={ThemeColors.tertiary}
+          />
         </TouchableOpacity>
       </Text>
       {sets.map((set, index) => (
@@ -407,19 +623,19 @@ const SingleMovement = ({
           setNumber={index + 1}
           handleRemoveSet={() => handleRemoveSet(index)}
           handleSetOnChange={() => handleSetOnChange(index)}
-          includeVideo={includeVideo}
           // handleAddVideo={() => handleAddVideo(index)}
           selectVideo={() => selectVideo(index)}
           recordVideo={() => recordVideo(index)}
         />
       ))}
       <View>
-        <Button
-          title="Add set"
+        <Pressable
           onPress={handleAddSet}
           style={styles.addSetButton}
           color={ThemeColors.secondary}
-        />
+        >
+          <Text style={styles.addSetButtonText}>Add Set</Text>
+        </Pressable>
       </View>
     </View>
   );
@@ -437,6 +653,7 @@ const SingleSet = ({
   selectVideo,
   recordVideo,
 }) => {
+  const { theme: ThemeColors } = useContext(ThemeContext);
   const { weight, reps } = set;
   const [videoSelected, setVideoSelected] = useState(false);
   const [hideVideoIcon, setHideVideoIcon] = useState(false);
@@ -446,6 +663,95 @@ const SingleSet = ({
     setHideVideoIcon(!hideVideoIcon);
   };
 
+  //styles dont move
+
+  const styles = StyleSheet.create({
+    videoTypeButton: {
+      borderRadius: 5,
+      overflow: "hidden",
+      padding: 7,
+      backgroundColor: ThemeColors.secondary,
+    },
+    videoOnOffIcon: {
+      position: "absolute",
+      right: 50,
+    },
+    videoContainer: {
+      flexDirection: "row",
+      justifyContent: "center",
+      alignItems: "center",
+      marginTop: 2,
+      marginBottom: 5,
+    },
+    // Single Movement Styles
+    singleMovementContainer: {
+      flex: 1,
+      padding: 20,
+      marginBottom: 20,
+    },
+    singleMovementRow: {
+      flexDirection: "row",
+      alignItems: "center",
+      paddingHorizontal: 10,
+      marginBottom: 5,
+    },
+    singleMovementColumn: {
+      flexDirection: "column",
+    },
+    singleMovementLabel: {
+      // width: 60,
+      color: ThemeColors.tertiary,
+      marginBottom: 2,
+      top: 5,
+      paddingLeft: 5,
+      paddingRight: 5,
+    },
+    singleMovementInput: {
+      borderWidth: 1,
+      borderColor: ThemeColors.quaternary,
+      borderRadius: 5,
+      padding: 7,
+      textAlign: "center",
+      marginTop: 5,
+      width: 60,
+      color: ThemeColors.tertiary,
+    },
+    singleMovementTitle: {
+      color: ThemeColors.tertiary,
+      fontSize: 18,
+      fontWeight: "bold",
+    },
+    singleMovementReps: {
+      fontSize: 14,
+      marginBottom: 5,
+      alignSelf: "center",
+      position: "absolute",
+      top: 40,
+      color: ThemeColors.tertiary,
+      left: 10,
+    },
+    singleMovementSets: {
+      fontSize: 14,
+      marginBottom: 5,
+      alignSelf: "center",
+      position: "absolute",
+      top: 70,
+      left: 10,
+    },
+    addSetButton: {
+      backgroundColor: "#D8D8D8",
+      paddingVertical: 10,
+      paddingHorizontal: 20,
+      borderRadius: 8,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    removeIcon: {
+      marginLeft: 10,
+    },
+  });
+
+  //end of styles dont move
   return (
     <View>
       <View style={styles.singleMovementRow}>
@@ -457,7 +763,7 @@ const SingleSet = ({
           onChangeText={(text) => setWeight(text)}
           placeholder="Weight"
           keyboardType="numeric"
-          placeholderTextColor="rgba(0, 0, 0, 0.5)"
+          placeholderTextColor={ThemeColors.tertiary}
           onChange={handleSetOnChange}
         />
         <Text style={styles.singleMovementLabel}>Reps</Text>
@@ -467,217 +773,13 @@ const SingleSet = ({
           onChangeText={(text) => setReps(text)}
           placeholder="Reps"
           keyboardType="numeric"
-          placeholderTextColor="rgba(0, 0, 0, 0.5)"
+          placeholderTextColor={ThemeColors.tertiary}
           onChange={handleSetOnChange}
         />
-        <TouchableOpacity onPress={handleRemoveSet}>
-          <Ionicons name="remove" size={24} color="black" />
+        <TouchableOpacity style={styles.removeIcon} onPress={handleRemoveSet}>
+          <Ionicons name="remove" size={24} color={ThemeColors.tertiary} />
         </TouchableOpacity>
       </View>
-      {includeVideo && !hideVideoIcon && (
-        <TouchableOpacity
-          style={styles.videoContainer}
-          // onPress={handleAddVideo}
-        >
-          <Entypo
-            name="video"
-            size={24}
-            color="black"
-            onPress={handleVideoIconPress}
-          />
-        </TouchableOpacity>
-      )}
-      {videoSelected && includeVideo && (
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-evenly",
-          }}
-        >
-          <TouchableOpacity
-            style={styles.videoTypeButton}
-            onPress={selectVideo}
-          >
-            <Text>Select Video</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.videoTypeButton}
-            onPress={recordVideo}
-          >
-            <Text>Record Video</Text>
-          </TouchableOpacity>
-        </View>
-      )}
-      <Camera {...props} video={true} />
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  videoTypeButton: {
-    borderRadius: 5,
-    overflow: "hidden",
-    padding: 7,
-    backgroundColor: ThemeColors.secondary,
-  },
-  videoOnOffIcon: {
-    position: "absolute",
-    right: 50,
-  },
-  videoContainer: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: 2,
-    marginBottom: 5,
-  },
-  // Single Movement Styles
-  singleMovementContainer: {
-    flex: 1,
-    padding: 20,
-    marginBottom: 20,
-  },
-  singleMovementRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingHorizontal: 10,
-    marginBottom: 5,
-  },
-  singleMovementColumn: {
-    flexDirection: "column",
-  },
-  singleMovementLabel: {
-    // width: 60,
-    marginBottom: 2,
-    top: 5,
-    paddingLeft: 5,
-    paddingRight: 5,
-  },
-  singleMovementInput: {
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 5,
-    padding: 7,
-    textAlign: "center",
-    marginTop: 5,
-    width: 60,
-  },
-  singleMovementTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-  },
-  singleMovementReps: {
-    fontSize: 14,
-    marginBottom: 5,
-    alignSelf: "center",
-    position: "absolute",
-    top: 40,
-    left: 10,
-  },
-  singleMovementSets: {
-    fontSize: 14,
-    marginBottom: 5,
-    alignSelf: "center",
-    position: "absolute",
-    top: 70,
-    left: 10,
-  },
-  addSetButton: {
-    backgroundColor: "#D8D8D8",
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 8,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  removeIcon: {
-    position: "absolute",
-    right: 10,
-  },
-  // Add Movement Styles
-  addMenu: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  addMenuItem: {
-    marginHorizontal: 10,
-  },
-  addedMovements: {
-    marginTop: 20,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  header: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    padding: 20,
-  },
-  inputContainer: {
-    alignItems: "center",
-    paddingHorizontal: 20,
-  },
-  label: {
-    marginBottom: 5,
-    top: 15,
-    backgroundColor: "white",
-    paddingHorizontal: 10,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 5,
-    padding: 10,
-    textAlign: "center",
-  },
-  line: {
-    borderBottomWidth: 1,
-    borderBottomColor: "#ccc",
-    width: "100%",
-    marginBottom: 20,
-    paddingBottom: 20,
-  },
-  dropdownText: {
-    fontSize: 16,
-    padding: 10,
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 5,
-    textAlign: "center",
-  },
-  dropdown: {
-    marginTop: 2,
-    borderRadius: 3,
-    borderWidth: 1,
-    borderColor: "#ccc",
-    width: 144,
-  },
-  addExercise: {
-    backgroundColor: "#D8D8D8",
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 8,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  footer: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: 20,
-    bottom: 5,
-  },
-  finishWorkout: {
-    backgroundColor: ThemeColors.secondary,
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 8,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});

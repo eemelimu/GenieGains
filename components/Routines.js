@@ -40,7 +40,7 @@ const Routines = () => {
 
   const moveToInspectRoutine = (routineName) => {
     console.log("called movetoCreateRoutine");
-    navigation.navigate("InspectRoutine", { routineName });
+    navigation.navigate("Inspect Routine", { routineName });
   };
 
   useFocusEffect(

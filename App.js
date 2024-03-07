@@ -121,7 +121,7 @@ const HomeStack = () => {
         component={PreferencesSettings}
       />
       <Stack.Screen name="Routines" component = {Routines} />
-      <Stack.Screen name="InspectRoutine" component = {InspectRoutine} />
+      <Stack.Screen name="Inspect Routine" component = {InspectRoutine} />
       <Stack.Screen name="Create Routine" component = {CreateRoutine} />
       <Stack.Screen name="Account Settings" component={AccountSettings} />
       <Stack.Screen name="Terms of Service" component={Tos} />

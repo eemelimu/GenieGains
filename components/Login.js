@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import {
   View,
   Button,
@@ -6,29 +6,49 @@ import {
   TextInput,
   TouchableOpacity,
   Image,
+  Modal,
+  Pressable,
 } from "react-native";
-import { useNavigation } from "@react-navigation/native";
-import { StyleSheet } from "react-native";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
+import { StyleSheet, BackHandler } from "react-native";
 import { useFonts } from "expo-font";
 import { ThemeColors } from "../assets/ThemeColors";
 import { useAuth } from "./AuthContext";
 import { BACKEND_URL } from "../assets/config";
+import { useNotification } from "./NotificationContext";
 const Login = () => {
+  const { setError, setSuccess, startLoading, stopLoading } = useNotification();
   const { dispatch } = useAuth();
   const navigation = useNavigation();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [openModal, setOpenModal] = useState(false);
   let [fontsLoaded] = useFonts({
     DMBold: require("../assets/fonts/DMSans-Bold.ttf"),
     DMRegular: require("../assets/fonts/DMSans-Regular.ttf"),
   });
+  useFocusEffect(
+    useCallback(() => {
+      const backAction = () => {
+        return true;
+      };
+      const backHandler = BackHandler.addEventListener(
+        "hardwareBackPress",
+        backAction
+      );
+      return () => {
+        backHandler.remove();
+      };
+    }, [])
+  );
   if (!fontsLoaded) {
     return null;
   }
 
   const handleLogin = async () => {
+    startLoading();
     try {
-      const res = await fetch(BACKEND_URL+"login", {
+      const res = await fetch(BACKEND_URL + "login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -41,14 +61,16 @@ const Login = () => {
       const data = await res.json();
       console.log(data);
       if (res.ok) {
+        setSuccess("Logged in");
         dispatch({
           type: "LOGIN",
           payload: { token: data.token },
         });
       } else {
-        throw new Error("Failed to login");
+        setError("Wrong username or password");
       }
     } catch (error) {
+      setError("Check your internet connection");
       console.error("Error:", error);
     }
   };
@@ -86,6 +108,26 @@ const Login = () => {
       >
         <Text style={styles.registerBtnText}>Register</Text>
       </TouchableOpacity>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={openModal}
+        onRequestClose={() => {
+          setOpenModal(!openModal);
+        }}
+      >
+        <View style={styles.modalContainer}>
+          <Text style={styles.errorText}>Wrong username or password</Text>
+          <Pressable
+            style={styles.button}
+            onPress={() => {
+              setOpenModal(false);
+            }}
+          >
+            <Text style={styles.ok}>Close</Text>
+          </Pressable>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -112,7 +154,10 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
     fontFamily: "DMBold",
   },
-
+  errorText: {
+    fontSize: 25,
+    color: "red",
+  },
   password: {
     paddingTop: 40,
     fontSize: 35,
@@ -148,6 +193,26 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     fontSize: 20,
     fontFamily: "DMRegular",
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    opacity: 0.9,
+    gap: 50,
+    backgroundColor: "grey",
+  },
+  button: {
+    backgroundColor: "black",
+    paddingTop: 10,
+    paddingBottom: 10,
+    paddingLeft: 20,
+    paddingRight: 20,
+    borderRadius: 10,
+  },
+  ok: {
+    color: "white",
+    fontSize: 20,
   },
 });
 {

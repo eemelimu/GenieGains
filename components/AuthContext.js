@@ -1,8 +1,9 @@
 // AuthContext.js
 import React, { createContext, useReducer, useContext, useEffect } from "react";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { getData, storeData, deleteData } from "../assets/utils/utils";
 import { useNavigation } from "@react-navigation/native";
 import { BACKEND_URL } from "../assets/config";
+
 const AuthContext = createContext();
 
 const initialState = {
@@ -42,7 +43,7 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const initializeAuth = async () => {
       try {
-        const token = await AsyncStorage.getItem("token");
+        const token = await getData("token");
         if (token) {
           const res = await fetch(BACKEND_URL + "token_login", {
             method: "POST",
@@ -58,11 +59,13 @@ export const AuthProvider = ({ children }) => {
             dispatch({ type: "STOPPED_LOADING" });
           } else {
             await AsyncStorage.removeItem("token");
-            throw new Error("Invalid token");
+            dispatch({ type: "STOPPED_LOADING" });
+            console.log("Invalid token");
           }
         } else {
           dispatch({ type: "STOPPED_LOADING" });
-          throw new Error("No token in local db");
+          dispatch({ type: "LOGOUT" });
+          console.log("No token in local db");
         }
       } catch (error) {
         dispatch({ type: "STOPPED_LOADING" });
@@ -83,10 +86,10 @@ export const AuthProvider = ({ children }) => {
       }
       try {
         if (state.isAuthenticated) {
-          await AsyncStorage.setItem("token", state.token);
+          storeData("token", state.token);
           navigation.navigate("Home");
         } else {
-          await AsyncStorage.removeItem("token");
+          deleteData("token");
           navigation.navigate("Login");
         }
       } catch (error) {

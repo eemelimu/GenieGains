@@ -7,6 +7,8 @@ import {
   TouchableOpacity,
 } from "react-native";
 import Tos from "./components/Tos";
+import Notification from "./components/Notification";
+import { NotificationProvider } from "./components/NotificationContext";
 import About from "./components/About";
 import ColorSettings from "./components/ColorSettings";
 import AccountSettings from "./components/AccountSettings";
@@ -28,7 +30,7 @@ import Register from "./components/Register";
 import { useAuth } from "./components/AuthContext";
 import LoadingPage from "./components/LoadingPage";
 import { Workout } from "./components/Workout";
-import Toast from "react-native-toast-message";
+import Toast, { ErrorToast } from "react-native-toast-message";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { DrawerContent } from "./components/DrawerContent";
 import { ViewWorkout } from "./components/ViewWorkout";
@@ -37,12 +39,20 @@ import { Troubleshooting } from "./components/Troubleshooting";
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 
-const CustomHeader = ({ navigation, title, showMenuButton, route }) => {
+const CustomHeader = ({
+  navigation,
+  title,
+  showMenuButton,
+  showNothing,
+  route,
+}) => {
   const [clickCounter, setClickCounter] = useState(0);
   const handleDrawer = () => {
     navigation.openDrawer();
   };
-
+  if (showNothing) {
+    return <View style={styles.header}></View>;
+  }
   return (
     <View style={styles.header}>
       {showMenuButton ? (
@@ -58,9 +68,10 @@ const CustomHeader = ({ navigation, title, showMenuButton, route }) => {
             } else {
               setClickCounter(clickCounter + 1);
               Toast.show({
-                type: "success",
-                text1: "Hello",
-                text2: "This is some something 👋",
+                type: "error",
+                text1: "Are you sure you want to exit?",
+                text2:
+                  "There may be unsaved changes. Press back again to confirm exit.",
               });
               console.log(clickCounter);
               console.log("fix toast");
@@ -78,7 +89,7 @@ const CustomHeader = ({ navigation, title, showMenuButton, route }) => {
 const HomeStack = () => {
   return (
     <Stack.Navigator
-      initialRouteName={"Login"}
+      initialRouteName={"Loading"}
       screenOptions={({ navigation, route }) => ({
         header: () => (
           <CustomHeader
@@ -86,10 +97,12 @@ const HomeStack = () => {
             title={route.name}
             showMenuButton={route.name === "Home"}
             route={route.name}
+            showNothing={route.name === "Loading" || route.name === "Login"}
           />
         ),
       })}
     >
+      <Stack.Screen name="Loading" component={LoadingPage} />
       <Stack.Screen name="Home" component={HomeScreen} />
       <Stack.Screen name="About" component={About} />
       <Stack.Screen name="Workout" component={Workout} />
@@ -118,23 +131,29 @@ const HomeStack = () => {
 
 export default function App() {
   return (
-    <SafeAreaView style={styles.container}>
-      <NavigationContainer>
-        <AuthProvider>
-          <ThemeProvider>
-            <Drawer.Navigator
-              drawerContent={(props) => <DrawerContent {...props} />}
-            >
-              <Drawer.Screen
-                options={{ headerShown: false }}
-                name=" "
-                component={HomeStack}
-              />
-            </Drawer.Navigator>
-          </ThemeProvider>
-        </AuthProvider>
-      </NavigationContainer>
-    </SafeAreaView>
+    <>
+      <SafeAreaView style={styles.container}>
+        <NavigationContainer>
+          <NotificationProvider>
+            <AuthProvider>
+              <ThemeProvider>
+                <Drawer.Navigator
+                  drawerContent={(props) => <DrawerContent {...props} />}
+                >
+                  <Drawer.Screen
+                    options={{ headerShown: false }}
+                    name=" "
+                    component={HomeStack}
+                  />
+                </Drawer.Navigator>
+              </ThemeProvider>
+              <Notification />
+            </AuthProvider>
+          </NotificationProvider>
+        </NavigationContainer>
+      </SafeAreaView>
+      <Toast />
+    </>
   );
 }
 
@@ -147,7 +166,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     paddingHorizontal: 20,
-    paddingTop: 50,
+    paddingTop: 30,
+    height: 110,
   },
   headerTitle: {
     fontSize: 20,

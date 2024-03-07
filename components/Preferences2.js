@@ -30,8 +30,8 @@ const Preferences = ({ route }) => {
           password: route.params.data.password,
           confirmPassword: route.params.data.confirmPassword,
           email: route.params.data.email,
-          unit: SelectedUnit,
-          experience: route.params.data.selectedSkill,
+          unit: SelectedUnit.toLowerCase(),
+          experience: route.params.data.selectedSkill.toLowerCase(),
         }),
       });
       console.log(await response.json());

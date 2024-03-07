@@ -23,9 +23,9 @@ pipeline {
             steps {
                 script {
                     if (isUnix()) {
-                        sh 'npm run test'
+                        sh 'npm run test -- -u'
                     } else {
-                        bat 'npm run test'
+                        bat 'npm run test -- -u'
                     }
                 }
             }

@@ -26,10 +26,13 @@ import { useAuth } from "./AuthContext";
 // Workout notet ja movementit näkyviin SingleWorkoutissa
 
 const HomeScreen = () => {
+  const seed =
+    new Date().getDate() + new Date().getMonth() + new Date().getFullYear();
   const { theme: ThemeColors } = useContext(ThemeContext);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [date] = useState(new Date());
   const [greeting, setGreeting] = useState("");
+  const [experience, setExperience] = useState("beginner");
   const [name, setName] = useState("name");
   const [selectedWorkout, setSelectedWorkout] = useState({});
   const [workouts, setWorkouts] = useState([]);
@@ -41,6 +44,48 @@ const HomeScreen = () => {
   const [searchText, setSearchText] = useState("");
   const [searchedWorkouts, setSearchedWorkouts] = useState(workouts);
   const [workoutMovements, setWorkoutMovements] = useState(null);
+
+  const beginnerTips = [
+    "Start Slow and Steady: Don't rush into intense workouts. Begin with light exercises to condition your body and avoid injury.",
+    "Focus on Form: Proper form is crucial to prevent injury and maximize results. Take time to learn the correct techniques for each exercise.",
+    "Listen to Your Body: Pay attention to how your body feels during workouts. If something doesn't feel right, stop and reassess rather than pushing through.",
+    "Stay Hydrated: Drink water before, during, and after your workouts to stay hydrated and maintain performance.",
+    "Consistency Over Intensity: Consistent workouts are more beneficial than occasional intense sessions. Aim for regular exercise routines.",
+    "Rest and Recovery: Allow your body time to rest and recover between workouts. Overtraining can lead to burnout and injuries.",
+    "Recovery Nutrition: After workouts, refuel your body with a balanced meal or snack containing carbohydrates and protein to aid in muscle recovery and replenish energy stores.",
+    "Practice Mind-Muscle Connection: Focus on engaging the target muscles during exercises by consciously contracting and squeezing them, which can enhance muscle activation and growth.",
+    "Learn Proper Equipment Usage: Take the time to familiarize yourself with gym equipment to ensure safe and effective usage, and don't hesitate to ask gym staff for guidance if needed.",
+    "Set Realistic Expectations: Understand that progress takes time, and avoid comparing yourself to others. Focus on your own journey and celebrate small victories along the way.",
+    "Hygiene Matters: Always wipe down equipment before and after use, and practice good hygiene habits like washing your hands regularly to prevent the spread of germs and bacteria.",
+  ];
+
+  const intermediateTips = [
+    "Progressive Overload: Continuously challenge yourself by increasing weights, reps, or intensity to stimulate muscle growth and strength gains.",
+    "Vary Your Workouts: Incorporate a variety of exercises to target different muscle groups and prevent plateaus.",
+    "Warm Up Properly: Spend at least 5-10 minutes warming up before each workout to increase blood flow and flexibility, reducing the risk of injury.",
+    "Nutrition Matters: Pay attention to your diet, ensuring you're getting enough protein, carbohydrates, and healthy fats to support your fitness goals.",
+    "Track Your Progress: Keep a workout log or use fitness apps to track your progress and adjust your routines accordingly.",
+    "Don't Skip Recovery Days: Scheduled rest days are essential for muscle repair and growth. Use these days for light activity, stretching, or active recovery.",
+    "Mindful Recovery Techniques: Incorporate mindfulness practices such as deep breathing exercises, meditation, or yoga to promote relaxation and stress reduction, which can aid in recovery and improve overall well-being.",
+    "Utilize Resistance Bands: Integrate resistance bands into your workouts to add variety and challenge different muscle groups while also improving stability and joint mobility.",
+    "Experiment with Tempo Training: Manipulate the tempo (speed) of your repetitions during exercises to create different training stimuli and elicit specific adaptations such as muscle hypertrophy or strength gains.",
+    "Practice Pre-Workout Activation: Perform dynamic warm-up exercises or activation drills targeting specific muscle groups before your workouts to enhance muscle recruitment and improve performance.",
+    "Attend Group Fitness Classes: Participate in group fitness classes such as spinning, Pilates, or dance workouts to add diversity to your routine, stay motivated, and connect with like-minded individuals.",
+  ];
+
+  const expertTips = [
+    "Periodize Your Training: Implement periodization techniques to vary intensity and volume over time for optimal performance and adaptation.",
+    "Incorporate Mobility Work: Focus on mobility exercises and flexibility training to improve joint health and range of motion.",
+    "Experiment with Advanced Techniques: Explore advanced training methods like supersets, drop sets, and pyramids to challenge your body in new ways.",
+    "Listen to Your Body Again: As an expert, you may be tempted to push through discomfort, but it's crucial to recognize when to back off to prevent overuse injuries.",
+    "Mental Conditioning: Develop mental resilience and focus through techniques like visualization, meditation, and mindfulness practices.",
+    "Continual Learning: Stay updated on the latest research and trends in fitness and nutrition to refine your training methods and stay ahead in your field.",
+    "Optimize Nutrient Timing: Strategically time your meals and snacks around your workouts to optimize performance, recovery, and nutrient absorption, considering factors like macronutrient composition and meal timing.",
+    "Utilize Recovery Tools: Invest in recovery tools such as compression garments, percussion massagers, or cold therapy devices to accelerate recovery, reduce muscle soreness, and enhance overall recovery efficiency.",
+    "Implement Deload Weeks: Periodically incorporate deload weeks into your training program, where you reduce training volume and intensity to allow for systemic recovery and prevent overtraining.",
+    "Focus on Mindful Movement: Practice mindful movement techniques such as tai chi, qigong, or Feldenkrais method to improve body awareness, movement quality, and neuromuscular coordination.",
+    "Embrace Active Lifestyle Habits: Incorporate physical activity into your daily routine beyond structured workouts, such as taking the stairs instead of the elevator or walking or biking for transportation whenever possible, to promote overall health and longevity.",
+  ];
 
   const dateToString = date.toLocaleDateString(undefined, {
     weekday: "short",
@@ -235,9 +280,14 @@ const HomeScreen = () => {
   };
 
   const styles = StyleSheet.create({
+    column: {
+      flexDirection: "column",
+    },
     searchItem: {
+      marginTop: 10,
       position: "absolute",
-      right: 10,
+      right: 20,
+      color: ThemeColors.tertiary,
     },
     searchItemInput: {
       position: "absolute",
@@ -301,8 +351,10 @@ const HomeScreen = () => {
       paddingHorizontal: 20,
     },
     header: {
+      flexDirection: "row",
+      gap: 50,
       paddingVertical: 10,
-      paddingHorizontal: 100,
+      paddingHorizontal: "5%",
     },
     flatListStyle: {
       width: "90%",
@@ -378,38 +430,48 @@ const HomeScreen = () => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.date}>{dateToString.toUpperCase()}</Text>
-        <Text style={styles.greetings}>
-          {greeting}, {name}!
-          {searchMenuVisible ? (
-            <View style={styles.searchItem}>
-              <TextInput
-                style={styles.searchItemInput}
-                placeholder="Search..."
-                value={searchText}
-                onChangeText={handleSearchTextChange}
-              />
-              <Ionicons
-                name="remove"
-                size={24}
-                color={ThemeColors.secondary}
-                onPress={() => {
-                  setSearchMenuVisible(!searchMenuVisible);
-                  setSearchText("");
-                  setSearchedWorkouts(workouts);
-                }}
-              />
-            </View>
-          ) : (
-            <AntDesign
-              name="search1"
+        <View style={styles.column}>
+          <Text style={styles.date}>{dateToString.toUpperCase()}</Text>
+          <Text style={styles.greetings}>
+            {greeting}, {name}!
+          </Text>
+          <Text style={styles.regularText}>
+            Your {experience} tip for today:{"\n"}
+            {experience === "beginner"
+              ? beginnerTips[(seed * 1337) % beginnerTips.length]
+              : experience === "intermediate"
+              ? intermediateTips[(seed * 1337) % intermediateTips.length]
+              : expertTips[(seed * 1337) % expertTips.length]}
+          </Text>
+        </View>
+        {searchMenuVisible ? (
+          <View style={styles.searchItem}>
+            <TextInput
+              style={styles.searchItemInput}
+              placeholder="Search..."
+              value={searchText}
+              onChangeText={handleSearchTextChange}
+            />
+            <Ionicons
+              name="remove"
               size={24}
               color={ThemeColors.secondary}
-              style={styles.searchItem}
-              onPress={() => setSearchMenuVisible(!searchMenuVisible)}
+              onPress={() => {
+                setSearchMenuVisible(!searchMenuVisible);
+                setSearchText("");
+                setSearchedWorkouts(workouts);
+              }}
             />
-          )}
-        </Text>
+          </View>
+        ) : (
+          <AntDesign
+            name="search1"
+            size={24}
+            color={ThemeColors.secondary}
+            style={styles.searchItem}
+            onPress={() => setSearchMenuVisible(!searchMenuVisible)}
+          />
+        )}
       </View>
       <View style={styles.main}>
         {searchText || searchMenuVisible ? (
@@ -420,7 +482,7 @@ const HomeScreen = () => {
             data={searchedWorkouts}
             ListEmptyComponent={() => (
               <>
-                <Text>No Workouts found</Text>
+                <Text style={styles.regularText}>No Workouts found</Text>
               </>
             )}
             renderItem={({ item }) => (
@@ -442,7 +504,7 @@ const HomeScreen = () => {
             data={workouts}
             ListEmptyComponent={() => (
               <>
-                <Text>No Workouts</Text>
+                <Text style={styles.regularText}>No Workouts</Text>
               </>
             )}
             renderItem={({ item }) => (
@@ -470,17 +532,17 @@ const HomeScreen = () => {
             style={styles.menuItem}
             onPress={() => console.log("From routines button pressed")}
           >
-            <Text>From routines</Text>
+            <Text style={styles.regularText}>From routines</Text>
           </TouchableOpacity>
         </View>
       )}
       <View style={styles.footer}>
         <TouchableOpacity style={styles.footerButton} onPress={handleLog}>
           <Entypo name="back-in-time" size={24} color={ThemeColors.tertiary} />
-          <Text>Log</Text>
+          <Text style={styles.regularText}>Log</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={[styles.footerButton, styles.startWorkoutButton]}
+          style={[styles.startWorkoutButton, styles.footerButton]}
           onPress={() => setMenuVisible(!menuVisible)}
         >
           <AntDesign name="plus" size={24} color={ThemeColors.secondary} />
@@ -499,7 +561,7 @@ const HomeScreen = () => {
           onPress={() => navigation.navigate("Goals")}
         >
           <Ionicons name="stats-chart" size={24} color={ThemeColors.tertiary} />
-          <Text>Progress</Text>
+          <Text style={styles.regularText}>Progress</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>

@@ -1,8 +1,16 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useCallback } from "react";
 import { View, Text, TouchableOpacity, Modal, StyleSheet } from "react-native";
+import { useFocusEffect } from "@react-navigation/native";
 //import { ThemeColors } from "../assets/ThemeColors";
 import { ThemeContext } from "./ThemeContext";
+import { useAuth } from "./AuthContext";
+import { BACKEND_URL } from "../assets/config";
+import { useNotification } from "./NotificationContext";
+
 const Preferences = () => {
+  const { dispatch, state } = useAuth();
+  const { setError, setSuccess, startLoading, stopLoading } = useNotification();
+  const token = state.token;
   const [isUnitModalVisible, setIsUnitModalVisible] = useState(false);
   const [isExperienceModalVisible, setIsExperienceModalVisible] =
     useState(false);
@@ -11,6 +19,34 @@ const Preferences = () => {
 
   const { theme: ThemeColors } = useContext(ThemeContext);
 
+  const getUserData = async () => {
+    startLoading();
+    try {
+      const response = await fetch(BACKEND_URL + "user", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Auth-Token": `${token}`,
+        },
+      });
+      if (!response.ok) {
+        console.log(token);
+        throw new Error("HTTP status " + response.status);
+      }
+      const data = await response.json();
+      setSelectedUnit(data.unit);
+      setSelectedExperience(data.experience);
+    } catch (error) {
+      setError("Check your internet connection");
+      console.error("Error:", error);
+    }
+    stopLoading();
+  };
+  useFocusEffect(
+    useCallback(() => {
+      getUserData();
+    }, [])
+  );
   const handleOpenUnitModal = () => {
     setIsUnitModalVisible(true);
   };
@@ -27,16 +63,50 @@ const Preferences = () => {
     setIsExperienceModalVisible(false);
   };
 
-  const handleConfirmUnit = () => {
-    // Handle confirmation for unit selection
-    console.log("Selected unit:", selectedUnit);
-    setIsUnitModalVisible(false);
+  const handleConfirmUnit = async () => {
+    try {
+      const response = await fetch(BACKEND_URL + "user", {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          "Auth-Token": `${token}`,
+        },
+        body: JSON.stringify({ unit: selectedUnit.toLowerCase() }),
+      });
+      if (!response.ok) {
+        setError("Something went wrong");
+      } else {
+        console.log("Selected unit:", selectedUnit);
+        setIsUnitModalVisible(false);
+        setSuccess("Unit updated successfully");
+      }
+    } catch (error) {
+      setError("Check your internet connection");
+      console.error("Error:", error);
+    }
   };
 
-  const handleConfirmExperience = () => {
-    // Handle confirmation for experience selection
-    console.log("Selected experience:", selectedExperience);
-    setIsExperienceModalVisible(false);
+  const handleConfirmExperience = async () => {
+    try {
+      const response = await fetch(BACKEND_URL + "user", {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          "Auth-Token": `${token}`,
+        },
+        body: JSON.stringify({ experience: selectedExperience.toLowerCase() }),
+      });
+      if (!response.ok) {
+        setError("Something went wrong");
+      } else {
+        console.log("Selected experience:", selectedExperience);
+        setSuccess("Experience updated successfully");
+        setIsExperienceModalVisible(false);
+      }
+    } catch (error) {
+      setError("Check your internet connection");
+      console.error("Error:", error);
+    }
   };
   const styles = StyleSheet.create({
     container: {
@@ -58,9 +128,14 @@ const Preferences = () => {
     },
     modalContainer: {
       flex: 1,
+      position: "absolute",
+      top: 60,
+      left: 0,
+      right: 0,
+      bottom: 0,
       justifyContent: "center",
       alignItems: "center",
-      backgroundColor: ThemeColors.secondary,
+      backgroundColor: ThemeColors.primary,
       opacity: 0.8,
     },
     modalContent: {
@@ -129,18 +204,18 @@ const Preferences = () => {
             <TouchableOpacity
               style={[
                 styles.modalButton,
-                selectedUnit === "Metric" && styles.selectedButton,
+                selectedUnit === "metric" && styles.selectedButton,
               ]}
-              onPress={() => setSelectedUnit("Metric")}
+              onPress={() => setSelectedUnit("metric")}
             >
               <Text style={styles.modalButtonText}>Metric</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={[
                 styles.modalButton,
-                selectedUnit === "Imperial" && styles.selectedButton,
+                selectedUnit === "imperial" && styles.selectedButton,
               ]}
-              onPress={() => setSelectedUnit("Imperial")}
+              onPress={() => setSelectedUnit("imperial")}
             >
               <Text style={styles.modalButtonText}>Imperial</Text>
             </TouchableOpacity>
@@ -174,29 +249,29 @@ const Preferences = () => {
             <TouchableOpacity
               style={[
                 styles.modalButton,
-                selectedExperience === "Beginner" && styles.selectedButton,
+                selectedExperience === "beginner" && styles.selectedButton,
               ]}
-              onPress={() => setSelectedExperience("Beginner")}
+              onPress={() => setSelectedExperience("beginner")}
             >
               <Text style={styles.modalButtonText}>Beginner</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={[
                 styles.modalButton,
-                selectedExperience === "Intermediate" && styles.selectedButton,
+                selectedExperience === "intermediate" && styles.selectedButton,
               ]}
-              onPress={() => setSelectedExperience("Intermediate")}
+              onPress={() => setSelectedExperience("intermediate")}
             >
               <Text style={styles.modalButtonText}>Intermediate</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={[
                 styles.modalButton,
-                selectedExperience === "Professional" && styles.selectedButton,
+                selectedExperience === "expert" && styles.selectedButton,
               ]}
-              onPress={() => setSelectedExperience("Professional")}
+              onPress={() => setSelectedExperience("expert")}
             >
-              <Text style={styles.modalButtonText}>Professionaö</Text>
+              <Text style={styles.modalButtonText}>Expert</Text>
             </TouchableOpacity>
 
             <View style={styles.modalButtonContainer}>

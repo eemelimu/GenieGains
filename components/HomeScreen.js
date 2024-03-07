@@ -526,7 +526,7 @@ const HomeScreen = () => {
             style={styles.menuItem}
             onPress={() => navigation.navigate("Workout")}
           >
-            <Text>New</Text>
+            <Text style={styles.regularText}>New</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.menuItem}

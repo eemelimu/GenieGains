@@ -58,7 +58,7 @@ export const AuthProvider = ({ children }) => {
             dispatch({ type: "LOGIN", payload: { token } });
             dispatch({ type: "STOPPED_LOADING" });
           } else {
-            await AsyncStorage.removeItem("token");
+            deleteData("token");
             dispatch({ type: "STOPPED_LOADING" });
             console.log("Invalid token");
           }

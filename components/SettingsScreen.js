@@ -1,10 +1,4 @@
-import React, {
-  useContext,
-  useState,
-  useCallback,
-  useEffect,
-  useState,
-} from "react";
+import React, { useContext, useState, useCallback, useEffect } from "react";
 import { View, Text, Button, StyleSheet, Pressable } from "react-native";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 //import { ThemeColors } from "../assets/ThemeColors";
@@ -16,8 +10,6 @@ import { FontAwesome } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { BACKEND_URL } from "../assets/config";
 import { useAuth } from "./AuthContext";
-import { useAuth } from "./AuthContext";
-import { BACKEND_URL } from "../assets/config";
 
 const SettingsButton = ({ color, text, children, navigationPage }) => {
   const navigation = useNavigation();

@@ -1,4 +1,3 @@
-import { STOP } from "gifted-charts-core";
 import React, { createContext, useState, useContext } from "react";
 
 const NotificationContext = createContext();

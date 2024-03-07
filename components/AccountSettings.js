@@ -12,7 +12,6 @@ import { MaterialIcons } from "@expo/vector-icons";
 //import { ThemeColors } from "../assets/ThemeColors";
 import { ThemeContext } from "./ThemeContext";
 import { BACKEND_URL } from "../assets/config";
-import { BACKEND_URL } from "../assets/config";
 import { useFocusEffect } from "@react-navigation/native";
 import { useNotification } from "./NotificationContext";
 
@@ -20,14 +19,12 @@ const AccountSettings = () => {
   const { setError, setSuccess, startLoading, stopLoading } = useNotification();
   const { dispatch, state } = useAuth();
   const token = state.token;
-  const [username, setUsername] = useState(""); 
+  const [username, setUsername] = useState("");
   const [emailModalVisible, setEmailModalVisible] = useState(false);
   const [passwordModalVisible, setPasswordModalVisible] = useState(false);
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [email, setEmail] = useState("");
-  const { state } = useAuth();
-  const token = state.token;
   const { theme: ThemeColors } = useContext(ThemeContext);
 
   const getUserData = async () => {

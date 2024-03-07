@@ -229,7 +229,7 @@ export const DrawerContent = () => {
           color={ThemeColors.tertiary}
           style={styles.drawerItemIcon}
         />
-        <Text>Troubleshooting</Text>
+        <Text style={styles.regularText}>Troubleshooting</Text>
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.drawerItem}

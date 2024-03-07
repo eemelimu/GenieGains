@@ -8,7 +8,6 @@ import {
 } from "react-native";
 import Toast from "react-native-toast-message";
 import { useNotification } from "./NotificationContext";
-import LoadingDots from "react-native-loading-dots";
 
 const NotificationComponent = () => {
   const { notification } = useNotification();

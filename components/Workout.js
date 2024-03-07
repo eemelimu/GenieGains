@@ -17,7 +17,8 @@ import { Ionicons } from "@expo/vector-icons";
 import { ThemeColors } from "../assets/ThemeColors";
 import { Entypo } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
-import ImagePicker from "react-native-image-picker";
+import { Camera } from "react-native-vision-camera";
+import { BACKEND_URL } from "../assets/config";
 
 // TODO:
 // - Video: Vaihda recordVideo & selectVideo ja handleAddVideo paikat, niin että handlevideo ottaa urin.
@@ -28,6 +29,19 @@ import ImagePicker from "react-native-image-picker";
 //   Ratkaisu: Jokaiselle liikkeelle oma state sarjojen lisäämiseen.
 
 export const Workout = () => {
+  const [cameraPermission, setCameraPermission] = useState();
+
+  useEffect(() => {
+    (async () => {
+      const cameraPermissionStatus = await Camera.requestCameraPermission();
+      setCameraPermission(cameraPermissionStatus);
+    })();
+  }, []);
+
+  console.log(`Camera permission status: ${cameraPermission}`);
+
+  const devices = useCameraDevices();
+  const cameraDevice = devices.back;
   const [name, setName] = useState(
     `Workout of ${new Date().toLocaleDateString(undefined, {
       month: "short",
@@ -73,7 +87,7 @@ export const Workout = () => {
 
   const createExercise = async (name, notes) => {
     try {
-      const res = await fetch("http://localhost:8000/exercise", {
+      const res = await fetch(BACKEND_URL + "exercise", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -106,24 +120,21 @@ export const Workout = () => {
 
   const addSetsToExercise = async (exerciseId, sets, movement) => {
     try {
-      const res = await fetch(
-        `http://localhost:8000/exercisemovementconnection`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Auth-Token": token,
-          },
-          body: JSON.stringify({
-            exercise_id: exerciseId,
-            movement_id: movement.id,
-            weight: sets.weight,
-            reps: sets.reps,
-            video: sets.video,
-            time: 0,
-          }),
-        }
-      );
+      const res = await fetch(BACKEND_URL + `exercisemovementconnection`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Auth-Token": token,
+        },
+        body: JSON.stringify({
+          exercise_id: exerciseId,
+          movement_id: movement.id,
+          weight: sets.weight,
+          reps: sets.reps,
+          video: sets.video,
+          time: 0,
+        }),
+      });
       const data = await res.json();
       return data;
     } catch (error) {
@@ -153,7 +164,7 @@ export const Workout = () => {
 
   useEffect(() => {
     try {
-      fetch("http://localhost:8000/movement", {
+      fetch(BACKEND_URL + "movement", {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -326,42 +337,44 @@ const SingleMovement = ({
       mediaType: "video",
       videoQuality: "high",
     };
-    setVideoUri("select video uri");
-    handleAddVideo(index);
+    //setVideoUri("select video uri");
+
     console.log(videoUri);
-    // ImagePicker.launchImageLibrary(options, (response) => {
-    //   if (response.didCancel) {
-    //     console.log("User cancelled video picker");
-    //   } else if (response.error) {
-    //     console.log("ImagePicker Error: ", response.error);
-    //   } else if (response.customButton) {
-    //     console.log("User tapped custom button: ", response.customButton);
-    //   } else {
-    //     setVideoUri(response.uri);
-    //   }
-    // });
+    ImagePicker.launchImageLibrary(options, (response) => {
+      if (response.didCancel) {
+        console.log("User cancelled video picker");
+      } else if (response.error) {
+        console.log("ImagePicker Error: ", response.error);
+      } else if (response.customButton) {
+        console.log("User tapped custom button: ", response.customButton);
+      } else {
+        setVideoUri(response.uri);
+        handleAddVideo(index);
+      }
+    });
   };
 
-  const recordVideo = (index) => {
+  const recordVideo = async (index) => {
     const options = {
       mediaType: "video",
       videoQuality: "high",
     };
 
-    setVideoUri("record video uri");
-    handleAddVideo(index);
-    console.log(videoUri);
-    // ImagePicker.launchCamera(options, (response) => {
-    //   if (response.didCancel) {
-    //     console.log("User cancelled video recording");
-    //   } else if (response.error) {
-    //     console.log("ImagePicker Error: ", response.error);
-    //   } else if (response.customButton) {
-    //     console.log("User tapped custom button: ", response.customButton);
-    //   } else {
-    //     setVideoUri(response.uri);
-    //   }
-    // });
+    //setVideoUri("record video uri");
+
+    ImagePicker.launchCamera(options, (response) => {
+      if (response.didCancel) {
+        console.log("User cancelled video recording");
+      } else if (response.error) {
+        console.log("ImagePicker Error: ", response.error);
+      } else if (response.customButton) {
+        console.log("User tapped custom button: ", response.customButton);
+      } else {
+        setVideoUri(response.uri);
+        handleAddVideo(index);
+        console.log(videoUri);
+      }
+    });
   };
 
   return (
@@ -495,6 +508,7 @@ const SingleSet = ({
           </TouchableOpacity>
         </View>
       )}
+      <Camera {...props} video={true} />
     </View>
   );
 };
@@ -544,7 +558,7 @@ const styles = StyleSheet.create({
     borderColor: "#ccc",
     borderRadius: 5,
     padding: 7,
-    textAlign: "top",
+    textAlign: "center",
     marginTop: 5,
     width: 60,
   },

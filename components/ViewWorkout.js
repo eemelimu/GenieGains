@@ -16,6 +16,13 @@ export const ViewWorkout = ({ route }) => {
   const navigation = useNavigation();
   const [workoutData, setWorkoutData] = useState([]);
 
+  // const handleEditWorkout = () => {
+  //   console.log("Workout Movements");
+  //   console.log(workout.movements);
+  //   console.log("workoutData");
+  //   console.log(workoutData);
+  // };
+
   useEffect(() => {
     const groupMovementsByName = (movements) => {
       const groupedMovements = [];
@@ -55,6 +62,9 @@ export const ViewWorkout = ({ route }) => {
           ))}
         </View>
       </ScrollView>
+      {/* <TouchableOpacity onPress={handleEditWorkout} style={styles.editButton}>
+        <Text>Edit Workout</Text>
+      </TouchableOpacity> */}
     </SafeAreaView>
   );
 };

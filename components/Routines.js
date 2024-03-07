@@ -143,7 +143,6 @@ const Routines = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View></View>
       <ScrollView style={{ flex: 1 }}>
         {trainingPlans.map((trainingPlan) => (
           <TouchableOpacity

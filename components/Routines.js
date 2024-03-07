@@ -33,7 +33,7 @@ const Routines = () => {
   });
 
   const moveToCreateRoutine = () => {
-    navigation.navigate("CreateRoutine");
+    navigation.navigate("Create Routine");
   };
   const moveToCreateMovement = () => {
     navigation.navigate("Create Movement");

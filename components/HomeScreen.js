@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback, useContext } from "react";
 import { BACKEND_URL } from "../assets/config";
 import { SimpleLineIcons } from "@expo/vector-icons";
 import { ThemeContext } from "./ThemeContext";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import {
   BackHandler,
   StyleSheet,
@@ -210,6 +211,31 @@ const HomeScreen = () => {
     }
   }, []);
 
+  const handleDeleteWorkout = async (id) => {
+    try {
+      const res = await fetch(BACKEND_URL + "exercise/" + id, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          "Auth-Token": token,
+        },
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setWorkouts(workouts.filter((workout) => workout.id !== id));
+        setSearchedWorkouts(
+          searchedWorkouts.filter((workout) => workout.id !== id)
+        );
+        setSuccess("Workout deleted succesfully");
+      } else {
+        setError("Something went wrong");
+      }
+    } catch (error) {
+      setError("Check your internet connection");
+      console.log("Error deleting workout: ", error);
+    }
+  };
+
   const getWorkoutMovements = async (id) => {
     try {
       await exercisesWithMovements();
@@ -256,30 +282,6 @@ const HomeScreen = () => {
       setGreeting("Good evening");
     }
   }, []);
-
-  const SingleWorkout = ({ name, date, id }) => {
-    const handleWorkoutPress = async () => {
-      const clickedWorkout = workoutMovements.find(
-        (workout) => workout.exercise_id == id
-      );
-
-      const getNotesById = await getworkoutInformation(id);
-      navigation.navigate("ViewWorkout", {
-        workout: clickedWorkout,
-        notes: getNotesById["note"],
-      });
-    };
-
-    return (
-      <TouchableOpacity
-        style={styles.singleWorkout}
-        onPress={handleWorkoutPress}
-      >
-        <Text style={styles.workoutName}>{name}</Text>
-        <Text style={styles.workoutDate}>{date}</Text>
-      </TouchableOpacity>
-    );
-  };
 
   const styles = StyleSheet.create({
     column: {
@@ -372,6 +374,10 @@ const HomeScreen = () => {
       color: ThemeColors.tertiary,
       fontSize: 20,
     },
+    deleteBtn: {
+      position: "absolute",
+      right: 10,
+    },
     footer: {
       bottom: 0,
       width: "100%",
@@ -431,6 +437,37 @@ const HomeScreen = () => {
     },
   });
 
+  const SingleWorkout = ({ name, date, id }) => {
+    const handleWorkoutPress = async () => {
+      const clickedWorkout = workoutMovements.find(
+        (workout) => workout.exercise_id == id
+      );
+
+      const getNotesById = await getworkoutInformation(id);
+      navigation.navigate("ViewWorkout", {
+        workout: clickedWorkout,
+        notes: getNotesById["note"],
+      });
+    };
+
+    return (
+      <TouchableOpacity
+        style={styles.singleWorkout}
+        onPress={handleWorkoutPress}
+      >
+        <Text style={styles.workoutName}>{name}</Text>
+        <Text style={styles.workoutDate}>{date}</Text>
+        <MaterialCommunityIcons
+          onPress={() => handleDeleteWorkout(id)}
+          style={styles.deleteBtn}
+          name="delete"
+          size={24}
+          color={ThemeColors.tertiary}
+        />
+      </TouchableOpacity>
+    );
+  };
+
   const getRoutine = async (id) => {
     try {
       const res = await fetch(BACKEND_URL + "trainingplan/" + id, {
@@ -447,7 +484,7 @@ const HomeScreen = () => {
     }
     return null;
   };
-  
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>

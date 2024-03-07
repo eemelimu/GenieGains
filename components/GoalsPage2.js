@@ -301,14 +301,16 @@ const GoalsPage = () => {
         });
         if (res.ok) {
           console.log("Addition successful");
+          setSuccess("Progress added successfully");
         } else {
           console.error("Addition failed");
+          setError("Failed to add progress");
         }
       } catch (error) {
         console.error("Error:", error);
       }
     }
-    getGoalsData(value);
+    getGoalsDataList();
     setIsAdditionModalVisible(false);
     setAdditionUnits("");
     setAdditionTargetAmount("");
@@ -472,7 +474,7 @@ const GoalsPage = () => {
                   font,
                   formatXLabel,
                   formatYLabel,
-                  tickCount: { y: 7, x: 3 },
+                  tickCount: { y: 7, x: 2 },
                   lineColor: ThemeColors.quaternary,
                   labelColor: {
                     x: ThemeColors.tertiary,

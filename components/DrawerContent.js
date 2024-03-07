@@ -283,11 +283,11 @@ export const DrawerContent = () => {
       )}
       <View style={styles.row}>
         <ThemeBtn
-          colors={["#000000", "#141313", "#b8bfc9", "#797979"]}
+          colors={["#212121", "#141313", "#b8bfc9", "#797979"]}
           name="Midnight"
         />
         <ThemeBtn
-          colors={["#4c669f", "#3b5998", "#192f6a", "#192f6a"]}
+          colors={["#4c669f", "#3b5998", "#ffffff", "#192f6a"]}
           name="Deep Sea"
         />
         <ThemeBtn

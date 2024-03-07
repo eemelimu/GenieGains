@@ -123,13 +123,13 @@ const SingleSet = ({ set, setNumber }) => {
           editable={false}
         />
       </View>
-      {video && video !== '' && (
+      {/* {video && video !== '' && (
         <View style={styles.videoContainer}>
           <View style={styles.videoImageContainer}>
             <Text>{video}</Text>
           </View>
         </View>
-      )}
+      )} */}
     </View>
   );
 };

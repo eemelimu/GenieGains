@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useContext } from "react";
 import { BACKEND_URL } from "../assets/config";
+import { SimpleLineIcons } from "@expo/vector-icons";
 import { ThemeContext } from "./ThemeContext";
 import {
   BackHandler,
@@ -236,7 +237,7 @@ const HomeScreen = () => {
   };
 
   const handleLog = () => {
-    navigation.navigate("Routines")
+    navigation.navigate("Routines");
     console.log(workoutMovements);
   };
 
@@ -542,8 +543,12 @@ const HomeScreen = () => {
       )}
       <View style={styles.footer}>
         <TouchableOpacity style={styles.footerButton} onPress={handleLog}>
-          <Entypo name="back-in-time" size={24} color={ThemeColors.tertiary} />
-          <Text style={styles.regularText}>Log</Text>
+          <SimpleLineIcons
+            name="notebook"
+            size={24}
+            color={ThemeColors.tertiary}
+          />
+          <Text style={styles.regularText}>Routines</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.startWorkoutButton, styles.footerButton]}

@@ -155,7 +155,6 @@ export const Workout = () => {
       borderRadius: 5,
       padding: 10,
       textAlign: "center",
-      placeholderTextColor: ThemeColors.tertiary,
       color: ThemeColors.tertiary,
     },
     line: {

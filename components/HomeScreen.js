@@ -236,6 +236,7 @@ const HomeScreen = () => {
   };
 
   const handleLog = () => {
+    navigation.navigate("Routines")
     console.log(workoutMovements);
   };
 

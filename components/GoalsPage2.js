@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useCallback } from "react";
 import { useAuth } from "./AuthContext";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import {
@@ -32,6 +32,7 @@ import { Text as TextSVG, Svg } from "react-native-svg";
 //import { ThemeColors } from "../assets/ThemeColors";
 import { BACKEND_URL } from "../assets/config";
 import { useNotification } from "./NotificationContext";
+import { useFocusEffect } from "@react-navigation/native";
 
 const CHART_HEIGHT = Dimensions.get("window").height / 2.6 - 20;
 const CHART_WIDTH = Dimensions.get("window").width - 40;
@@ -88,6 +89,7 @@ const calculateCombinedValueBetweenDates = (
 };
 
 const GoalsPage = () => {
+  const [unit, setUnit] = useState("metric");
   const { setError, setSuccess, startLoading, stopLoading } = useNotification();
   const { theme: ThemeColors } = useContext(ThemeContext);
   const [openAdditionPicker, setOpenAdditionPicker] = useState(false);
@@ -122,6 +124,29 @@ const GoalsPage = () => {
   });
   const [initialXPosition, setInitialXPosition] = useState(null);
   const [SecondinitialXPosition, setSecondInitialXPosition] = useState(null);
+
+  const getUserData = async () => {
+    try {
+      const res = await fetch(BACKEND_URL + "user", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Auth-Token": token,
+        },
+      });
+      const data = await res.json();
+      console.log("data", data);
+      if (res.ok) {
+        setUnit(data.unit);
+      } else {
+        setError("Something went wrong");
+        throw new Error("Failed to fetch user data");
+      }
+    } catch (error) {
+      setError("Check your internet connection");
+      console.error("Error:", error);
+    }
+  };
 
   const getGoalsData = async (id) => {
     try {
@@ -178,8 +203,11 @@ const GoalsPage = () => {
 
   useEffect(() => {
     getGoalsDataList();
+    getUserData();
     //setGoalsData(data);
   }, []);
+
+
 
   useEffect(() => {
     setItems(goalsData.map((goal) => ({ label: goal.name, value: goal.id })));
@@ -612,7 +640,11 @@ const GoalsPage = () => {
             <TextInput
               placeholderTextColor={ThemeColors.quaternary}
               style={styles.input}
-              placeholder="Units (e.g., steps, kilograms)"
+              placeholder={
+                unit === "metric"
+                  ? "Units (e.g., steps, cm, kg)"
+                  : "Units (e.g., steps, inches, lbs)"
+              }
               value={units}
               maxLength={10}
               onChangeText={(text) => setUnits(text)}
@@ -706,7 +738,11 @@ const GoalsPage = () => {
             <TextInput
               maxLength={10}
               style={styles.input}
-              placeholder="Units (e.g., steps, kg)"
+              placeholder={
+                unit === "metric"
+                  ? "Units (e.g., steps, cm, kg)"
+                  : "Units (e.g., steps, inches, lbs)"
+              }
               value={additionUnits}
               onChangeText={(val) => setAdditionUnits(val)}
               placeholderTextColor={ThemeColors.quaternary}

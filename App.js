@@ -31,9 +31,10 @@ import { useAuth } from "./components/AuthContext";
 import LoadingPage from "./components/LoadingPage";
 import { Workout } from "./components/Workout";
 import Toast, { ErrorToast } from "react-native-toast-message";
+import CreateMovement from "./components/CreateMovement";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { DrawerContent } from "./components/DrawerContent";
-import  Routines  from "./components/Routines";
+import Routines from "./components/Routines";
 import InspectRoutine from "./components/InspectRoutine";
 import CreateRoutine from "./components/CreateRoutine";
 import { ViewWorkout } from "./components/ViewWorkout";
@@ -116,13 +117,14 @@ const HomeStack = () => {
       <Stack.Screen name="Register" component={Register} />
       <Stack.Screen name="Settings" component={SettingsScreen} />
       <Stack.Screen name="Troubleshooting" component={Troubleshooting} />
+      <Stack.Screen name="Create Movement" component={CreateMovement} />
       <Stack.Screen
         name="Preferences Settings"
         component={PreferencesSettings}
       />
-      <Stack.Screen name="Routines" component = {Routines} />
-      <Stack.Screen name="InspectRoutine" component = {InspectRoutine} />
-      <Stack.Screen name="CreateRoutine" component = {CreateRoutine} />
+      <Stack.Screen name="Routines" component={Routines} />
+      <Stack.Screen name="InspectRoutine" component={InspectRoutine} />
+      <Stack.Screen name="CreateRoutine" component={CreateRoutine} />
       <Stack.Screen name="Account Settings" component={AccountSettings} />
       <Stack.Screen name="Terms of Service" component={Tos} />
       <Stack.Screen name="Appearance" component={ColorSettings} />

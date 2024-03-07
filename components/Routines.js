@@ -35,6 +35,9 @@ const Routines = () => {
   const moveToCreateRoutine = () => {
     navigation.navigate("CreateRoutine");
   };
+  const moveToCreateMovement = () => {
+    navigation.navigate("Create Movement");
+  };
 
   const moveToInspectRoutine = (routineName) => {
     console.log("called movetoCreateRoutine");
@@ -124,6 +127,14 @@ const Routines = () => {
       width: 150,
       alignItems: "center",
     },
+    createMovementBtn: {
+      backgroundColor: ThemeColors.secondary,
+      borderRadius: 5,
+      paddingVertical: 10,
+      paddingHorizontal: 20,
+      width: 170,
+    },
+
     footerButton: {
       paddingVertical: 5,
       paddingHorizontal: 10,
@@ -158,6 +169,22 @@ const Routines = () => {
       </ScrollView>
 
       <View style={styles.footer}>
+        <TouchableOpacity
+          style={[styles.footerButton, styles.createMovementBtn]}
+          onPress={moveToCreateMovement}
+        >
+          <AntDesign name="plus" size={24} color={ThemeColors.tertiary} />
+
+          <Text
+            style={{
+              fontWeight: "bold",
+              fontSize: 15,
+              color: ThemeColors.tertiary,
+            }}
+          >
+            Create Movement
+          </Text>
+        </TouchableOpacity>
         <TouchableOpacity
           style={[styles.footerButton, styles.selectRoutineButton]}
           onPress={moveToCreateRoutine}

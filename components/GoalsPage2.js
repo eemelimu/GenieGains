@@ -207,8 +207,6 @@ const GoalsPage = () => {
     //setGoalsData(data);
   }, []);
 
-
-
   useEffect(() => {
     setItems(goalsData.map((goal) => ({ label: goal.name, value: goal.id })));
     setAdditionItems(

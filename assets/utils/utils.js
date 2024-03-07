@@ -28,6 +28,7 @@ export const deleteData = async (key) => {
 
 export const lightOrDark = (color) => {
   // Check the format of the color, HEX or RGB?
+  if (color === undefined) return "light";
   if (color.match(/^rgb/)) {
     // If HEX --> store the red, green, blue values in separate variables
     color = color.match(

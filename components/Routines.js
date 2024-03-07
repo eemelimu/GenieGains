@@ -6,12 +6,13 @@ import {
   SafeAreaView,
   TouchableOpacity,
   ScrollView,
+  Pressable,
+  Button,
 } from "react-native";
 
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { BACKEND_URL } from "../assets/config";
 import { useAuth } from "./AuthContext";
-
 import { ThemeColors } from "../assets/ThemeColors";
 import { AntDesign } from "@expo/vector-icons";
 import { useFonts } from "expo-font";
@@ -22,6 +23,7 @@ const Routines = () => {
   const { setError, setSuccess, startLoading, stopLoading } = useNotification();
   const { theme: ThemeColors } = useContext(ThemeContext);
   const [trainingPlans, setTrainingPlans] = useState([]);
+  const [editable, setEditable] = useState(false);
 
   const navigation = useNavigation();
   const { state } = useAuth();
@@ -34,9 +36,6 @@ const Routines = () => {
 
   const moveToCreateRoutine = () => {
     navigation.navigate("Create Routine");
-  };
-  const moveToCreateMovement = () => {
-    navigation.navigate("Create Movement");
   };
 
   const moveToInspectRoutine = (routineName) => {
@@ -70,9 +69,16 @@ const Routines = () => {
     return <></>;
   }
   const styles = StyleSheet.create({
+    movementsContainer: {
+      position: "absolute",
+      left: 5, 
+      top: 40,
+      justifyContent: "center",
+      paddingHorizontal: 10,
+    },
     singleRoutine: {
-      width: "90%",
-      height: 100,
+      width: "75%",
+      height: 125,
       backgroundColor: ThemeColors.secondary,
       justifyContent: "center",
       alignItems: "center",
@@ -80,12 +86,16 @@ const Routines = () => {
       paddingHorizontal: 15,
       marginTop: 20,
       position: "relative",
+      flexDirection: "row",
     },
 
     RoutineName: {
-      fontSize: 20,
+      padding: 10,
+      position: "absolute",
+      top: 0,
+      left: 5,
+      fontSize: 18,
       fontFamily: "DMBold",
-      bottom: 20,
       color: ThemeColors.tertiary,
     },
 
@@ -120,6 +130,17 @@ const Routines = () => {
       bottom: 10,
     },
     selectRoutineButton: {
+      position: "absolute",
+      bottom: 5,
+      padding: 10,
+      backgroundColor: ThemeColors.tertiary,
+      borderRadius: 5,
+      paddingVertical: 10,
+      paddingHorizontal: 10,
+      width: 70,
+      alignItems: "center",
+    },
+    selectRoutineButtonCreate: {
       backgroundColor: ThemeColors.secondary,
       borderRadius: 5,
       paddingVertical: 10,
@@ -127,14 +148,6 @@ const Routines = () => {
       width: 150,
       alignItems: "center",
     },
-    createMovementBtn: {
-      backgroundColor: ThemeColors.secondary,
-      borderRadius: 5,
-      paddingVertical: 10,
-      paddingHorizontal: 20,
-      width: 170,
-    },
-
     footerButton: {
       paddingVertical: 5,
       paddingHorizontal: 10,
@@ -144,10 +157,19 @@ const Routines = () => {
     },
   });
 
-  const Routine = ({ name }) => {
+  const Routine = ({ name, routine }) => {
     return (
       <View style={styles.singleRoutine}>
         <Text style={styles.RoutineName}>{name}</Text>
+        <View style={styles.movementsContainer}>
+          <Text>{routine.movements.map((movement) => movement.name).join(', ')}</Text>
+        </View>
+        <Pressable
+          style={styles.selectRoutineButton}
+          onPress={() => navigation.navigate("Workout", { movements: routine })}
+        >
+          <Text style={styles.buttonText}>Start</Text>
+        </Pressable>
       </View>
     );
   };
@@ -163,39 +185,25 @@ const Routines = () => {
               moveToInspectRoutine(trainingPlan.training_plan_name)
             }
           >
-            <Routine name={trainingPlan.training_plan_name} />
+            <Routine
+              name={trainingPlan.training_plan_name}
+              routine={trainingPlan}
+            />
           </TouchableOpacity>
         ))}
       </ScrollView>
 
       <View style={styles.footer}>
         <TouchableOpacity
-          style={[styles.footerButton, styles.createMovementBtn]}
-          onPress={moveToCreateMovement}
-        >
-          <AntDesign name="plus" size={24} color={ThemeColors.tertiary} />
-
-          <Text
-            style={{
-              fontWeight: "bold",
-              fontSize: 15,
-              color: ThemeColors.tertiary,
-            }}
-          >
-            Create Movement
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.footerButton, styles.selectRoutineButton]}
+          style={styles.selectRoutineButtonCreate}
           onPress={moveToCreateRoutine}
         >
-          <AntDesign name="plus" size={24} color={ThemeColors.tertiary} />
+          <AntDesign name="plus" size={24}  />
 
           <Text
             style={{
               fontWeight: "bold",
               fontSize: 15,
-              color: ThemeColors.tertiary,
             }}
           >
             Create routine

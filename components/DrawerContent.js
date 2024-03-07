@@ -17,10 +17,10 @@ import { AntDesign } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
 import { useAuth } from "./AuthContext";
 import { ThemeContext } from "./ThemeContext";
+
 // TODO
 // - FEEDBACK: Animoi inputin avaaminen ja sulkeminen
 // - FEEDBACK: Lähetä palautetta toiminnallisuus
-// - FEEDBACK: Feedback Sent -viesti ja sen animointi
 
 const ThemeBtn = ({ colors, name }) => {
   const { theme: ThemeColors, changeThemeColor } = useContext(ThemeContext);
@@ -133,7 +133,7 @@ export const DrawerContent = () => {
       flexDirection: "row",
       alignItems: "center",
       justifyContent: "center",
-      backgroundColor: ThemeColors.quaternary,
+      backgroundColor: ThemeColors.secondary,
       borderRadius: 10,
       alignSelf: "center",
       marginTop: 10,
@@ -276,6 +276,11 @@ export const DrawerContent = () => {
           </TouchableOpacity>
         </View>
       )}
+      {feedbackSent && (
+        <View style={styles.sendFeedBackItemSent}>
+          <Text style={styles.regularText}>Feedback Sent</Text>
+        </View>
+      )}
       <View style={styles.row}>
         <ThemeBtn
           colors={["#000000", "#141313", "#b8bfc9", "#797979"]}
@@ -307,11 +312,7 @@ export const DrawerContent = () => {
           name="Buttercream"
         /> */}
       </View>
-      {feedbackSent && (
-        <View style={styles.sendFeedBackItemSent}>
-          <Text style={styles.regularText}>Feedback Sent</Text>
-        </View>
-      )}
+
       <View style={styles.drawerFooter}>
         <TouchableOpacity
           style={styles.drawerFooterItem}

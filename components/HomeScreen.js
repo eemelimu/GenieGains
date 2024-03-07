@@ -432,6 +432,23 @@ const HomeScreen = () => {
     },
   });
 
+  const getRoutine = async (id) => {
+    try {
+      const res = await fetch(BACKEND_URL + "trainingplan/" + id, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Auth-Token": token,
+        },
+      });
+      const data = await res.json();
+      console.log(data);
+    } catch (error) {
+      console.log("Error fetching routine: ", error);
+    }
+    return null;
+  };
+  
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
@@ -535,7 +552,7 @@ const HomeScreen = () => {
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.menuItem}
-            onPress={() => console.log("From routines button pressed")}
+            onPress={() => navigation.navigate("Workout", { workout: 123, userName: "John" })}
           >
             <Text style={styles.regularText}>From routines</Text>
           </TouchableOpacity>

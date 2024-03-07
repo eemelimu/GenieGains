@@ -77,8 +77,6 @@ const CustomHeader = ({
                 text2:
                   "There may be unsaved changes. Press back again to confirm exit.",
               });
-              console.log(clickCounter);
-              console.log("fix toast");
             }
           }}
         >
@@ -122,9 +120,9 @@ const HomeStack = () => {
         name="Preferences Settings"
         component={PreferencesSettings}
       />
-      <Stack.Screen name="Routines" component={Routines} />
-      <Stack.Screen name="InspectRoutine" component={InspectRoutine} />
-      <Stack.Screen name="CreateRoutine" component={CreateRoutine} />
+      <Stack.Screen name="Routines" component = {Routines} />
+      <Stack.Screen name="InspectRoutine" component = {InspectRoutine} />
+      <Stack.Screen name="Create Routine" component = {CreateRoutine} />
       <Stack.Screen name="Account Settings" component={AccountSettings} />
       <Stack.Screen name="Terms of Service" component={Tos} />
       <Stack.Screen name="Appearance" component={ColorSettings} />

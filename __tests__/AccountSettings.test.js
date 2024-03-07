@@ -8,6 +8,9 @@ import { AuthProvider } from "../components/AuthContext";
 import { waitFor } from "@testing-library/react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import Login from "../components/Login";
+import { NotificationProvider } from "../components/NotificationContext";
+import Toast, { ErrorToast } from "react-native-toast-message";
+import Notification from "../components/Notification";
 
 jest.useFakeTimers();
 
@@ -18,26 +21,30 @@ test("Account settings component renders correctly and that the theme context ap
   await act(async () => {
     component = renderer.create(
       <NavigationContainer>
-        <AuthProvider>
-          <ThemeProvider>
-            <Stack.Navigator>
-              <Stack.Screen
-                name="Account Settings"
-                component={AccountSettings}
-              />
-              <Stack.Screen name="Login" component={Login} />
-            </Stack.Navigator>
-          </ThemeProvider>
-        </AuthProvider>
+        <NotificationProvider>
+          <AuthProvider>
+            <ThemeProvider>
+              <Stack.Navigator>
+                <Stack.Screen
+                  name="Account Settings"
+                  component={AccountSettings}
+                />
+                <Stack.Screen name="Login" component={Login} />
+              </Stack.Navigator>
+            </ThemeProvider>
+          </AuthProvider>
+          <Notification />
+          <Toast />
+        </NotificationProvider>
       </NavigationContainer>
     );
   });
 
-  await waitFor(() => {
+  await waitFor(async () => {
     let tree;
     act(() => {
       tree = component.toJSON();
     });
-    expect(tree).toMatchSnapshot();
+    await expect(tree).toMatchSnapshot();
   });
 });

@@ -8,6 +8,9 @@ import { AuthProvider } from "../components/AuthContext";
 import { waitFor } from "@testing-library/react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import Login from "../components/Login";
+import { NotificationProvider } from "../components/NotificationContext";
+import Notification from "../components/Notification";
+import Toast, { ErrorToast } from "react-native-toast-message";
 
 jest.useFakeTimers();
 
@@ -18,14 +21,18 @@ test("Register renders correctly and that the theme context applies themes corre
   await act(async () => {
     component = renderer.create(
       <NavigationContainer>
-        <AuthProvider>
-          <ThemeProvider>
-            <Stack.Navigator>
-              <Stack.Screen name="Register" component={Register} />
-              <Stack.Screen name="Login" component={Login} />
-            </Stack.Navigator>
-          </ThemeProvider>
-        </AuthProvider>
+        <NotificationProvider>
+          <AuthProvider>
+            <ThemeProvider>
+              <Stack.Navigator>
+                <Stack.Screen name="Register" component={Register} />
+                <Stack.Screen name="Login" component={Login} />
+              </Stack.Navigator>
+            </ThemeProvider>
+          </AuthProvider>
+          <Notification />
+          <Toast />
+        </NotificationProvider>
       </NavigationContainer>
     );
   });

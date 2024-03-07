@@ -9,6 +9,9 @@ import { waitFor, render, fireEvent } from "@testing-library/react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import Login from "../components/Login";
 import { useNavigation } from "@react-navigation/native";
+import { NotificationProvider } from "../components/NotificationContext";
+import Notification from "../components/Notification";
+import Toast, { ErrorToast } from "react-native-toast-message";
 
 jest.useFakeTimers();
 
@@ -19,22 +22,28 @@ test("Preferences2 component renders correctly and that the theme context applie
   await act(async () => {
     component = renderer.create(
       <NavigationContainer>
-        <AuthProvider>
-          <ThemeProvider>
-            <Stack.Navigator>
-              <Stack.Screen name="Preferences2" component={Preferences2} />
-              <Stack.Screen name="Login" component={Login} />
-            </Stack.Navigator>
-          </ThemeProvider>
-        </AuthProvider>
+        <NotificationProvider>
+          <AuthProvider>
+            <ThemeProvider>
+              <Stack.Navigator>
+                <Stack.Screen name="Preferences2" component={Preferences2} />
+                <Stack.Screen name="Login" component={Login} />
+              </Stack.Navigator>
+            </ThemeProvider>
+          </AuthProvider>
+          <Notification />
+          <Toast />
+        </NotificationProvider>
       </NavigationContainer>
     );
   });
 
   await waitFor(() => {
+    act(() => {
     let tree;
     tree = component.toJSON();
     expect(tree).toMatchSnapshot();
+  });
   });
 });
 

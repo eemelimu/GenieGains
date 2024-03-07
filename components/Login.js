@@ -42,7 +42,7 @@ const Login = () => {
     }, [])
   );
   if (!fontsLoaded) {
-    return null;
+    return <></>;
   }
 
   const handleLogin = async () => {

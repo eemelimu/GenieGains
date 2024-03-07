@@ -13,7 +13,6 @@ import { useFonts } from "expo-font";
 import CheckBox from "expo-checkbox";
 import { ThemeColors } from "../assets/ThemeColors";
 import { BACKEND_URL } from "../assets/config";
-
 const Preferences = ({ route }) => {
   const navigation = useNavigation();
   const [SelectedUnit, setSelectedUnit] = useState(null);

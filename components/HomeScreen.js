@@ -19,7 +19,7 @@ import { Entypo } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { useAuth } from "./AuthContext";
-
+import { useNotification } from "./NotificationContext";
 // TODO
 // Search bar styles paremmaksi
 // Search barin hightlightaus (aktivointi) kun painaa search iconia
@@ -28,6 +28,7 @@ import { useAuth } from "./AuthContext";
 const HomeScreen = () => {
   const seed =
     new Date().getDate() + new Date().getMonth() + new Date().getFullYear();
+  const { setError, setSuccess, startLoading, stopLoading } = useNotification();
   const { theme: ThemeColors } = useContext(ThemeContext);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [date] = useState(new Date());

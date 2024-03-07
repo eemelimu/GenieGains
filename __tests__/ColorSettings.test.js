@@ -6,15 +6,25 @@ import { NavigationContainer } from "@react-navigation/native";
 import { getData } from "../assets/utils/utils";
 import { ThemeProvider } from "../components/ThemeContext";
 import { ThemeColors } from "../assets/ThemeColors";
+import { NotificationProvider } from "../components/NotificationContext";
+import Notification from "../components/Notification";
+import Toast, { ErrorToast } from "react-native-toast-message";
+import { createStackNavigator } from "@react-navigation/stack";
+
 jest.useFakeTimers();
 
 test("Color settings component renders correctly", async () => {
+  const Stack = createStackNavigator();
   // Render the component
   const component = renderer.create(
     <NavigationContainer>
-      <ThemeProvider>
-        <ColorSettings />
-      </ThemeProvider>
+      <NotificationProvider>
+        <ThemeProvider>
+          <Stack.Screen name="Color Settings" component={ColorSettings} />
+        </ThemeProvider>
+        <Notification />
+        <Toast />
+      </NotificationProvider>
     </NavigationContainer>
   );
   await waitFor(() => {
@@ -26,9 +36,13 @@ test("Color settings component renders correctly", async () => {
 test("Color resets correctly", async () => {
   const { getByText } = render(
     <NavigationContainer>
-      <ThemeProvider>
-        <ColorSettings />
-      </ThemeProvider>
+      <NotificationProvider>
+        <ThemeProvider>
+          <ColorSettings />
+        </ThemeProvider>
+        <Notification />
+        <Toast />
+      </NotificationProvider>
     </NavigationContainer>
   );
   await waitFor(async () => {

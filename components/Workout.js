@@ -18,7 +18,6 @@ import { Ionicons } from "@expo/vector-icons";
 import { ThemeColors } from "../assets/ThemeColors";
 import { Entypo } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
-//import { Camera } from "react-native-vision-camera";
 import { BACKEND_URL } from "../assets/config";
 import { ThemeContext } from "./ThemeContext";
 // TODO:
@@ -29,7 +28,7 @@ import { ThemeContext } from "./ThemeContext";
 //   COPILOTIN rakaisu: Tämä johtuu siitä, että molemmat liikkeet käyttävät samaa statea sarjojen lisäämiseen.
 //   Ratkaisu: Jokaiselle liikkeelle oma state sarjojen lisäämiseen.
 
-export const Workout = () => {
+export const Workout = ({ route }) => {
   const { theme: ThemeColors } = useContext(ThemeContext);
   //styles dont move
 
@@ -212,28 +211,12 @@ export const Workout = () => {
     },
   });
 
-  //end of styles dont move
-
-  // // // const [cameraPermission, setCameraPermission] = useState();
-
-  // // // useEffect(() => {
-  // // //   (async () => {
-  // // //     const cameraPermissionStatus = await Camera.requestCameraPermission();
-  // // //     setCameraPermission(cameraPermissionStatus);
-  // // //   })();
-  // // // }, []);
-
-  // // // console.log(`Camera permission status: ${cameraPermission}`);
-
-  // // // const devices = useCameraDevices();
-  // // // const cameraDevice = devices.back;
   const [name, setName] = useState(
     `Workout of ${new Date().toLocaleDateString(undefined, {
       month: "short",
       day: "numeric",
     })}`
   );
-
   const [notes, setNotes] = useState("");
   const [selectedMovement, setSelectedMovement] = useState(null);
   const [movements, setMovements] = useState([]);
@@ -245,6 +228,14 @@ export const Workout = () => {
   const navigation = useNavigation();
   const [inProgress, setInProgress] = useState(false);
   const [timeOfDay, setTimeOfDay] = useState("");
+
+  useEffect(() => {
+    if (route.params) {
+      setName(route.params.movements.training_plan_name);
+      setAddedMovements(route.params.movements.movements);
+      setWorkoutData(route.params.movements.movements);
+    }
+  }, [route.params]);
 
   const handleAddMovement = () => {
     const selectedMovementFilter = movements.filter(

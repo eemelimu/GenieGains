@@ -1,7 +1,13 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, Image } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  Image,
+  StyleSheet,
+} from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { StyleSheet } from "react-native";
 import { useFonts } from "expo-font";
 import { ThemeColors } from "../assets/ThemeColors";
 import { useNotification } from "./NotificationContext";

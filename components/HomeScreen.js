@@ -176,9 +176,12 @@ const HomeScreen = () => {
           },
         })
           .then((response) => response.json())
+          .catch((error) => {
+            console.log("Error fetching workouts: ", error);
+          })
           .then((data) => {
-            setWorkouts(data.exercise_list);
-            setSearchedWorkouts(data.exercise_list);
+            setWorkouts(data.exercise_list || []);
+            setSearchedWorkouts(data.exercise_list || []);
           })
           .catch((error) => {
             console.log("Error fetching workouts: ", error);

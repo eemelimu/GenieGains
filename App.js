@@ -153,8 +153,8 @@ export default function App() {
                     component={HomeStack}
                   />
                 </Drawer.Navigator>
+                <Notification />
               </ThemeProvider>
-              <Notification />
             </AuthProvider>
           </NotificationProvider>
         </NavigationContainer>

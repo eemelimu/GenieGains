@@ -1,17 +1,24 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useContext, useRef } from "react";
 import {
   View,
   Text,
   StyleSheet,
   Dimensions,
   ActivityIndicator,
+  Animated,
 } from "react-native";
 import Toast from "react-native-toast-message";
 import { useNotification } from "./NotificationContext";
+import { Fontisto } from "@expo/vector-icons";
+import { ThemeContext } from "./ThemeContext";
 
 const NotificationComponent = () => {
+  const { theme: ThemeColors } = useContext(ThemeContext);
   const { notification } = useNotification();
   const { isLoading } = notification;
+
+  const spinValue = useRef(new Animated.Value(0)).current;
+
   useEffect(() => {
     const { error, success } = notification;
 
@@ -28,7 +35,30 @@ const NotificationComponent = () => {
         text2: error,
       });
     }
-  }, [notification]);
+
+    // Start spinning animation when loading starts
+    if (isLoading) {
+      startSpinAnimation();
+    } else {
+      // Stop spinning animation when loading ends
+      spinValue.setValue(0);
+    }
+  }, [notification, isLoading]);
+
+  const startSpinAnimation = () => {
+    Animated.loop(
+      Animated.timing(spinValue, {
+        toValue: 1,
+        duration: 1000,
+        useNativeDriver: true,
+      })
+    ).start();
+  };
+
+  const spin = spinValue.interpolate({
+    inputRange: [0, 1],
+    outputRange: ["0deg", "360deg"],
+  });
 
   const styles = StyleSheet.create({
     loadingContainer: {
@@ -40,15 +70,18 @@ const NotificationComponent = () => {
       alignItems: "center",
       justifyContent: "center",
       alignSelf: "center",
-      backgroundColor: "white",
+      backgroundColor: ThemeColors.primary,
       opacity: 0.7,
     },
     loadingText: {
-      color: "blue",
+      color: ThemeColors.tertiary,
       fontSize: 16,
       fontWeight: "bold",
       marginLeft: 5,
       margin: 5,
+    },
+    rotatingIcon: {
+      transform: [{ rotate: spin }],
     },
   });
 
@@ -56,7 +89,13 @@ const NotificationComponent = () => {
     <>
       {isLoading && (
         <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" />
+          <Animated.View style={[styles.rotatingIcon]}>
+            <Fontisto
+              name="injection-syringe"
+              size={24}
+              color={ThemeColors.tertiary}
+            />
+          </Animated.View>
           <Text style={styles.loadingText}>Loading...</Text>
         </View>
       )}

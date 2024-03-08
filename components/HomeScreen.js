@@ -103,6 +103,7 @@ const HomeScreen = () => {
 
   useFocusEffect(
     useCallback(() => {
+      startLoading();
       const fetchData = async () => {
         try {
           const res = await fetch(BACKEND_URL + "exercisemovementconnection", {
@@ -147,6 +148,7 @@ const HomeScreen = () => {
           });
 
           setWorkoutMovements(Object.values(groupedMovements));
+          stopLoading();
         } catch (error) {
           console.log("Error fetching workout movements: ", error);
         }

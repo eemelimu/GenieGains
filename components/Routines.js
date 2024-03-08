@@ -50,6 +50,7 @@ const Routines = () => {
   useFocusEffect(
     useCallback(() => {
       const fetchData = async () => {
+        startLoading();
         try {
           const res = await fetch(BACKEND_URL + "trainingplan", {
             method: "GET",
@@ -61,7 +62,9 @@ const Routines = () => {
           const data = await res.json();
           setTrainingPlans(data.trainingplan_list);
           console.log("luk" + data);
+          stopLoading();
         } catch (error) {
+          setError("Check your internet connection");
           console.log("Error: ", error);
         }
       };

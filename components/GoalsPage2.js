@@ -626,7 +626,7 @@ const GoalsPage = () => {
       >
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Create New Workout Goal</Text>
+            <Text style={styles.modalTitle}>Create New Goal</Text>
             <Text style={styles.informationText}>Goal's name:</Text>
             <TextInput
               maxLength={100}

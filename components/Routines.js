@@ -38,6 +38,10 @@ const Routines = () => {
     navigation.navigate("Create Routine");
   };
 
+  const moveToCreateMovement = () => {
+    navigation.navigate("Create Movement");
+  };
+
   const moveToInspectRoutine = (routineName) => {
     console.log("called movetoCreateRoutine");
     navigation.navigate("Inspect Routine", { routineName });
@@ -71,7 +75,7 @@ const Routines = () => {
   const styles = StyleSheet.create({
     movementsContainer: {
       position: "absolute",
-      left: 5, 
+      left: 5,
       top: 40,
       justifyContent: "center",
       paddingHorizontal: 10,
@@ -141,7 +145,7 @@ const Routines = () => {
       alignItems: "center",
     },
     selectRoutineButtonCreate: {
-      backgroundColor: ThemeColors.secondary,
+      backgroundColor: ThemeColors.tertiary,
       borderRadius: 5,
       paddingVertical: 10,
       paddingHorizontal: 20,
@@ -155,6 +159,23 @@ const Routines = () => {
       width: 150,
       alignItems: "center",
     },
+    createMovementBtn: {
+      backgroundColor: ThemeColors.tertiary,
+      padding: 10,
+      borderRadius: 5,
+      width: 170,
+      alignItems: "center",
+    },
+    movementName: {
+      fontSize: 15,
+      fontFamily: "DMRegular",
+      color: ThemeColors.tertiary,
+    },
+    buttonText: {
+      color: ThemeColors.primary,
+      fontSize: 15,
+      fontFamily: "DMRegular",
+    },
   });
 
   const Routine = ({ name, routine }) => {
@@ -162,7 +183,9 @@ const Routines = () => {
       <View style={styles.singleRoutine}>
         <Text style={styles.RoutineName}>{name}</Text>
         <View style={styles.movementsContainer}>
-          <Text>{routine.movements.map((movement) => movement.name).join(', ')}</Text>
+          <Text style={styles.movementName}>
+            {routine.movements.map((movement) => movement.name).join(", ")}
+          </Text>
         </View>
         <Pressable
           style={styles.selectRoutineButton}
@@ -195,15 +218,33 @@ const Routines = () => {
 
       <View style={styles.footer}>
         <TouchableOpacity
-          style={styles.selectRoutineButtonCreate}
-          onPress={moveToCreateRoutine}
+          style={styles.createMovementBtn}
+          onPress={moveToCreateMovement}
         >
-          <AntDesign name="plus" size={24}  />
+          <AntDesign name="plus" size={24} color={ThemeColors.secondary} />
 
           <Text
             style={{
               fontWeight: "bold",
               fontSize: 15,
+              color: ThemeColors.secondary,
+            }}
+          >
+            Create movement
+          </Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.selectRoutineButtonCreate}
+          onPress={moveToCreateRoutine}
+        >
+          <AntDesign name="plus" size={24} color={ThemeColors.secondary} />
+
+          <Text
+            style={{
+              fontWeight: "bold",
+              fontSize: 15,
+              color: ThemeColors.secondary,
             }}
           >
             Create routine

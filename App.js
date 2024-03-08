@@ -19,6 +19,7 @@ import { ThemeProvider } from "./components/ThemeContext";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { SimpleLineIcons } from "@expo/vector-icons";
+//import HomeScreen from "./components/HomeScreen";
 import HomeScreen from "./components/HomeScreen";
 import GoalsPage from "./components/GoalsPage2";
 import { Ionicons } from "@expo/vector-icons";
@@ -120,9 +121,9 @@ const HomeStack = () => {
         name="Preferences Settings"
         component={PreferencesSettings}
       />
-      <Stack.Screen name="Routines" component = {Routines} />
-      <Stack.Screen name="Inspect Routine" component = {InspectRoutine} />
-      <Stack.Screen name="Create Routine" component = {CreateRoutine} />
+      <Stack.Screen name="Routines" component={Routines} />
+      <Stack.Screen name="Inspect Routine" component={InspectRoutine} />
+      <Stack.Screen name="Create Routine" component={CreateRoutine} />
       <Stack.Screen name="Account Settings" component={AccountSettings} />
       <Stack.Screen name="Terms of Service" component={Tos} />
       <Stack.Screen name="Appearance" component={ColorSettings} />

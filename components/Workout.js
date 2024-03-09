@@ -108,7 +108,6 @@ export const Workout = ({ route }) => {
       flex: 1,
       backgroundColor: ThemeColors.primary,
       paddingBottom: 20,
-      paddingTop: 20,
     },
     inputContainer: {
       alignItems: "center",
@@ -127,6 +126,7 @@ export const Workout = ({ route }) => {
       padding: 10,
       textAlign: "center",
       color: ThemeColors.tertiary,
+      width: 150,
     },
     line: {
       left: 0,
@@ -191,7 +191,6 @@ export const Workout = ({ route }) => {
     })}`
   );
   const [notes, setNotes] = useState("");
-  const [selectedMovement, setSelectedMovement] = useState(null);
   const [movements, setMovements] = useState([]);
   const [addedMovements, setAddedMovements] = useState([]);
   const { state } = useAuth();
@@ -209,20 +208,18 @@ export const Workout = ({ route }) => {
     }
   }, [route.params]);
 
-  const handleAddMovement = () => {
+  const handleAddMovement = (value) => {
     const selectedMovementFilter = movements.filter(
-      (movement) => movement.name === selectedMovement
+      (movement) => movement.name === value
     );
-    if (selectedMovement) {
-      if (addedMovements.includes(selectedMovementFilter[0])) {
-        // Jos liike on jo lisätty, ei lisätä sitä uudestaan
-        setDropdownKey((prevKey) => prevKey + 1);
-        return;
-      }
-      setAddedMovements([...addedMovements, selectedMovementFilter[0]]);
+    console.log(selectedMovementFilter);
+    if (addedMovements.includes(selectedMovementFilter[0])) {
       setDropdownKey((prevKey) => prevKey + 1);
-      setWorkoutData([selectedMovementFilter[0], ...workoutData]);
+      return;
     }
+    setAddedMovements([...addedMovements, selectedMovementFilter[0]]);
+    setDropdownKey((prevKey) => prevKey + 1);
+    setWorkoutData([selectedMovementFilter[0], ...workoutData]);
   };
 
   const handleRemoveMovement = (movement) => {
@@ -319,7 +316,10 @@ export const Workout = ({ route }) => {
         },
       })
         .then((response) => response.json())
-        .then((data) => setMovements(data.movement_list))
+        .then((data) => {
+          setMovements(data.movement_list);
+          console.log(data);
+        })
         .catch((error) => {
           console.log("Error fetching movements: ", error);
         });
@@ -359,7 +359,7 @@ export const Workout = ({ route }) => {
             key={dropdownKey}
             options={movements.map((movement) => movement.name)}
             onSelect={(index, value) => {
-              setSelectedMovement(value);
+              handleAddMovement(value);
             }}
             defaultValue="Select Movement"
             textStyle={styles.dropdownText}
@@ -374,14 +374,6 @@ export const Workout = ({ route }) => {
               backgroundColorThemeColors: ThemeColors.quaternary,
             }}
           />
-        </View>
-        <View style={styles.addMenuItem}>
-          <TouchableOpacity
-            style={styles.addExercise}
-            onPress={handleAddMovement}
-          >
-            <Text style={styles.regularText}>Add exercise</Text>
-          </TouchableOpacity>
         </View>
       </View>
       <ScrollView style={{ flex: 1 }}>
@@ -553,19 +545,17 @@ const SingleMovement = ({
 
   return (
     <View style={styles.singleMovementContainer}>
-      <Text style={styles.singleMovementTitle}>
-        {movement.name}
-      </Text>
-        <TouchableOpacity
-          onPress={() => handleRemoveMovement(movement)}
-          style={styles.deleteMovementIcon}
-        >
-          <MaterialIcons
-            name="delete-outline"
-            size={24}
-            color={ThemeColors.tertiary}
-          />
-        </TouchableOpacity>
+      <Text style={styles.singleMovementTitle}>{movement.name}</Text>
+      <TouchableOpacity
+        onPress={() => handleRemoveMovement(movement)}
+        style={styles.deleteMovementIcon}
+      >
+        <MaterialIcons
+          name="delete-outline"
+          size={24}
+          color={ThemeColors.tertiary}
+        />
+      </TouchableOpacity>
       {sets.map((set, index) => (
         <SingleSet
           key={index}

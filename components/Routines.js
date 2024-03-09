@@ -7,9 +7,8 @@ import {
   TouchableOpacity,
   ScrollView,
   Pressable,
-  Button,
 } from "react-native";
-
+import Button from "./Button";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { BACKEND_URL } from "../assets/config";
 import { useAuth } from "./AuthContext";
@@ -84,11 +83,12 @@ const Routines = () => {
       paddingHorizontal: 10,
     },
     singleRoutine: {
+      display: "flex",
       width: "75%",
       height: 125,
       backgroundColor: ThemeColors.secondary,
       justifyContent: "center",
-      alignItems: "center",
+      alignItems: "space-between",
       borderRadius: 15,
       paddingHorizontal: 15,
       marginTop: 20,
@@ -190,12 +190,12 @@ const Routines = () => {
             {routine.movements.map((movement) => movement.name).join(", ")}
           </Text>
         </View>
-        <Pressable
-          style={styles.selectRoutineButton}
+        <Button
+          isHighlighted={true}
+          width={70}
+          text="Start"
           onPress={() => navigation.navigate("Workout", { movements: routine })}
-        >
-          <Text style={styles.buttonText}>Start</Text>
-        </Pressable>
+        />
       </View>
     );
   };
@@ -220,39 +220,25 @@ const Routines = () => {
       </ScrollView>
 
       <View style={styles.footer}>
-        <TouchableOpacity
-          style={styles.createMovementBtn}
+        <Button
+          width={170}
+          isHighlighted={true}
+          text="Create movement"
           onPress={moveToCreateMovement}
-        >
-          <AntDesign name="plus" size={24} color={ThemeColors.secondary} />
+          renderIcon={(color) => (
+            <AntDesign name="plus" size={24} color={color} />
+          )}
+        />
 
-          <Text
-            style={{
-              fontWeight: "bold",
-              fontSize: 15,
-              color: ThemeColors.secondary,
-            }}
-          >
-            Create movement
-          </Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.selectRoutineButtonCreate}
+        <Button
+          width={170}
+          text="Create routine"
           onPress={moveToCreateRoutine}
-        >
-          <AntDesign name="plus" size={24} color={ThemeColors.secondary} />
-
-          <Text
-            style={{
-              fontWeight: "bold",
-              fontSize: 15,
-              color: ThemeColors.secondary,
-            }}
-          >
-            Create routine
-          </Text>
-        </TouchableOpacity>
+          isHighlighted={true}
+          renderIcon={(color) => (
+            <AntDesign name="plus" size={24} color={color} />
+          )}
+        />
       </View>
     </SafeAreaView>
   );

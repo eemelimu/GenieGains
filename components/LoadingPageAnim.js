@@ -41,12 +41,7 @@ const LoadingPageAnim = () => {
 
   return (
     <View style={styles.container}>
-      <Animated.View
-        style={[
-          styles.container,
-          { backgroundColor: ThemeColors.secondary, opacity: fadeAnim },
-        ]}
-      >
+      <Animated.View style={[styles.container, { opacity: fadeAnim }]}>
         <Video
           ref={videoRef}
           source={require("../assets/gymjunkie.mp4")}

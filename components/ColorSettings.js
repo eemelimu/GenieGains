@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Modal, Pressable, StyleSheet, Text, View } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Button from "./Button";
 import tinycolor from "tinycolor2";
 import Animated, {
   useAnimatedStyle,
@@ -224,17 +225,17 @@ export default function ColorSettings({}) {
         >
           <Text style={styles.buttonText}>Change Quaternary Color</Text>
         </Pressable>
-        <Pressable
-          style={styles.button}
-          onPress={() => {
+        <Button
+          isHighlighted={true}
+          text="Reset to default"
+          width={"80%"}
+          onPress={async () => {
             resetTheme();
             //setColors(ThemeColors);
-            storeData("theme", ThemeColors);
+            await storeData("theme", ThemeColors);
             setSuccess("Theme reset to default");
           }}
-        >
-          <Text style={styles.buttonText}>Reset to default</Text>
-        </Pressable>
+        />
       </View>
 
       <Modal

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext, useCallback } from "react";
 import { useAuth } from "./AuthContext";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import Button from "./Button";
 import {
   View,
   Text,
@@ -396,6 +397,7 @@ const GoalsPage = () => {
       fontWeight: "bold",
       marginBottom: 10,
       textAlign: "center",
+      color: ThemeColors.tertiary,
     },
     input: {
       marginTop: 10,
@@ -405,18 +407,6 @@ const GoalsPage = () => {
       padding: 10,
       marginBottom: 10,
       color: ThemeColors.tertiary,
-    },
-    createButton: {
-      marginTop: 10,
-      backgroundColor: ThemeColors.secondary,
-      padding: 10,
-      borderRadius: 5,
-      alignItems: "center",
-    },
-    cancelButton: {
-      padding: 10,
-      borderRadius: 5,
-      alignItems: "center",
     },
     buttonText: {
       color: ThemeColors.tertiary,
@@ -613,9 +603,12 @@ const GoalsPage = () => {
         placeholder={"Choose a goal to view progress for"}
         theme={lightOrDark(ThemeColors.primary).toUpperCase() || "DEFAULT"}
       />
-      <Pressable style={styles.button} onPress={() => setIsModalVisible(true)}>
-        <Text style={styles.boldText}>Create New Goal</Text>
-      </Pressable>
+      <Button
+        height={50}
+        width={"100%"}
+        text={"Create New Goal"}
+        onPress={() => setIsModalVisible(true)}
+      />
       <Modal
         visible={isModalVisible}
         transparent={true}
@@ -682,11 +675,15 @@ const GoalsPage = () => {
                 display="default"
               />
             )}
-            <Pressable style={styles.createButton} onPress={handleCreateGoal}>
-              <Text style={styles.buttonText}>Create Goal</Text>
-            </Pressable>
-            <Pressable
-              style={styles.cancelButton}
+            <Button
+              width={"100%"}
+              text={"Create Goal"}
+              onPress={handleCreateGoal}
+            />
+            <Button
+              width={"100%"}
+              isHighlighted={true}
+              text={"Cancel"}
               onPress={() => {
                 setIsModalVisible(false);
                 setDate(new Date());
@@ -694,20 +691,18 @@ const GoalsPage = () => {
                 setUnits("");
                 setTargetAmount("");
               }}
-            >
-              <Text style={styles.cancelButtonText}>Cancel</Text>
-            </Pressable>
+            />
           </View>
         </View>
       </Modal>
-      <Pressable
-        style={styles.button}
+      <Button
+        width={"100%"}
+        height={50}
+        text={"Add progress"}
         onPress={() => {
           setIsAdditionModalVisible(true);
         }}
-      >
-        <Text style={styles.boldText}>Add progress</Text>
-      </Pressable>
+      />
       <Modal
         visible={isAdditionModalVisible}
         transparent={true}
@@ -772,11 +767,11 @@ const GoalsPage = () => {
                 lightOrDark(ThemeColors.primary).toUpperCase() || "DEFAULT"
               }
             />
-            <Pressable style={styles.createButton} onPress={addAdditionalData}>
-              <Text style={styles.buttonText}>Add</Text>
-            </Pressable>
-            <Pressable
-              style={styles.cancelButton}
+            <Button width={"100%"} text={"Add"} onPress={addAdditionalData} />
+            <Button
+              width={"100%"}
+              isHighlighted={true}
+              text={"Cancel"}
               onPress={() => {
                 setIsAdditionModalVisible(false);
                 setAdditionDate(new Date());
@@ -785,9 +780,7 @@ const GoalsPage = () => {
                 setAdditionNote("");
                 setAdditionValue([]);
               }}
-            >
-              <Text style={styles.cancelButtonText}>Cancel</Text>
-            </Pressable>
+            />
           </View>
         </View>
       </Modal>

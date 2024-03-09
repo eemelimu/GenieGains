@@ -3,6 +3,7 @@ import { BACKEND_URL } from "../assets/config";
 import { SimpleLineIcons } from "@expo/vector-icons";
 import { ThemeContext } from "./ThemeContext";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import Container from "./Container";
 import {
   BackHandler,
   StyleSheet,
@@ -13,10 +14,10 @@ import {
   ScrollView,
   TextInput,
   FlatList,
-  Button,
   Pressable,
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
+import Button from "./Button";
 import { Entypo } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
@@ -584,15 +585,25 @@ const HomeScreen = () => {
         )}
       </View>
       <View style={styles.footer}>
-        <TouchableOpacity style={styles.footerButton} onPress={handleLog}>
+        <Button
+          isHighlighted={false}
+          width={120}
+          height={"80%"}
+          text="Routines"
+          renderIcon={(color) => (
+            <SimpleLineIcons name="notebook" size={24} color={color} />
+          )}
+          onPress={handleLog}
+        />
+        {/* <TouchableOpacity style={styles.footerButton} onPress={handleLog}>
           <SimpleLineIcons
             name="notebook"
             size={24}
             color={ThemeColors.tertiary}
           />
           <Text style={styles.regularText}>Routines</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
+        </TouchableOpacity> */}
+        {/* <TouchableOpacity
           style={[styles.startWorkoutButton, styles.footerButton]}
           onPress={() => navigation.navigate("Workout")}
         >
@@ -606,14 +617,36 @@ const HomeScreen = () => {
           >
             Start Workout
           </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
+        </TouchableOpacity> */}
+        <Button
+          isHighlighted={true}
+          width={150}
+          height={"80%"}
+          text="Start Workout"
+          onLongPress={() => console.log("long press")}
+          onPress={() => navigation.navigate("Workout")}
+          renderIcon={(color) => (
+            <AntDesign name="plus" size={24} color={color} />
+          )}
+        />
+        {/* <TouchableOpacity
           style={styles.footerButton}
           onPress={() => navigation.navigate("Goals")}
         >
           <Ionicons name="stats-chart" size={24} color={ThemeColors.tertiary} />
           <Text style={styles.regularText}>Progress</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
+        <Button
+          isHighlighted={false}
+          width={120}
+          height={"80%"}
+          text="Progress"
+          onLongPress={() => console.log("long press")}
+          onPress={() => navigation.navigate("Goals")}
+          renderIcon={(color) => (
+            <Ionicons name="stats-chart" size={24} color={color} />
+          )}
+        />
       </View>
     </SafeAreaView>
   );

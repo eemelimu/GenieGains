@@ -398,7 +398,6 @@ const GoalsPage = () => {
       justifyContent: "center",
       alignItems: "center",
       backgroundColor: hexToRgba(ThemeColors.primary, 0.8),
-      //opacity: 0.9,
     },
     modalContent: {
       backgroundColor: ThemeColors.secondary,

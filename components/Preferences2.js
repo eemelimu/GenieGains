@@ -13,11 +13,16 @@ import { useFonts } from "expo-font";
 import CheckBox from "expo-checkbox";
 import { ThemeColors } from "../assets/ThemeColors";
 import { BACKEND_URL } from "../assets/config";
+import { useAuth } from "./AuthContext";
+import { useNotification } from "./NotificationContext";
 const Preferences = ({ route }) => {
+  const { setError, setSuccess, startLoading, stopLoading } = useNotification();
+  const { dispatch } = useAuth();
   const navigation = useNavigation();
   const [SelectedUnit, setSelectedUnit] = useState(null);
   console.log("data from register and preferences?", route.params);
   const registerUser = async () => {
+    startLoading();
     try {
       const response = await fetch(BACKEND_URL + "register", {
         method: "POST",
@@ -33,13 +38,19 @@ const Preferences = ({ route }) => {
           experience: route.params.data.selectedSkill.toLowerCase(),
         }),
       });
-      console.log(await response.json());
+      const data = await response.json();
+      console.log(data);
       if (!response.ok) {
-        throw new Error("Failed to register user");
+        setError("Something went wrong! Please try again later.");
+      } else {
+        setSuccess("User registered successfully!");
+        console.log(data.token);
+        dispatch({ type: "LOGIN", payload: { token: data.token } });
       }
-      console.log(response.status);
-      navigation.navigate("Login"); // navigate to login page or homescreen?
+      //console.log(response.status);
+      //navigation.navigate("Login");
     } catch (error) {
+      setError("Check your internet connection");
       console.error("Error registering user:", error);
     }
   };

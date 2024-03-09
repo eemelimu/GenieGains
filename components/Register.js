@@ -7,6 +7,7 @@ import {
   Image,
   StyleSheet,
 } from "react-native";
+import Button from "./Button";
 import { useNavigation } from "@react-navigation/native";
 import { useFonts } from "expo-font";
 import { ThemeColors } from "../assets/ThemeColors";
@@ -85,90 +86,106 @@ const Register = () => {
     return null;
   }
 
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    Logo: {
+      marginTop: 30,
+      width: 200,
+      height: 50,
+      borderColor: ThemeColors.tertiary,
+      borderWidth: 1,
+      marginBottom: 60,
+    },
+    information: {
+      paddingTop: 20,
+      fontSize: 25,
+      paddingBottom: 20,
+      fontFamily: "DMBold",
+      color: ThemeColors.tertiary,
+    },
+    registerBtn: {
+      paddingTop: 25,
+    },
+    registerBtnText: {
+      backgroundColor: ThemeColors.secondary,
+      color: ThemeColors.black,
+      fontSize: 30,
+      padding: 10,
+      borderRadius: 25,
+      textShadowColor: ThemeColors.black,
+      fontFamily: "DMBold",
+    },
+    userNameInput: {
+      backgroundColor: ThemeColors.secondary,
+      width: "70%",
+      height: "7%",
+      borderRadius: 50,
+      fontSize: 20,
+      fontFamily: "DMRegular",
+    },
+  });
+
   return (
     <View style={styles.container}>
-      <Image style={styles.Logo} source={require("../assets/Logo1.png")} />
+      <Image
+        style={styles.Logo}
+        source={require("../assets/GJunkie_02.png")}
+        resizeMode="contain"
+      />
       <Text style={styles.information}> Username </Text>
       <TextInput
         style={styles.userNameInput}
         placeholder="    Enter username..."
         value={username}
         onChangeText={setUsername}
+        autoComplete="username"
+        autoCapitalize="none"
       />
       <Text style={styles.information}> Password </Text>
       <TextInput
-        style={styles.passwordInput}
+        style={styles.userNameInput}
         placeholder="    Enter password..."
         secureTextEntry={true}
         value={password}
         onChangeText={setPassword}
+        autoComplete="new-password"
+        autoCapitalize="none"
       />
       <Text style={styles.information}> Confirm Password </Text>
       <TextInput
-        style={styles.passwordInput}
+        style={styles.userNameInput}
         placeholder="    Enter password..."
         secureTextEntry={true}
         value={password2}
         onChangeText={setPassword2}
+        autoComplete="password"
+        autoCapitalize="none"
       />
       <Text style={styles.information}> E-Mail </Text>
       <TextInput
-        style={styles.passwordInput}
+        style={styles.userNameInput}
         placeholder="    Enter E-Mail..."
         value={email}
         onChangeText={setEmail}
+        autoComplete="email"
+        autoCapitalize="none"
       />
-      <TouchableOpacity style={styles.registerBtn} onPress={moveToPreferences}>
+      {/* <TouchableOpacity style={styles.registerBtn} onPress={moveToPreferences}>
         <Text style={styles.registerBtnText}>Register</Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
+      <Button
+        textSize={20}
+        height={50}
+        width={"80%"}
+        text="Register"
+        onPress={moveToPreferences}
+      />
     </View>
   );
 };
 
 export default Register;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  Logo: {
-    width: 150,
-    height: 150,
-  },
-  information: {
-    paddingTop: 20,
-    fontSize: 25,
-    paddingBottom: 20,
-    fontFamily: "DMBold",
-  },
-  passwordInput: {
-    backgroundColor: ThemeColors.white,
-    width: "70%",
-    height: "7%",
-    borderRadius: 50,
-    fontSize: 20,
-    fontFamily: "DMRegular",
-  },
-  registerBtn: {
-    paddingTop: 25,
-  },
-  registerBtnText: {
-    backgroundColor: ThemeColors.orange,
-    color: ThemeColors.black,
-    fontSize: 30,
-    padding: 10,
-    borderRadius: 25,
-    textShadowColor: ThemeColors.black,
-    fontFamily: "DMBold",
-  },
-  userNameInput: {
-    backgroundColor: ThemeColors.white,
-    width: "70%",
-    height: "7%",
-    borderRadius: 50,
-    fontSize: 20,
-    fontFamily: "DMRegular",
-  },
-});

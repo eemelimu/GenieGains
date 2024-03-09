@@ -4,6 +4,7 @@ import { ThemeContext } from "./ThemeContext";
 import tinycolor from "tinycolor2";
 
 const Button = ({
+  textSize,
   width,
   height,
   onPress,
@@ -48,7 +49,7 @@ const Button = ({
   const textStyle = [
     {
       color: ThemeColors.tertiary,
-      fontSize: 16,
+      fontSize: textSize,
     },
 
     isHighlighted && {

@@ -106,6 +106,7 @@ const HomeScreen = () => {
     useCallback(() => {
       startLoading();
       const fetchData = async () => {
+        console.log("Token is: ", token);
         try {
           const res = await fetch(BACKEND_URL + "exercisemovementconnection", {
             method: "GET",
@@ -117,7 +118,7 @@ const HomeScreen = () => {
           const data = await res.json();
 
           const groupedMovements = {};
-
+          console.log(data);
           data.exercisemovementconnection_list.forEach((workout) => {
             const {
               exercise_id,
@@ -157,7 +158,7 @@ const HomeScreen = () => {
       };
 
       fetchData();
-    }, [])
+    }, [token])
   );
 
   useFocusEffect(
@@ -196,7 +197,7 @@ const HomeScreen = () => {
       return () => {
         backHandler.remove();
       };
-    }, [])
+    }, [token])
   );
 
   useFocusEffect(
@@ -223,7 +224,7 @@ const HomeScreen = () => {
       } catch (error) {
         console.log("Error fetching workouts: ", error);
       }
-    }, [])
+    }, [token])
   );
 
   // useEffect(() => {

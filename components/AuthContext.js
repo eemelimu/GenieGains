@@ -81,6 +81,7 @@ export const AuthProvider = ({ children }) => {
     const handleAuthChange = async () => {
       console.log("Auth state changed:", state.isAuthenticated);
       console.log("Auth is loading:", state.isLoading);
+      console.log("Auth token:", state.token);
       if (state.isLoading) {
         return;
       }

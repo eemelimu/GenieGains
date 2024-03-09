@@ -31,9 +31,10 @@ test("Create Movement component renders correctly", async () => {
                 />
                 <Stack.Screen name="Login" component={Login} />
               </Stack.Navigator>
+              <Notification />
             </ThemeProvider>
           </AuthProvider>
-          <Notification />
+
           <Toast />
         </NotificationProvider>
       </NavigationContainer>

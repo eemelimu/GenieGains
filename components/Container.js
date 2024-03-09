@@ -7,11 +7,9 @@ import { ThemeContext } from "./ThemeContext";
 const Container = ({ children }) => {
   const { theme: ThemeColors } = useContext(ThemeContext);
   const gradientStartColor = tinycolor(ThemeColors.primary)
-    .darken(20)
+    .darken(5)
     .toString();
-  const gradientEndColor = tinycolor(ThemeColors.primary)
-    .lighten(20)
-    .toString();
+  const gradientEndColor = tinycolor(ThemeColors.primary).lighten(5).toString();
 
   return (
     <LinearGradient

@@ -27,13 +27,14 @@ import {
   Rect,
 } from "@shopify/react-native-skia";
 import DMSansBold from "../assets/fonts/DMSans-Bold.ttf";
-import { epochToDate, lightOrDark } from "../assets/utils/utils";
+import { epochToDate, lightOrDark, hexToRgba } from "../assets/utils/utils";
 import DropDownPicker from "react-native-dropdown-picker";
 import { Text as TextSVG, Svg } from "react-native-svg";
 //import { ThemeColors } from "../assets/ThemeColors";
 import { BACKEND_URL } from "../assets/config";
 import { useNotification } from "./NotificationContext";
 import { useFocusEffect } from "@react-navigation/native";
+import { FontAwesome } from "@expo/vector-icons";
 
 const CHART_HEIGHT = Dimensions.get("window").height / 2.6 - 20;
 const CHART_WIDTH = Dimensions.get("window").width - 40;
@@ -100,7 +101,7 @@ const GoalsPage = () => {
   const [units, setUnits] = useState("");
   const [additionUnits, setAdditionUnits] = useState("");
   const [additionTargetAmount, setAdditionTargetAmount] = useState("");
-  const [additionDate, setAdditionDate] = useState(new Date());
+  const [additionDate, setAdditionDate] = useState(new Date().getTime());
   const [additionNote, setAdditionNote] = useState("");
   const [targetAmount, setTargetAmount] = useState("");
   const [goalsData, setGoalsData] = useState([]);
@@ -108,7 +109,7 @@ const GoalsPage = () => {
   const [isAdditionModalVisible, setIsAdditionModalVisible] = useState(false);
   const [openDatePicker, setOpenDatePicker] = useState(false);
   const [open, setOpen] = useState(false);
-  const [date, setDate] = useState(new Date());
+  const [date, setDate] = useState(new Date().getTime());
   const [value, setValue] = useState(null);
   const [additionValue, setAdditionValue] = useState([]);
   const [items, setItems] = useState([]);
@@ -243,6 +244,10 @@ const GoalsPage = () => {
   }, [value, goalsData]);
 
   const handleCreateGoal = async () => {
+    if (goalName === "" || units === "" || targetAmount === "") {
+      setError("Please fill in all fields");
+      return;
+    }
     console.log("Goal Name:", goalName);
     console.log("Units:", units);
     console.log("Target Amount:", targetAmount);
@@ -278,6 +283,15 @@ const GoalsPage = () => {
   };
 
   const addAdditionalData = async () => {
+    if (
+      additionUnits == "" ||
+      additionTargetAmount == "" ||
+      additionValue.length == 0 ||
+      additionNote == ""
+    ) {
+      setError("Please fill in all fields");
+      return;
+    }
     console.log("Addition Units:", additionUnits);
     console.log("Addition Target Amount:", additionTargetAmount);
     console.log("Addition Date:", additionDate);
@@ -383,14 +397,15 @@ const GoalsPage = () => {
       bottom: 0,
       justifyContent: "center",
       alignItems: "center",
-      backgroundColor: ThemeColors.primary,
-      opacity: 0.8,
+      backgroundColor: hexToRgba(ThemeColors.primary, 0.8),
+      //opacity: 0.9,
     },
     modalContent: {
       backgroundColor: ThemeColors.secondary,
       padding: 20,
       borderRadius: 10,
       width: "80%",
+      opacity: 1,
     },
     modalTitle: {
       fontSize: 18,

@@ -28,9 +28,10 @@ test("Register renders correctly and that the theme context applies themes corre
                 <Stack.Screen name="Register" component={Register} />
                 <Stack.Screen name="Login" component={Login} />
               </Stack.Navigator>
+              <Notification />
             </ThemeProvider>
           </AuthProvider>
-          <Notification />
+          
           <Toast />
         </NotificationProvider>
       </NavigationContainer>

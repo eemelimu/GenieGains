@@ -208,7 +208,13 @@ const HomeScreen = () => {
         },
       })
         .then((response) => response.json())
-        .then((data) => setName(data.username))
+        .catch((error) => {
+          console.log("Error fetching workouts: ", error);
+        })
+        .then((data) => {
+          setName(data.username);
+          setExperience(data.experience);
+        })
         .catch((error) => {
           console.log("Error fetching workouts: ", error);
         });

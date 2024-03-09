@@ -29,9 +29,10 @@ test("Preferences2 component renders correctly and that the theme context applie
                 <Stack.Screen name="Preferences2" component={Preferences2} />
                 <Stack.Screen name="Login" component={Login} />
               </Stack.Navigator>
+              <Notification />
             </ThemeProvider>
           </AuthProvider>
-          <Notification />
+
           <Toast />
         </NotificationProvider>
       </NavigationContainer>
@@ -52,14 +53,18 @@ test("Next button can be pressed and works as expected", async () => {
   let component;
   component = render(
     <NavigationContainer>
-      <AuthProvider>
-        <ThemeProvider>
-          <Stack.Navigator>
-            <Stack.Screen name="Preferences2" component={Preferences2} />
-            <Stack.Screen name="Login" component={Login} />
-          </Stack.Navigator>
-        </ThemeProvider>
-      </AuthProvider>
+      <NotificationProvider>
+        <AuthProvider>
+          <ThemeProvider>
+            <Stack.Navigator>
+              <Stack.Screen name="Preferences2" component={Preferences2} />
+              <Stack.Screen name="Login" component={Login} />
+            </Stack.Navigator>
+            <Notification />
+            <Toast />
+          </ThemeProvider>
+        </AuthProvider>
+      </NotificationProvider>
     </NavigationContainer>
   );
 

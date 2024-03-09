@@ -31,9 +31,10 @@ test("Account settings component renders correctly and that the theme context ap
                 />
                 <Stack.Screen name="Login" component={Login} />
               </Stack.Navigator>
+              <Notification />
             </ThemeProvider>
           </AuthProvider>
-          <Notification />
+
           <Toast />
         </NotificationProvider>
       </NavigationContainer>

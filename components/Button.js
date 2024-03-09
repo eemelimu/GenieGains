@@ -33,8 +33,8 @@ const Button = ({
       shadowColor: ThemeColors.quaternary,
       shadowOffset: { width: 0, height: 2 },
       shadowOpacity: 0.5,
-      shadowRadius: 4,
-      elevation: 5,
+      shadowRadius: 2,
+      elevation: 1,
       padding: 10,
       marginTop: 10,
       marginBottom: 10,
@@ -50,7 +50,7 @@ const Button = ({
       color: ThemeColors.tertiary,
       fontSize: 16,
     },
-    { color: ThemeColors.tertiary },
+
     isHighlighted && {
       color: ThemeColors.secondary,
       fontWeight: "bold",

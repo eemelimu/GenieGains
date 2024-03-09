@@ -28,9 +28,9 @@ test("Preferences component renders correctly and that the theme context applies
                 <Stack.Screen name="Preferences" component={Preferences} />
                 <Stack.Screen name="Login" component={Login} />
               </Stack.Navigator>
+              <Notification />
             </ThemeProvider>
           </AuthProvider>
-          <Notification />
           <Toast />
         </NotificationProvider>
       </NavigationContainer>

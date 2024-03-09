@@ -10,23 +10,27 @@ import { NotificationProvider } from "../components/NotificationContext";
 import Notification from "../components/Notification";
 import Toast, { ErrorToast } from "react-native-toast-message";
 import { createStackNavigator } from "@react-navigation/stack";
+import { act } from "react-dom/test-utils";
 
 jest.useFakeTimers();
 
 test("Color settings component renders correctly", async () => {
-  const Stack = createStackNavigator();
-  // Render the component
-  const component = renderer.create(
-    <NavigationContainer>
-      <NotificationProvider>
-        <ThemeProvider>
-          <Stack.Screen name="Color Settings" component={ColorSettings} />
-        </ThemeProvider>
-        <Notification />
-        <Toast />
-      </NotificationProvider>
-    </NavigationContainer>
-  );
+  let component;
+  await act(async () => {
+    const Stack = createStackNavigator();
+    // Render the component
+    component = renderer.create(
+      <NavigationContainer>
+        <NotificationProvider>
+          <ThemeProvider>
+            <Stack.Screen name="Color Settings" component={ColorSettings} />
+            <Notification />
+          </ThemeProvider>
+          <Toast />
+        </NotificationProvider>
+      </NavigationContainer>
+    );
+  });
   await waitFor(() => {
     let tree = component.toJSON();
     expect(tree).toMatchSnapshot();
@@ -39,8 +43,9 @@ test("Color resets correctly", async () => {
       <NotificationProvider>
         <ThemeProvider>
           <ColorSettings />
+          <Notification />
         </ThemeProvider>
-        <Notification />
+
         <Toast />
       </NotificationProvider>
     </NavigationContainer>

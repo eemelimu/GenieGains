@@ -19,8 +19,9 @@ import { ThemeProvider } from "./components/ThemeContext";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { SimpleLineIcons } from "@expo/vector-icons";
-//import HomeScreen from "./components/HomeScreen";
 import HomeScreen from "./components/HomeScreen";
+//import HomeScreen from "./components/LoadingPageAnim"
+import LoadingPageAnim from "./components/LoadingPageAnim";
 import GoalsPage from "./components/GoalsPage2";
 import { Ionicons } from "@expo/vector-icons";
 import { AuthProvider } from "./components/AuthContext";
@@ -105,7 +106,7 @@ const HomeStack = () => {
         ),
       })}
     >
-      <Stack.Screen name="Loading" component={LoadingPage} />
+      <Stack.Screen name="Loading" component={LoadingPageAnim} />
       <Stack.Screen name="Home" component={HomeScreen} />
       <Stack.Screen name="About" component={About} />
       <Stack.Screen name="Workout" component={Workout} />

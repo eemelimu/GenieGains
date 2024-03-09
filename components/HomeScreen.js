@@ -393,7 +393,7 @@ const HomeScreen = () => {
       alignItems: "center",
     },
     startWorkoutButton: {
-      backgroundColor: ThemeColors.quaternary,
+      backgroundColor: ThemeColors.tertiary,
       borderRadius: 5,
       paddingVertical: 10,
       paddingHorizontal: 20,

@@ -56,19 +56,19 @@ export const AuthProvider = ({ children }) => {
           console.log("token check is :", ok);
           if (ok) {
             dispatch({ type: "LOGIN", payload: { token } });
-            dispatch({ type: "STOPPED_LOADING" });
+            //dispatch({ type: "STOPPED_LOADING" });
           } else {
             deleteData("token");
-            dispatch({ type: "STOPPED_LOADING" });
+            //dispatch({ type: "STOPPED_LOADING" });
             console.log("Invalid token");
           }
         } else {
-          dispatch({ type: "STOPPED_LOADING" });
+          //dispatch({ type: "STOPPED_LOADING" });
           dispatch({ type: "LOGOUT" });
           console.log("No token in local db");
         }
       } catch (error) {
-        dispatch({ type: "STOPPED_LOADING" });
+        //dispatch({ type: "STOPPED_LOADING" });
         dispatch({ type: "LOGOUT" });
         console.error("Error initializing auth:", error);
       }

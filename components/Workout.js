@@ -6,7 +6,6 @@ import {
   TextInput,
   SafeAreaView,
   TouchableOpacity,
-  Button,
   ScrollView,
   Pressable,
 } from "react-native";
@@ -15,41 +14,14 @@ import ModalDropdown from "react-native-modal-dropdown";
 import { useAuth } from "./AuthContext";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
-import { ThemeColors } from "../assets/ThemeColors";
-import { Entypo } from "@expo/vector-icons";
-import { Feather } from "@expo/vector-icons";
 import { BACKEND_URL } from "../assets/config";
 import { ThemeContext } from "./ThemeContext";
-// TODO:
-// - Video: Vaihda recordVideo & selectVideo ja handleAddVideo paikat, niin että handlevideo ottaa urin.
-// - Dropdown menun fonttia selkeemmäks
-// - Bug: Jos lisää kaksi liikettä ja lisää toiseen liikkeeseen lisää sarjoja,
-//   niin toisen liikkeen päälle ilmestyy tyhjää tilaa.
-//   COPILOTIN rakaisu: Tämä johtuu siitä, että molemmat liikkeet käyttävät samaa statea sarjojen lisäämiseen.
-//   Ratkaisu: Jokaiselle liikkeelle oma state sarjojen lisäämiseen.
 
 export const Workout = ({ route }) => {
   const { theme: ThemeColors } = useContext(ThemeContext);
-  //styles dont move
 
+  //styles dont move
   const styles = StyleSheet.create({
-    videoTypeButton: {
-      borderRadius: 5,
-      overflow: "hidden",
-      padding: 7,
-      backgroundColor: ThemeColors.secondary,
-    },
-    videoOnOffIcon: {
-      position: "absolute",
-      right: 50,
-    },
-    videoContainer: {
-      flexDirection: "row",
-      justifyContent: "center",
-      alignItems: "center",
-      marginTop: 2,
-      marginBottom: 5,
-    },
     // Single Movement Styles
     singleMovementContainer: {
       flex: 1,
@@ -66,7 +38,6 @@ export const Workout = ({ route }) => {
       flexDirection: "column",
     },
     singleMovementLabel: {
-      // width: 60,
       marginBottom: 2,
       top: 5,
       paddingLeft: 5,
@@ -136,7 +107,8 @@ export const Workout = ({ route }) => {
     container: {
       flex: 1,
       backgroundColor: ThemeColors.primary,
-      padding: 20,
+      paddingBottom: 20,
+      paddingTop: 20,
     },
     inputContainer: {
       alignItems: "center",
@@ -157,6 +129,7 @@ export const Workout = ({ route }) => {
       color: ThemeColors.tertiary,
     },
     line: {
+      left: 0,
       borderBottomWidth: 1,
       borderBottomColor: ThemeColors.quaternary,
       width: "100%",
@@ -200,7 +173,7 @@ export const Workout = ({ route }) => {
     },
     finishWorkout: {
       backgroundColor: ThemeColors.secondary,
-      paddingVertical: 10,
+      paddingVertical: 15,
       paddingHorizontal: 20,
       borderRadius: 8,
       alignItems: "center",
@@ -212,8 +185,8 @@ export const Workout = ({ route }) => {
   });
 
   const [name, setName] = useState(
-    `Workout of ${new Date().toLocaleDateString(undefined, {
-      month: "short",
+    `Workout ${new Date().toLocaleDateString(undefined, {
+      month: "numeric",
       day: "numeric",
     })}`
   );
@@ -227,7 +200,6 @@ export const Workout = ({ route }) => {
   const [workoutData, setWorkoutData] = useState([]);
   const navigation = useNavigation();
   const [inProgress, setInProgress] = useState(false);
-  const [timeOfDay, setTimeOfDay] = useState("");
 
   useEffect(() => {
     if (route.params) {
@@ -307,7 +279,6 @@ export const Workout = ({ route }) => {
           movement_id: movement.id,
           weight: sets.weight,
           reps: sets.reps,
-          video: sets.video,
           time: 0,
         }),
       });
@@ -354,17 +325,6 @@ export const Workout = ({ route }) => {
         });
     } catch (error) {
       console.log("Error fetching movements: ", error);
-    }
-  }, []);
-
-  useEffect(() => {
-    const currentTime = new Date().getHours();
-    if (currentTime < 12) {
-      setTimeOfDay("Morning");
-    } else if (currentTime < 18) {
-      setTimeOfDay("Afternoon");
-    } else {
-      setTimeOfDay("Evening");
     }
   }, []);
 
@@ -484,7 +444,6 @@ const SingleMovement = ({
       flexDirection: "column",
     },
     singleMovementLabel: {
-      // width: 60,
       marginBottom: 2,
       top: 5,
       paddingLeft: 5,
@@ -536,16 +495,19 @@ const SingleMovement = ({
       fontSize: 16,
     },
     deleteMovementIcon: {
-      marginLeft: 100,
+      position: "absolute",
+      right: 5,
+      top: 10,
+      padding: 10,
     },
   });
 
   //end of styles dont move
 
-  const [sets, setSets] = useState([{ weight: "", reps: "", video: "" }]);
+  const [sets, setSets] = useState([{ weight: "", reps: "" }]);
 
   const handleAddSet = () => {
-    setSets([...sets, { weight: "", reps: "", video: "" }]);
+    setSets([...sets, { weight: "", reps: "" }]);
     if (workoutData.includes(movement)) {
       const index = workoutData.indexOf(movement);
       const newWorkoutData = [...workoutData];
@@ -593,6 +555,7 @@ const SingleMovement = ({
     <View style={styles.singleMovementContainer}>
       <Text style={styles.singleMovementTitle}>
         {movement.name}
+      </Text>
         <TouchableOpacity
           onPress={() => handleRemoveMovement(movement)}
           style={styles.deleteMovementIcon}
@@ -603,7 +566,6 @@ const SingleMovement = ({
             color={ThemeColors.tertiary}
           />
         </TouchableOpacity>
-      </Text>
       {sets.map((set, index) => (
         <SingleSet
           key={index}
@@ -613,9 +575,6 @@ const SingleMovement = ({
           setNumber={index + 1}
           handleRemoveSet={() => handleRemoveSet(index)}
           handleSetOnChange={() => handleSetOnChange(index)}
-          // handleAddVideo={() => handleAddVideo(index)}
-          selectVideo={() => selectVideo(index)}
-          recordVideo={() => recordVideo(index)}
         />
       ))}
       <View>
@@ -638,41 +597,13 @@ const SingleSet = ({
   setNumber,
   handleRemoveSet,
   handleSetOnChange,
-  // handleAddVideo,
-  includeVideo,
-  selectVideo,
-  recordVideo,
 }) => {
   const { theme: ThemeColors } = useContext(ThemeContext);
   const { weight, reps } = set;
-  const [videoSelected, setVideoSelected] = useState(false);
-  const [hideVideoIcon, setHideVideoIcon] = useState(false);
-
-  const handleVideoIconPress = () => {
-    setVideoSelected(!videoSelected);
-    setHideVideoIcon(!hideVideoIcon);
-  };
 
   //styles dont move
 
   const styles = StyleSheet.create({
-    videoTypeButton: {
-      borderRadius: 5,
-      overflow: "hidden",
-      padding: 7,
-      backgroundColor: ThemeColors.secondary,
-    },
-    videoOnOffIcon: {
-      position: "absolute",
-      right: 50,
-    },
-    videoContainer: {
-      flexDirection: "row",
-      justifyContent: "center",
-      alignItems: "center",
-      marginTop: 2,
-      marginBottom: 5,
-    },
     // Single Movement Styles
     singleMovementContainer: {
       flex: 1,

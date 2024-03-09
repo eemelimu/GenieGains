@@ -666,13 +666,18 @@ const GoalsPage = () => {
               keyboardType="numeric"
               placeholderTextColor={ThemeColors.quaternary}
             />
-            <Pressable
+            {/* <Pressable
               style={styles.button}
               onPress={() => setOpenDatePicker(true)}
             >
               <Text style={styles.buttonText}>Select Date</Text>
               <Text style={styles.buttonText}>{epochToDate(date)}</Text>
-            </Pressable>
+            </Pressable> */}
+            <Button
+              width={"100%"}
+              text={"Select Date: " + epochToDate(date)}
+              onPress={() => setOpenDatePicker(true)}
+            />
             {openDatePicker && (
               <DateTimePicker
                 value={new Date()}

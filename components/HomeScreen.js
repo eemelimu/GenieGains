@@ -152,6 +152,7 @@ const HomeScreen = () => {
           stopLoading();
         } catch (error) {
           console.log("Error fetching workout movements: ", error);
+          stopLoading();
         }
       };
 
@@ -198,30 +199,57 @@ const HomeScreen = () => {
     }, [])
   );
 
-  useEffect(() => {
-    try {
-      fetch(BACKEND_URL + "user", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          "Auth-Token": token,
-        },
-      })
-        .then((response) => response.json())
-        .catch((error) => {
-          console.log("Error fetching workouts: ", error);
+  useFocusEffect(
+    useCallback(() => {
+      try {
+        fetch(BACKEND_URL + "user", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "Auth-Token": token,
+          },
         })
-        .then((data) => {
-          setName(data.username);
-          setExperience(data.experience);
-        })
-        .catch((error) => {
-          console.log("Error fetching workouts: ", error);
-        });
-    } catch (error) {
-      console.log("Error fetching workouts: ", error);
-    }
-  }, []);
+          .then((response) => response.json())
+          .catch((error) => {
+            console.log("Error fetching workouts: ", error);
+          })
+          .then((data) => {
+            setName(data.username);
+            setExperience(data.experience);
+          })
+          .catch((error) => {
+            console.log("Error fetching workouts: ", error);
+          });
+      } catch (error) {
+        console.log("Error fetching workouts: ", error);
+      }
+    }, [])
+  );
+
+  // useEffect(() => {
+  //   try {
+  //     fetch(BACKEND_URL + "user", {
+  //       method: "GET",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //         "Auth-Token": token,
+  //       },
+  //     })
+  //       .then((response) => response.json())
+  //       .catch((error) => {
+  //         console.log("Error fetching workouts: ", error);
+  //       })
+  //       .then((data) => {
+  //         setName(data.username);
+  //         setExperience(data.experience);
+  //       })
+  //       .catch((error) => {
+  //         console.log("Error fetching workouts: ", error);
+  //       });
+  //   } catch (error) {
+  //     console.log("Error fetching workouts: ", error);
+  //   }
+  // }, []);
 
   const handleDeleteWorkout = async (id) => {
     try {

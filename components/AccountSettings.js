@@ -1,5 +1,8 @@
 import React, { useState, useContext, useCallback, useEffect } from "react";
 import { useAuth } from "./AuthContext";
+import Button from "./Button";
+import tinycolor from "tinycolor2";
+import { hexToRgba, storeData } from "../assets/utils/utils";
 import {
   View,
   Text,
@@ -22,10 +25,39 @@ const AccountSettings = () => {
   const [username, setUsername] = useState("");
   const [emailModalVisible, setEmailModalVisible] = useState(false);
   const [passwordModalVisible, setPasswordModalVisible] = useState(false);
+  const [logoutModalVisible, setLogoutModalVisible] = useState(false);
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [email, setEmail] = useState("");
-  const { theme: ThemeColors } = useContext(ThemeContext);
+  const {
+    theme: ThemeColors,
+    resetTheme,
+    changeThemeColor,
+  } = useContext(ThemeContext);
+
+  const logoutAll = async () => {
+    setLogoutModalVisible(false);
+    try {
+      const response = await fetch(BACKEND_URL + "logout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Auth-Token": `${token}`,
+        },
+      });
+      if (!response.ok) {
+        setError("Something went wrong! Please try again later.");
+      } else {
+        dispatch({ type: "LOGOUT" });
+        resetTheme();
+        storeData("theme", ThemeColors);
+        setSuccess("Logged out from all devices successfully");
+      }
+    } catch (error) {
+      setError("Check your internet connection");
+      console.error("Error:", error);
+    }
+  };
 
   const getUserData = async () => {
     //startLoading();
@@ -111,7 +143,10 @@ const AccountSettings = () => {
   };
 
   const handleLogout = () => {
+    setLogoutModalVisible(false);
     dispatch({ type: "LOGOUT" });
+    resetTheme();
+    storeData("theme", ThemeColors);
   };
 
   useFocusEffect(
@@ -151,11 +186,10 @@ const AccountSettings = () => {
       bottom: 0,
       justifyContent: "center",
       alignItems: "center",
-      backgroundColor: ThemeColors.primary,
-      opacity: 0.8,
+      backgroundColor: hexToRgba(ThemeColors.primary, 0.8),
     },
     modalContent: {
-      backgroundColor: ThemeColors.secondary,
+      backgroundColor: hexToRgba(ThemeColors.secondary, 0.9),
       padding: 20,
       borderRadius: 10,
       width: "80%",
@@ -185,11 +219,16 @@ const AccountSettings = () => {
     cancelButtonText: {
       color: ThemeColors.quaternary,
     },
+    boldText: {
+      fontWeight: "bold",
+      color: ThemeColors.tertiary,
+      fontSize: 20,
+    },
   });
 
   return (
     <View style={styles.container}>
-      <Text style={styles.username}>{username}</Text>
+      <Text style={styles.username}>Username:{username}</Text>
 
       <Pressable
         style={styles.button}
@@ -198,6 +237,14 @@ const AccountSettings = () => {
         <MaterialIcons name="email" size={24} color={ThemeColors.tertiary} />
         <Text style={styles.buttonText}>Change Email</Text>
       </Pressable>
+      {/* <Button
+      width={"80%"}
+        text={"Change Email"}
+        onPress={() => setEmailModalVisible(true)}
+        renderIcon={(color) => (
+          <MaterialIcons name="email" size={24} color={color} />
+        )}
+      /> */}
 
       <Pressable
         style={styles.button}
@@ -206,7 +253,10 @@ const AccountSettings = () => {
         <MaterialIcons name="lock" size={24} color={ThemeColors.tertiary} />
         <Text style={styles.buttonText}>Change Password</Text>
       </Pressable>
-      <Pressable style={styles.button} onPress={handleLogout}>
+      <Pressable
+        style={styles.button}
+        onPress={() => setLogoutModalVisible(true)}
+      >
         <MaterialIcons name="logout" size={24} color={ThemeColors.tertiary} />
         <Text style={styles.buttonText}>Logout</Text>
       </Pressable>
@@ -230,23 +280,26 @@ const AccountSettings = () => {
               color={ThemeColors.tertiary}
               placeholderTextColor={ThemeColors.tertiary}
             />
-            <Pressable style={styles.saveButton} onPress={handleEmailChange}>
-              <Text style={styles.saveButtonText}>Save</Text>
-            </Pressable>
-            <Pressable
-              style={styles.cancelButton}
+            <Button
+              width={"80%"}
+              text={"Save"}
+              onPress={handleEmailChange}
+              color={ThemeColors.primary}
+              textColor={ThemeColors.tertiary}
+            />
+            <Button
+              isHighlighted={true}
+              width={"80%"}
+              text={"Cancel"}
               onPress={() => {
                 getUserData();
                 setEmailModalVisible(false);
               }}
-            >
-              <Text style={styles.cancelButtonText}>Cancel</Text>
-            </Pressable>
+            />
           </View>
         </View>
       </Modal>
 
-      {/* Password Modal */}
       <Modal
         animationType="slide"
         transparent={true}
@@ -273,19 +326,57 @@ const AccountSettings = () => {
               value={confirmPassword}
               onChangeText={setConfirmPassword}
             />
-            <Pressable style={styles.saveButton} onPress={handlePasswordChange}>
+            {/* <Pressable style={styles.saveButton} onPress={handlePasswordChange}>
               <Text style={styles.saveButtonText}>Save</Text>
-            </Pressable>
-            <Pressable
-              style={styles.cancelButton}
+            </Pressable> */}
+            <Button
+              width={"80%"}
+              text={"Save"}
+              onPress={handlePasswordChange}
+              color={ThemeColors.primary}
+              textColor={ThemeColors.tertiary}
+            />
+            <Button
+              isHighlighted={true}
+              width={"80%"}
+              text={"Cancel"}
               onPress={() => {
                 setPasswordModalVisible(false);
                 setPassword("");
                 setConfirmPassword("");
               }}
-            >
-              <Text style={styles.cancelButtonText}>Cancel</Text>
-            </Pressable>
+            />
+          </View>
+        </View>
+      </Modal>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={logoutModalVisible}
+        onRequestClose={() => setLogoutModalVisible(false)}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Text style={styles.boldText}>
+              Are you sure you want to logout?
+            </Text>
+            <Button
+              width={"80%"}
+              text={"Yes log me out from all devices"}
+              onPress={logoutAll}
+              textColor={ThemeColors.tertiary}
+            />
+            <Button
+              width={"80%"}
+              text={"Logout just from this device"}
+              onPress={handleLogout}
+            />
+            <Button
+              isHighlighted={true}
+              width={"80%"}
+              text={"Cancel"}
+              onPress={() => setLogoutModalVisible(false)}
+            />
           </View>
         </View>
       </Modal>

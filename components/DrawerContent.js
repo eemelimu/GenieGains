@@ -1,6 +1,6 @@
 import React, { useState, useContext } from "react";
 import { LinearGradient } from "expo-linear-gradient";
-import { storeData } from "../assets/utils/utils";
+import { storeData, hexToRgba } from "../assets/utils/utils";
 import {
   StyleSheet,
   View,
@@ -8,7 +8,11 @@ import {
   TouchableOpacity,
   TextInput,
   Pressable,
+  Modal,
 } from "react-native";
+import { BACKEND_URL } from "../assets/config";
+import Button from "./Button";
+import { useNotification } from "./NotificationContext";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 import { SimpleLineIcons } from "@expo/vector-icons";
@@ -84,18 +88,54 @@ const ThemeBtn = ({ colors, name }) => {
 };
 
 export const DrawerContent = () => {
-  const { theme: ThemeColors } = useContext(ThemeContext);
+  const { state, dispatch } = useAuth();
+  const token = state.token;
+  const { setError, setSuccess, startLoading, stopLoading } = useNotification();
+  const [logoutModalVisible, setLogoutModalVisible] = useState(false);
+  const {
+    theme: ThemeColors,
+    resetTheme,
+    changeThemeColor,
+  } = useContext(ThemeContext);
+  console.log("ThemeColors", ThemeColors);
   const [feedbackInputVisible, setFeedbackInputVisible] = useState(false);
   const [feedbackText, setFeedbackText] = useState("");
   const [feedbackSent, setFeedbackSent] = useState(false);
   const [feedbackWarning, setFeedbackWarning] = useState(false);
   const navigation = useNavigation();
-  const { dispatch } = useAuth();
+
+  const logoutAll = async () => {
+    setLogoutModalVisible(false);
+    try {
+      const response = await fetch(BACKEND_URL + "logout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Auth-Token": `${token}`,
+        },
+      });
+      if (!response.ok) {
+        setError("Something went wrong! Please try again later.");
+      } else {
+        dispatch({ type: "LOGOUT" });
+        resetTheme();
+        storeData("theme", ThemeColors);
+        setSuccess("Logged out from all devices successfully");
+      }
+    } catch (error) {
+      setError("Check your internet connection");
+      console.error("Error:", error);
+    }
+  };
 
   const handleLogout = () => {
     dispatch({
       type: "LOGOUT",
     });
+    resetTheme();
+    setSuccess("Logged out successfully");
+    storeData("theme", ThemeColors);
+    setLogoutModalVisible(false);
   };
 
   const handleSendFeedback = () => {
@@ -186,6 +226,29 @@ export const DrawerContent = () => {
       padding: 10,
       borderBottomWidth: 1,
       borderBottomColor: ThemeColors.quaternary,
+    },
+    modalContainer: {
+      flex: 1,
+      position: "absolute",
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      justifyContent: "center",
+      alignItems: "center",
+      backgroundColor: hexToRgba(ThemeColors.primary, 0.8),
+    },
+    modalContent: {
+      backgroundColor: hexToRgba(ThemeColors.secondary, 0.9),
+      padding: 20,
+      borderRadius: 10,
+      width: "80%",
+      alignItems: "center",
+    },
+    boldText: {
+      fontSize: 20,
+      fontWeight: "bold",
+      color: ThemeColors.tertiary,
     },
   });
 
@@ -316,7 +379,9 @@ export const DrawerContent = () => {
       <View style={styles.drawerFooter}>
         <TouchableOpacity
           style={styles.drawerFooterItem}
-          onPress={handleLogout}
+          onPress={() => {
+            setLogoutModalVisible(true);
+          }}
         >
           <SimpleLineIcons
             name="logout"
@@ -329,6 +394,37 @@ export const DrawerContent = () => {
           </Text>
         </TouchableOpacity>
       </View>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={logoutModalVisible}
+        onRequestClose={() => setLogoutModalVisible(false)}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Text style={styles.boldText}>
+              Are you sure you want to logout?
+            </Text>
+            <Button
+              width={"80%"}
+              text={"Yes log me out from all devices"}
+              onPress={logoutAll}
+              textColor={ThemeColors.tertiary}
+            />
+            <Button
+              width={"80%"}
+              text={"Logout just from this device"}
+              onPress={handleLogout}
+            />
+            <Button
+              isHighlighted={true}
+              width={"80%"}
+              text={"Cancel"}
+              onPress={() => setLogoutModalVisible(false)}
+            />
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };

@@ -400,7 +400,7 @@ const GoalsPage = () => {
       backgroundColor: hexToRgba(ThemeColors.primary, 0.8),
     },
     modalContent: {
-      backgroundColor: ThemeColors.secondary,
+      backgroundColor: hexToRgba(ThemeColors.secondary, 0.9),
       padding: 20,
       borderRadius: 10,
       width: "80%",

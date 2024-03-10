@@ -59,18 +59,17 @@ const Routines = () => {
       });
       const data = await res.json();
       console.log(data);
-      stopLoading();
       setSuccess("Routine deleted successfully");
     } catch (error) {
       setError("Check your internet connection");
       console.log("Error: ", error);
     }
   };
-  
+
   useFocusEffect(
     useCallback(() => {
       const fetchData = async () => {
-        // startLoading();
+        startLoading();
         try {
           const res = await fetch(BACKEND_URL + "trainingplan", {
             method: "GET",
@@ -82,14 +81,14 @@ const Routines = () => {
           const data = await res.json();
           setTrainingPlans(data.trainingplan_list);
           console.log("luk" + data);
-          // stopLoading();
+          stopLoading();
         } catch (error) {
           setError("Check your internet connection");
           console.log("Error: ", error);
         }
       };
       fetchData();
-    }, [trainingPlans])
+    }, [])
   );
 
   if (!fontsLoaded) {

@@ -16,6 +16,9 @@ import { ThemeColors } from "../assets/ThemeColors";
 import { useAuth } from "./AuthContext";
 import { BACKEND_URL } from "../assets/config";
 import { useNotification } from "./NotificationContext";
+import { AntDesign } from '@expo/vector-icons';
+import { Feather } from "@expo/vector-icons";
+
 const Login = () => {
   const { setError, setSuccess, startLoading, stopLoading } = useNotification();
   const { dispatch } = useAuth();
@@ -82,16 +85,14 @@ const Login = () => {
       justifyContent: "center",
       alignItems: "center",
     },
-
     Logo: {
       marginTop: 50,
-      width: 200,
-      height: 50,
+      width: 300,
+      height: 100,
       borderColor: ThemeColors.tertiary,
       borderWidth: 1,
-      marginBottom: 60,
+      marginBottom: 150,
     },
-
     userName: {
       paddingTop: 40,
       fontSize: 35,
@@ -110,16 +111,20 @@ const Login = () => {
       fontFamily: "DMBold",
       color: ThemeColors.tertiary,
     },
-    passwordInput: {
-      backgroundColor: ThemeColors.secondary,
+    userNameInput: {
       width: "70%",
-      height: "10%",
-      borderRadius: 50,
+      borderRadius: 10,
       fontSize: 20,
       fontFamily: "DMRegular",
-      marginBottom: 50,
+      textAlign: "center",
     },
-
+    passwordInput: {
+      width: "70%",
+      borderRadius: 10,
+      fontSize: 20,
+      fontFamily: "DMRegular",
+      textAlign: "center",
+    },
     registerBtn: {
       paddingTop: 25,
     },
@@ -131,15 +136,6 @@ const Login = () => {
       borderRadius: 25,
       textShadowColor: ThemeColors.tertiary,
       fontFamily: "DMBold",
-    },
-
-    userNameInput: {
-      backgroundColor: ThemeColors.secondary,
-      width: "70%",
-      height: "10%",
-      borderRadius: 50,
-      fontSize: 20,
-      fontFamily: "DMRegular",
     },
     modalContainer: {
       flex: 1,
@@ -161,6 +157,25 @@ const Login = () => {
       color: "white",
       fontSize: 20,
     },
+    inputRow: {
+      position: "aboslute",
+      flexDirection: "row",
+      paddingTop: 50,
+      marginBottom: 25,
+      borderBottomWidth: 1,
+      borderBottomColor: ThemeColors.tertiary,
+    },
+    buttonContainer: {
+      marginTop: 50,
+      width: "100%",
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    iconStyle: {
+      position: "absolute",
+      left: 0,
+      top: 45,
+    }
   });
 
   return (
@@ -170,30 +185,35 @@ const Login = () => {
         style={styles.Logo}
         source={require("../assets/GJunkie_02.png")}
       ></Image>
-      <Text style={styles.userName}> Username </Text>
-      <TextInput
-        value={username}
-        onChangeText={setUsername}
-        style={styles.userNameInput}
-        placeholder="    Enter username..."
-        placeholderTextColor={ThemeColors.tertiary}
-        autoComplete="username"
-        autoCapitalize="none"
-      />
-      <Text style={styles.password}> Password </Text>
+      <View style={styles.inputRow}>
+      <AntDesign name="user" size={24} color="black" style={styles.iconStyle}/>
+        <TextInput
+          value={username}
+          onChangeText={setUsername}
+          style={styles.userNameInput}
+          placeholder="Username"
+          placeholderTextColor={`${ThemeColors.tertiary}80`}
+          autoComplete="username"
+          autoCapitalize="none"
+        />
+      </View>
+      <View style={styles.inputRow}>
+      <Feather name="lock" size={24} color="black" style={styles.iconStyle}/>
       <TextInput
         secureTextEntry={true}
         value={password}
         onChangeText={setPassword}
         style={styles.passwordInput}
-        placeholder="    Enter password..."
-        placeholderTextColor={ThemeColors.tertiary}
+        placeholder="Password"
+        placeholderTextColor={`${ThemeColors.tertiary}80`}
         autoComplete="current-password"
         autoCapitalize="none"
       />
+      </View>
       {/* <TouchableOpacity style={styles.registerBtn} onPress={handleLogin}>
         <Text style={styles.registerBtnText}>Login</Text>
       </TouchableOpacity> */}
+      <View style={styles.buttonContainer}>
       <Button
         textSize={20}
         height={50}
@@ -201,7 +221,6 @@ const Login = () => {
         text="Login"
         onPress={handleLogin}
       />
-
       {/* <TouchableOpacity
         style={styles.registerBtn}
         onPress={() => {
@@ -218,6 +237,7 @@ const Login = () => {
         text="Register"
         onPress={() => navigation.navigate("Register")}
       />
+      </View>
     </View>
   );
 };

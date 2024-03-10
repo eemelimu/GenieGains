@@ -128,7 +128,6 @@ const HomeScreen = () => {
               movement_name,
               reps,
               weight,
-              video,
             } = workout;
 
             if (!groupedMovements[exercise_id]) {
@@ -145,7 +144,6 @@ const HomeScreen = () => {
               name: movement_name,
               reps: reps,
               weight: weight,
-              video: video,
             });
           });
 
@@ -226,31 +224,6 @@ const HomeScreen = () => {
       }
     }, [token])
   );
-
-  // useEffect(() => {
-  //   try {
-  //     fetch(BACKEND_URL + "user", {
-  //       method: "GET",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //         "Auth-Token": token,
-  //       },
-  //     })
-  //       .then((response) => response.json())
-  //       .catch((error) => {
-  //         console.log("Error fetching workouts: ", error);
-  //       })
-  //       .then((data) => {
-  //         setName(data.username);
-  //         setExperience(data.experience);
-  //       })
-  //       .catch((error) => {
-  //         console.log("Error fetching workouts: ", error);
-  //       });
-  //   } catch (error) {
-  //     console.log("Error fetching workouts: ", error);
-  //   }
-  // }, []);
 
   const handleDeleteWorkout = async (id) => {
     try {

@@ -16,12 +16,12 @@ export const ViewWorkout = ({ route }) => {
   const navigation = useNavigation();
   const [workoutData, setWorkoutData] = useState([]);
 
-  // const handleEditWorkout = () => {
-  //   console.log("Workout Movements");
-  //   console.log(workout.movements);
-  //   console.log("workoutData");
-  //   console.log(workoutData);
-  // };
+  const handleEditWorkout = () => {
+    console.log("Workout Movements");
+    console.log(workout.movements);
+    console.log("workoutData");
+    console.log(workoutData);
+  };
 
   useEffect(() => {
     const groupMovementsByName = (movements) => {
@@ -102,7 +102,7 @@ const SingleMovement = ({ movement }) => {
 };
 
 const SingleSet = ({ set, setNumber }) => {
-  const { weight, reps, video } = set;
+  const { weight, reps } = set;
 
   return (
     <View>
@@ -118,32 +118,16 @@ const SingleSet = ({ set, setNumber }) => {
         <Text style={styles.singleMovementLabel}>Reps</Text>
         <TextInput
           style={styles.singleMovementInput}
-          value={reps}
+          value={reps.toString()}
           keyboardType="numeric"
           editable={false}
         />
       </View>
-      {/* {video && video !== '' && (
-        <View style={styles.videoContainer}>
-          <View style={styles.videoImageContainer}>
-            <Text>{video}</Text>
-          </View>
-        </View>
-      )} */}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  videoImageContainer: {
-    width: 75,
-    height: 75,
-    backgroundColor: "#ccc",
-  },
-  videoContainer: {
-    alignItems: "center",
-    justifyContent: "center",
-  },
   singleMovementInput: {
     borderWidth: 1,
     borderColor: "#ccc",

@@ -17,6 +17,7 @@ import { AntDesign } from "@expo/vector-icons";
 import { useFonts } from "expo-font";
 import { ThemeContext } from "./ThemeContext";
 import { useNotification } from "./NotificationContext";
+import { MaterialIcons } from "@expo/vector-icons";
 
 const Routines = () => {
   const { setError, setSuccess, startLoading, stopLoading } = useNotification();
@@ -46,10 +47,30 @@ const Routines = () => {
     navigation.navigate("Inspect Routine", { routineName });
   };
 
+  const handleDeleteRoutine = async (routineId) => {
+    startLoading();
+    try {
+      const res = await fetch(BACKEND_URL + "trainingplan/" + routineId, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          "Auth-Token": token,
+        },
+      });
+      const data = await res.json();
+      console.log(data);
+      stopLoading();
+      setSuccess("Routine deleted successfully");
+    } catch (error) {
+      setError("Check your internet connection");
+      console.log("Error: ", error);
+    }
+  };
+  
   useFocusEffect(
     useCallback(() => {
       const fetchData = async () => {
-        startLoading();
+        // startLoading();
         try {
           const res = await fetch(BACKEND_URL + "trainingplan", {
             method: "GET",
@@ -61,14 +82,14 @@ const Routines = () => {
           const data = await res.json();
           setTrainingPlans(data.trainingplan_list);
           console.log("luk" + data);
-          stopLoading();
+          // stopLoading();
         } catch (error) {
           setError("Check your internet connection");
           console.log("Error: ", error);
         }
       };
       fetchData();
-    }, [])
+    }, [trainingPlans])
   );
 
   if (!fontsLoaded) {
@@ -179,12 +200,27 @@ const Routines = () => {
       fontSize: 15,
       fontFamily: "DMRegular",
     },
+    deleteMovementIcon: {
+      position: "absolute",
+      right: 10,
+      top: 10,
+    },
   });
 
   const Routine = ({ name, routine }) => {
     return (
       <View style={styles.singleRoutine}>
         <Text style={styles.RoutineName}>{name}</Text>
+        <TouchableOpacity
+          style={styles.deleteMovementIcon}
+          onPress={() => handleDeleteRoutine(routine.id)}
+        >
+          <MaterialIcons
+            name="delete-outline"
+            size={24}
+            color={ThemeColors.tertiary}
+          />
+        </TouchableOpacity>
         <View style={styles.movementsContainer}>
           <Text style={styles.movementName}>
             {routine.movements.map((movement) => movement.name).join(", ")}

@@ -111,14 +111,7 @@ const Login = () => {
       fontFamily: "DMBold",
       color: ThemeColors.tertiary,
     },
-    userNameInput: {
-      width: "70%",
-      borderRadius: 10,
-      fontSize: 20,
-      fontFamily: "DMRegular",
-      textAlign: "center",
-    },
-    passwordInput: {
+    input: {
       width: "70%",
       borderRadius: 10,
       fontSize: 20,
@@ -190,7 +183,7 @@ const Login = () => {
         <TextInput
           value={username}
           onChangeText={setUsername}
-          style={styles.userNameInput}
+          style={styles.input}
           placeholder="Username"
           placeholderTextColor={`${ThemeColors.tertiary}80`}
           autoComplete="username"
@@ -198,12 +191,12 @@ const Login = () => {
         />
       </View>
       <View style={styles.inputRow}>
-      <Feather name="lock" size={24} color="black" style={styles.iconStyle}/>
+      <AntDesign name="lock" size={24} color="black" style={styles.iconStyle}/>
       <TextInput
         secureTextEntry={true}
         value={password}
         onChangeText={setPassword}
-        style={styles.passwordInput}
+        style={styles.input}
         placeholder="Password"
         placeholderTextColor={`${ThemeColors.tertiary}80`}
         autoComplete="current-password"

@@ -224,15 +224,12 @@ const Login = () => {
         />
         <TouchableOpacity
           onPress={() => setShowPassword(!showPassword)}
-          style={styles.showPassword}
+          style={[styles.showPassword, password.length === 0 && { opacity: 0}]}
         >
         {showPassword ? <Feather name="eye-off" size={24} color="black" /> : <Feather name="eye" size={24} color="black" />
         }
         </TouchableOpacity>
       </View>
-      {/* <TouchableOpacity style={styles.registerBtn} onPress={handleLogin}>
-        <Text style={styles.registerBtnText}>Login</Text>
-      </TouchableOpacity> */}
       <View style={styles.buttonContainer}>
         <Button
           textSize={20}
@@ -241,14 +238,6 @@ const Login = () => {
           text="Login"
           onPress={handleLogin}
         />
-        {/* <TouchableOpacity
-        style={styles.registerBtn}
-        onPress={() => {
-          navigation.navigate("Register");
-        }}
-      >
-        <Text style={styles.registerBtnText}>Register</Text>
-      </TouchableOpacity> */}
         <Button
           isHighlighted={true}
           textSize={20}

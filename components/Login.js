@@ -224,10 +224,13 @@ const Login = () => {
         />
         <TouchableOpacity
           onPress={() => setShowPassword(!showPassword)}
-          style={[styles.showPassword, password.length === 0 && { opacity: 0}]}
+          style={[styles.showPassword, password.length === 0 && { opacity: 0 }]}
         >
-        {showPassword ? <Feather name="eye-off" size={24} color="black" /> : <Feather name="eye" size={24} color="black" />
-        }
+          {showPassword ? (
+            <Feather name="eye-off" size={24} color="black" />
+          ) : (
+            <Feather name="eye" size={24} color="black" />
+          )}
         </TouchableOpacity>
       </View>
       <View style={styles.buttonContainer}>

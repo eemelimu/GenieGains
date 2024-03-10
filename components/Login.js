@@ -16,7 +16,7 @@ import { ThemeColors } from "../assets/ThemeColors";
 import { useAuth } from "./AuthContext";
 import { BACKEND_URL } from "../assets/config";
 import { useNotification } from "./NotificationContext";
-import { AntDesign } from '@expo/vector-icons';
+import { AntDesign } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 
 const Login = () => {
@@ -26,10 +26,13 @@ const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [openModal, setOpenModal] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+
   let [fontsLoaded] = useFonts({
     DMBold: require("../assets/fonts/DMSans-Bold.ttf"),
     DMRegular: require("../assets/fonts/DMSans-Regular.ttf"),
   });
+
   useFocusEffect(
     useCallback(() => {
       const backAction = () => {
@@ -164,11 +167,18 @@ const Login = () => {
       justifyContent: "center",
       alignItems: "center",
     },
+    showPassword: {
+      position: "absolute",
+      right: 0,
+      top: 45,
+      opacity: 0.5,
+    },
     iconStyle: {
       position: "absolute",
       left: 0,
       top: 45,
-    }
+      opacity: 0.5,
+    },
   });
 
   return (
@@ -179,7 +189,12 @@ const Login = () => {
         source={require("../assets/GJunkie_02.png")}
       ></Image>
       <View style={styles.inputRow}>
-      <AntDesign name="user" size={24} color="black" style={styles.iconStyle}/>
+        <AntDesign
+          name="user"
+          size={24}
+          color="black"
+          style={styles.iconStyle}
+        />
         <TextInput
           value={username}
           onChangeText={setUsername}
@@ -191,30 +206,42 @@ const Login = () => {
         />
       </View>
       <View style={styles.inputRow}>
-      <AntDesign name="lock" size={24} color="black" style={styles.iconStyle}/>
-      <TextInput
-        secureTextEntry={true}
-        value={password}
-        onChangeText={setPassword}
-        style={styles.input}
-        placeholder="Password"
-        placeholderTextColor={`${ThemeColors.tertiary}80`}
-        autoComplete="current-password"
-        autoCapitalize="none"
-      />
+        <AntDesign
+          name="lock"
+          size={24}
+          color="black"
+          style={styles.iconStyle}
+        />
+        <TextInput
+          secureTextEntry={!showPassword}
+          value={password}
+          onChangeText={setPassword}
+          style={styles.input}
+          placeholder="Password"
+          placeholderTextColor={`${ThemeColors.tertiary}80`}
+          autoComplete="current-password"
+          autoCapitalize="none"
+        />
+        <TouchableOpacity
+          onPress={() => setShowPassword(!showPassword)}
+          style={styles.showPassword}
+        >
+        {showPassword ? <Feather name="eye-off" size={24} color="black" /> : <Feather name="eye" size={24} color="black" />
+        }
+        </TouchableOpacity>
       </View>
       {/* <TouchableOpacity style={styles.registerBtn} onPress={handleLogin}>
         <Text style={styles.registerBtnText}>Login</Text>
       </TouchableOpacity> */}
       <View style={styles.buttonContainer}>
-      <Button
-        textSize={20}
-        height={50}
-        width={"80%"}
-        text="Login"
-        onPress={handleLogin}
-      />
-      {/* <TouchableOpacity
+        <Button
+          textSize={20}
+          height={50}
+          width={"80%"}
+          text="Login"
+          onPress={handleLogin}
+        />
+        {/* <TouchableOpacity
         style={styles.registerBtn}
         onPress={() => {
           navigation.navigate("Register");
@@ -222,14 +249,14 @@ const Login = () => {
       >
         <Text style={styles.registerBtnText}>Register</Text>
       </TouchableOpacity> */}
-      <Button
-        isHighlighted={true}
-        textSize={20}
-        height={50}
-        width={"80%"}
-        text="Register"
-        onPress={() => navigation.navigate("Register")}
-      />
+        <Button
+          isHighlighted={true}
+          textSize={20}
+          height={50}
+          width={"80%"}
+          text="Register"
+          onPress={() => navigation.navigate("Register")}
+        />
       </View>
     </View>
   );

@@ -13,6 +13,8 @@ import { useFonts } from "expo-font";
 import { ThemeColors } from "../assets/ThemeColors";
 import { useNotification } from "./NotificationContext";
 import { BACKEND_URL } from "../assets/config";
+import { AntDesign } from "@expo/vector-icons";
+import { Fontisto } from '@expo/vector-icons';
 
 const Register = () => {
   const { setError, setSuccess, startLoading, stopLoading } = useNotification();
@@ -119,13 +121,25 @@ const Register = () => {
       textShadowColor: ThemeColors.black,
       fontFamily: "DMBold",
     },
-    userNameInput: {
-      backgroundColor: ThemeColors.secondary,
+    input: {
       width: "70%",
-      height: "7%",
-      borderRadius: 50,
+      borderRadius: 10,
       fontSize: 20,
       fontFamily: "DMRegular",
+      textAlign: "center",
+    },
+    iconStyle: {
+      position: "absolute",
+      left: 0,
+      top: 45,
+    },
+    inputRow: {
+      position: "aboslute",
+      flexDirection: "row",
+      paddingTop: 50,
+      marginBottom: 25,
+      borderBottomWidth: 1,
+      borderBottomColor: ThemeColors.tertiary,
     },
   });
 
@@ -136,47 +150,53 @@ const Register = () => {
         source={require("../assets/GJunkie_02.png")}
         resizeMode="contain"
       />
-      <Text style={styles.information}> Username </Text>
-      <TextInput
-        style={styles.userNameInput}
-        placeholder="    Enter username..."
-        value={username}
-        onChangeText={setUsername}
-        autoComplete="username"
-        autoCapitalize="none"
-      />
-      <Text style={styles.information}> Password </Text>
-      <TextInput
-        style={styles.userNameInput}
-        placeholder="    Enter password..."
-        secureTextEntry={true}
-        value={password}
-        onChangeText={setPassword}
-        autoComplete="new-password"
-        autoCapitalize="none"
-      />
-      <Text style={styles.information}> Confirm Password </Text>
-      <TextInput
-        style={styles.userNameInput}
-        placeholder="    Enter password..."
-        secureTextEntry={true}
-        value={password2}
-        onChangeText={setPassword2}
-        autoComplete="password"
-        autoCapitalize="none"
-      />
-      <Text style={styles.information}> E-Mail </Text>
-      <TextInput
-        style={styles.userNameInput}
-        placeholder="    Enter E-Mail..."
-        value={email}
-        onChangeText={setEmail}
-        autoComplete="email"
-        autoCapitalize="none"
-      />
-      {/* <TouchableOpacity style={styles.registerBtn} onPress={moveToPreferences}>
-        <Text style={styles.registerBtnText}>Register</Text>
-      </TouchableOpacity> */}
+      <View style={styles.inputRow}>
+      <AntDesign name="user" size={24} color="black" style={styles.iconStyle} />
+
+        <TextInput
+          style={styles.input}
+          placeholder="Username"
+          value={username}
+          onChangeText={setUsername}
+          autoComplete="username"
+          autoCapitalize="none"
+        />
+      </View>
+      <View style={styles.inputRow}>
+      <AntDesign name="lock" size={24} color="black" style={styles.iconStyle} />
+        <TextInput
+          style={styles.input}
+          placeholder="Password"
+          secureTextEntry={true}
+          value={password}
+          onChangeText={setPassword}
+          autoComplete="new-password"
+          autoCapitalize="none"
+        />
+      </View>
+      <View style={styles.inputRow}>
+      <AntDesign name="lock" size={24} color="black" style={styles.iconStyle} />
+        <TextInput
+          style={styles.input}
+          placeholder="Retype Password"
+          secureTextEntry={true}
+          value={password2}
+          onChangeText={setPassword2}
+          autoComplete="password"
+          autoCapitalize="none"
+        />
+      </View>
+      <View style={styles.inputRow}>
+      <Fontisto name="email" size={24} color="black" style={styles.iconStyle} />
+        <TextInput
+          style={styles.input}
+          placeholder="Email"
+          value={email}
+          onChangeText={setEmail}
+          autoComplete="email"
+          autoCapitalize="none"
+        />
+      </View>
       <Button
         textSize={20}
         height={50}

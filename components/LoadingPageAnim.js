@@ -1,10 +1,10 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect, useCallback } from "react";
 import { View, Animated, StyleSheet } from "react-native";
 import { Video } from "expo-av";
 import { useAuth } from "./AuthContext";
 import { useContext } from "react";
 import { ThemeContext } from "./ThemeContext";
-
+import { useFocusEffect } from "@react-navigation/native";
 const LoadingPageAnim = () => {
   const { theme: ThemeColors } = useContext(ThemeContext);
   const { dispatch } = useAuth();
@@ -13,7 +13,7 @@ const LoadingPageAnim = () => {
   const [videoFinished, setVideoFinished] = useState(false);
 
   const handleVideoEnd = async () => {
-    await videoRef.current.stopAsync();
+    //await videoRef.current.stopAsync();
     setVideoFinished(true);
     Animated.timing(fadeAnim, {
       toValue: 0,
@@ -24,6 +24,7 @@ const LoadingPageAnim = () => {
       dispatch({ type: "STOPPED_LOADING" });
     }, 1000);
   };
+
 
   const styles = StyleSheet.create({
     container: {

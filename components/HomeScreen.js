@@ -3,6 +3,7 @@ import { BACKEND_URL } from "../assets/config";
 import { SimpleLineIcons } from "@expo/vector-icons";
 import { ThemeContext } from "./ThemeContext";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { deleteData, getData, storeData } from "../assets/utils/utils";
 import Container from "./Container";
 import {
   BackHandler,
@@ -158,7 +159,6 @@ const HomeScreen = () => {
       fetchData();
     }, [token])
   );
-
   useFocusEffect(
     useCallback(() => {
       const backAction = () => {

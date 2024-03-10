@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext, useCallback } from "react";
 import { useAuth } from "./AuthContext";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import Button from "./Button";
+import * as Clipboard from "expo-clipboard";
 import {
   View,
   Text,
@@ -42,7 +43,6 @@ const CHART_WIDTH = Dimensions.get("window").width - 40;
 const calculateRemainingData = (target) => {
   const data = target.data;
   const latestEntry = target;
-  console.log("latestEntry", latestEntry?.created);
   let sum = 0;
   for (i in data) {
     sum += data[i].number;
@@ -55,12 +55,6 @@ const calculateRemainingData = (target) => {
 };
 
 const getDataByDateAndValue = (date, value, goal) => {
-  console.log("date", date);
-  console.log("value", value);
-  console.log("goal", goal);
-  console.log(
-    goal.data.find((entry) => entry.created === date && entry.number === value)
-  );
   return goal.data.find(
     (entry) => entry.created === date && entry.number === value
   );
@@ -351,6 +345,7 @@ const GoalsPage = () => {
       paddingHorizontal: 20,
     },
     dataContainer: {
+      padding: 10,
       backgroundColor: ThemeColors.secondary,
       alignItems: "center",
       justifyContent: "center",
@@ -592,12 +587,10 @@ const GoalsPage = () => {
                       style={styles.informationText}
                     >{`${calculateRemainingData(selectedGoal)[0].toFixed(
                       2
-                    )} is your daily ${
-                      selectedGoal.unit
-                    } amount based on the goal you have set`}</Text>
+                    )} is your daily ${selectedGoal.unit.toLowerCase()} amount recommendation`}</Text>
                     <Text style={styles.informationText}>{`You have ${
                       calculateRemainingData(selectedGoal)[1]
-                    } ${selectedGoal.unit} left to reach your goal`}</Text>
+                    } ${selectedGoal.unit.toLowerCase()} left to reach your goal`}</Text>
                   </>
                 )}
               </>

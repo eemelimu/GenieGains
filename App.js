@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import * as Notifications from "expo-notifications";
+import { AppState } from "react-native";
 import {
   StyleSheet,
   View,
@@ -157,6 +159,50 @@ const HomeStack = () => {
 };
 
 export default function App() {
+  const [notifPermission, setNotifPermission] = useState(false);
+  Notifications.setNotificationHandler({
+    handleNotification: async () => ({
+      shouldShowAlert: true,
+      shouldPlaySound: false,
+      shouldSetBadge: true,
+    }),
+  });
+  const getPermission = async () => {
+    const { status } = await Notifications.requestPermissionsAsync();
+    if (status !== "granted") {
+      setNotifPermission(false);
+      return;
+    }
+    setNotifPermission(true);
+  };
+  const newNotification = async () => {
+    if (notifPermission) {
+      await Notifications.scheduleNotificationAsync({
+        content: {
+          title: "We miss you!",
+          body: "Come back and get your workout in!",
+        },
+        trigger: {
+          seconds: 5,
+        },
+      });
+    }
+  };
+  useEffect(() => {
+    getPermission();
+    const handleAppStateChange = (nextAppState) => {
+      if (nextAppState === "background") {
+        newNotification();
+      }
+    };
+    const appStateSubscription = AppState.addEventListener(
+      "change",
+      handleAppStateChange
+    );
+    return () => {
+      appStateSubscription.remove();
+    };
+  }, []);
   return (
     <>
       <SafeAreaView style={styles.container}>

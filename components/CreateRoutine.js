@@ -21,6 +21,7 @@ import ModalDropdown from "react-native-modal-dropdown";
 import { BACKEND_URL } from "../assets/config";
 import { ThemeContext } from "./ThemeContext";
 import { useNotification } from "./NotificationContext";
+import DropDownPicker from "react-native-dropdown-picker";
 
 const CreateRoutine = () => {
   const { setError, setSuccess, startLoading, stopLoading } = useNotification();
@@ -39,19 +40,24 @@ const CreateRoutine = () => {
   const [selectedRoutineMovements, setSelectedMovements] = useState([]);
   const [menuMovements, setMenuMovements] = useState([]);
   const [routineName, setRoutineName] = useState("");
+  const [routineNotes, setRoutineNotes] = useState("");
+  const [dropdownKey, setDropdownKey] = useState(0);
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState(null);
+  const [items, setItems] = useState([]);
 
   const styles = StyleSheet.create({
     singleMovement: {
       flex: 1,
-      width: "90%",
-      height: 100,
+      width: 250,
+      height: 50,
       backgroundColor: ThemeColors.secondary,
       marginVertical: 15,
-      justifyContent: "center",
+      paddingLeft: 20,
+      flexDirection: "row",
+      justifyContent: "flex-start",
       alignItems: "center",
-      borderRadius: 15,
-      paddingHorizontal: 10,
-      position: "relative",
+      borderRadius: 7,
     },
     finishRoutine: {
       width: "20%",
@@ -68,19 +74,21 @@ const CreateRoutine = () => {
       fontFamily: "DMRegular",
     },
     nameInput: {
-      width: "20%",
-      minWidth: 120,
-      height: 50,
-      backgroundColor: ThemeColors.secondary,
+      borderWidth: 1,
+      borderColor: ThemeColors.quaternary,
+      borderRadius: 5,
+      padding: 10,
+      textAlign: "center",
       color: ThemeColors.tertiary,
-      marginVertical: 7,
-      justifyContent: "center",
-      alignItems: "center",
-      borderRadius: 15,
-      paddingHorizontal: 10,
-      position: "relative",
-      alignSelf: "center",
-      fontFamily: "DMRegular",
+      width: 150,
+    },
+    line: {
+      left: 0,
+      borderBottomWidth: 1,
+      borderBottomColor: ThemeColors.quaternary,
+      width: "100%",
+      marginBottom: 20,
+      paddingBottom: 20,
     },
     dropdownText: {
       fontSize: 16,
@@ -99,20 +107,16 @@ const CreateRoutine = () => {
       backgroundColor: ThemeColors.secondary,
       color: ThemeColors.tertiary,
     },
-
     MovementName: {
-      fontSize: 20,
+      fontSize: 18,
       fontFamily: "DMBold",
-      bottom: 20,
       color: ThemeColors.tertiary,
     },
-
     MovementType: {
       fontSize: 20,
       fontFamily: "DMRegular",
       color: ThemeColors.tertiary,
     },
-
     container: {
       flex: 1,
       backgroundColor: ThemeColors.primary,
@@ -120,10 +124,7 @@ const CreateRoutine = () => {
     main: {
       flex: 1,
       alignItems: "center",
-      paddingVertical: 20,
-      paddingHorizontal: 20,
     },
-
     Type: {
       color: "#02075d",
       fontSize: 10,
@@ -151,6 +152,16 @@ const CreateRoutine = () => {
       width: 150,
       alignItems: "center",
     },
+    header: {
+      marginTop: 20,
+      flexDirection: "row",
+      justifyContent: "space-evenly",
+      alignItems: "center",
+    },
+    deleteMovementIcon: {
+      position: "absolute",
+      right: 10,
+    },
   });
 
   const saveRoutine = async () => {
@@ -160,7 +171,7 @@ const CreateRoutine = () => {
         setError("Routine name is required");
         return;
       }
-if (selectedRoutineMovements.length === 0) {
+      if (selectedRoutineMovements.length === 0) {
         console.log("Routine movements are required");
         setError("Routine movements are required");
         return;
@@ -231,71 +242,88 @@ if (selectedRoutineMovements.length === 0) {
     }, [token])
   );
 
-  // useEffect(() => {
-  //   setSelectedMovements([])
-  //   if (trainingPlans.length > 0) {
-  //     setSelectedMovements(trainingPlans[0].movements);
-  //   }
-  // }, [trainingPlans]);
-  const Movement = ({ name }) => {
+  const Movement = ({ name, index, handleRemoveMovement, movement }) => {
     return (
       <View style={styles.singleMovement}>
-        <Text style={styles.MovementName}>{name}</Text>
+        <Text style={styles.MovementName}>
+          {index}. {name}
+        </Text>
+        <TouchableOpacity
+          onPress={() => handleRemoveMovement(movement)}
+          style={styles.deleteMovementIcon}
+        >
+          <MaterialIcons
+            name="delete-outline"
+            size={24}
+            color={ThemeColors.tertiary}
+          />
+        </TouchableOpacity>
       </View>
+    );
+  };
+
+  const handleAddMovement = (value) => {
+    const selectedMovement = menuMovements.find(
+      (movement) => movement.name === value.label
+    );
+    if (!selectedRoutineMovements.includes(selectedMovement)) {
+      setSelectedMovements((prevMovements) => [
+        ...prevMovements,
+        selectedMovement,
+      ]);
+    }
+  };
+
+  handleRemoveMovement = (movement) => {
+    setSelectedMovements((prevMovements) =>
+      prevMovements.filter((m) => m.id !== movement.id)
     );
   };
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView style={{ flex: 1 }}>
-        <View style={styles.main}>
-          <TextInput
-            placeholder="Routine name"
-            style={styles.nameInput}
-            onChangeText={(text) => setRoutineName(text)}
-            placeholderTextColor={ThemeColors.tertiary}
-          />
-
-          <ModalDropdown
-            textStyle={styles.dropdownText}
-            style={styles.selectMovementButton}
-            options={menuMovements
-              .filter(
-                (movement) =>
-                  !selectedRoutineMovements.find(
-                    (selectedMovement) => selectedMovement.id === movement.id
-                  )
-              )
-              .map((movement) => movement.name)}
-            onSelect={(index, value) => {
-              console.log("Selected: ", value);
-              const selectedMovement = menuMovements.find(
-                (movement) => movement.name === value
-              );
-              setSelectedMovements((prevMovements) => [
-                ...prevMovements,
-                selectedMovement,
-              ]);
-            }}
-            textStyle={styles.dropdownText}
-            dropdownStyle={styles.dropdown}
-            defaultValue="Select movement"
-            dropdownTextStyle={{
-              color: ThemeColors.tertiary,
-              backgroundColor: ThemeColors.primary,
-              fontSize: 16,
-            }}
-            dropdownTextHighlightStyle={{
-              color: ThemeColors.tertiary,
-              backgroundColorThemeColors: ThemeColors.quaternary,
-            }}
-          />
-
-          {selectedRoutineMovements.map((movement) => (
-            <Movement key={movement.id} name={movement.name} />
+      <View style={styles.header}>
+        <TextInput
+          placeholder="Routine name"
+          style={styles.nameInput}
+          onChangeText={(text) => setRoutineName(text)}
+          placeholderTextColor={ThemeColors.tertiary}
+        />
+        <TextInput
+          placeholder="Routine Notes"
+          style={styles.nameInput}
+          onChangeText={(text) => setRoutineNotes(text)}
+          placeholderTextColor={ThemeColors.tertiary}
+        />
+      </View>
+      <View style={styles.line} />
+      <View style={styles.main}>
+        <DropDownPicker
+          open={open}
+          value={value}
+          items={menuMovements.map((movement) => ({
+            label: movement.name,
+            value: movement.id,
+          }))}
+          setOpen={setOpen}
+          onSelectItem={handleAddMovement}
+          setValue={setValue}
+          setItems={setItems}
+          placeholder="Select movement"
+          containerStyle={{ width: "80%" }}
+        />
+        <ScrollView style={{ flex: 1 }}>
+          {selectedRoutineMovements.map((movement, index) => (
+            <Movement
+              key={movement.id}
+              name={movement.name}
+              index={index + 1}
+              handleRemoveMovement={handleRemoveMovement}
+              movement={movement}
+            />
           ))}
-        </View>
-      </ScrollView>
+        </ScrollView>
+      </View>
       <TouchableOpacity style={styles.finishRoutine} onPress={saveRoutine}>
         <Text
           style={{
@@ -307,8 +335,6 @@ if (selectedRoutineMovements.length === 0) {
           Finish routine
         </Text>
       </TouchableOpacity>
-
-      {/* <View style={styles.footer}></View> */}
     </SafeAreaView>
   );
 };

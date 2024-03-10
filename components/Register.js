@@ -14,7 +14,8 @@ import { ThemeColors } from "../assets/ThemeColors";
 import { useNotification } from "./NotificationContext";
 import { BACKEND_URL } from "../assets/config";
 import { AntDesign } from "@expo/vector-icons";
-import { Fontisto } from '@expo/vector-icons';
+import { Fontisto } from "@expo/vector-icons";
+import { Feather } from "@expo/vector-icons";
 
 const Register = () => {
   const { setError, setSuccess, startLoading, stopLoading } = useNotification();
@@ -23,6 +24,8 @@ const Register = () => {
   const [password, setPassword] = useState("");
   const [password2, setPassword2] = useState("");
   const [email, setEmail] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showPassword2, setShowPassword2] = useState(false);
   // add unit & experience
   // add password2
 
@@ -95,9 +98,9 @@ const Register = () => {
       alignItems: "center",
     },
     Logo: {
-      marginTop: 30,
-      width: 200,
-      height: 50,
+      marginTop: 10,
+      width: 300,
+      height: 100,
       borderColor: ThemeColors.tertiary,
       borderWidth: 1,
       marginBottom: 60,
@@ -128,10 +131,17 @@ const Register = () => {
       fontFamily: "DMRegular",
       textAlign: "center",
     },
+    showPassword: {
+      position: "absolute",
+      right: 0,
+      top: 45,
+      opacity: 0.5,
+    },
     iconStyle: {
       position: "absolute",
       left: 0,
       top: 45,
+      opacity: 0.5,
     },
     inputRow: {
       position: "aboslute",
@@ -140,6 +150,12 @@ const Register = () => {
       marginBottom: 25,
       borderBottomWidth: 1,
       borderBottomColor: ThemeColors.tertiary,
+    },
+    buttonContainer: {
+      paddingVertical: 50,
+      width: "100%",
+      justifyContent: "center",
+      alignItems: "center",
     },
   });
 
@@ -151,8 +167,12 @@ const Register = () => {
         resizeMode="contain"
       />
       <View style={styles.inputRow}>
-      <AntDesign name="user" size={24} color="black" style={styles.iconStyle} />
-
+        <AntDesign
+          name="user"
+          size={24}
+          color="black"
+          style={styles.iconStyle}
+        />
         <TextInput
           style={styles.input}
           placeholder="Username"
@@ -163,31 +183,60 @@ const Register = () => {
         />
       </View>
       <View style={styles.inputRow}>
-      <AntDesign name="lock" size={24} color="black" style={styles.iconStyle} />
+        <AntDesign
+          name="lock"
+          size={24}
+          color="black"
+          style={styles.iconStyle}
+        />
         <TextInput
           style={styles.input}
           placeholder="Password"
-          secureTextEntry={true}
+          secureTextEntry={!showPassword}
           value={password}
           onChangeText={setPassword}
           autoComplete="new-password"
           autoCapitalize="none"
         />
+        <TouchableOpacity
+          onPress={() => setShowPassword(!showPassword)}
+          style={styles.showPassword}
+        >
+        {showPassword ? <Feather name="eye-off" size={24} color="black" /> : <Feather name="eye" size={24} color="black" />
+        }
+        </TouchableOpacity>
       </View>
       <View style={styles.inputRow}>
-      <AntDesign name="lock" size={24} color="black" style={styles.iconStyle} />
+        <AntDesign
+          name="lock"
+          size={24}
+          color="black"
+          style={styles.iconStyle}
+        />
         <TextInput
           style={styles.input}
           placeholder="Retype Password"
-          secureTextEntry={true}
+          secureTextEntry={!showPassword2}
           value={password2}
           onChangeText={setPassword2}
           autoComplete="password"
           autoCapitalize="none"
         />
+        <TouchableOpacity
+          onPress={() => setShowPassword2(!showPassword2)}
+          style={styles.showPassword}
+        >
+        {showPassword2 ? <Feather name="eye-off" size={24} color="black" /> : <Feather name="eye" size={24} color="black" />
+        }
+        </TouchableOpacity>
       </View>
       <View style={styles.inputRow}>
-      <Fontisto name="email" size={24} color="black" style={styles.iconStyle} />
+        <Fontisto
+          name="email"
+          size={24}
+          color="black"
+          style={styles.iconStyle}
+        />
         <TextInput
           style={styles.input}
           placeholder="Email"
@@ -197,13 +246,15 @@ const Register = () => {
           autoCapitalize="none"
         />
       </View>
-      <Button
-        textSize={20}
-        height={50}
-        width={"80%"}
-        text="Register"
-        onPress={moveToPreferences}
-      />
+      <View style={styles.buttonContainer}>
+        <Button
+          textSize={20}
+          height={50}
+          width={"80%"}
+          text="Register"
+          onPress={moveToPreferences}
+        />
+      </View>
     </View>
   );
 };

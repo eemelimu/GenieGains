@@ -200,7 +200,7 @@ const Register = () => {
         />
         <TouchableOpacity
           onPress={() => setShowPassword(!showPassword)}
-          style={styles.showPassword}
+          style={[styles.showPassword, password.length === 0 && { opacity: 0}]}
         >
         {showPassword ? <Feather name="eye-off" size={24} color="black" /> : <Feather name="eye" size={24} color="black" />
         }
@@ -224,7 +224,7 @@ const Register = () => {
         />
         <TouchableOpacity
           onPress={() => setShowPassword2(!showPassword2)}
-          style={styles.showPassword}
+          style={[styles.showPassword, password2.length === 0 && { opacity: 0}]}
         >
         {showPassword2 ? <Feather name="eye-off" size={24} color="black" /> : <Feather name="eye" size={24} color="black" />
         }

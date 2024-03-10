@@ -5,6 +5,7 @@ import {
   Text,
   SafeAreaView,
   TouchableOpacity,
+  Image,
 } from "react-native";
 import Tos from "./components/Tos";
 import Notification from "./components/Notification";
@@ -63,7 +64,12 @@ const CustomHeader = ({
     <View style={styles.header}>
       {showMenuButton ? (
         <TouchableOpacity onPress={handleDrawer}>
-          <SimpleLineIcons name="menu" size={24} color="black" />
+          <SimpleLineIcons
+            style={styles.icon}
+            name="menu"
+            size={24}
+            color="black"
+          />
         </TouchableOpacity>
       ) : (
         <TouchableOpacity
@@ -82,10 +88,23 @@ const CustomHeader = ({
             }
           }}
         >
-          <Ionicons name="arrow-back" size={28} color="black" />
+          <Ionicons
+            style={styles.icon}
+            name="arrow-back"
+            size={28}
+            color="black"
+          />
         </TouchableOpacity>
       )}
-      <Text style={styles.headerTitle}>{title}</Text>
+      {route === "Home" ? (
+        <Image
+          style={styles.logo}
+          resizeMode={"contain"}
+          source={require("./assets/GJunkie_02.png")}
+        ></Image>
+      ) : (
+        <Text style={styles.headerTitle}>{title}</Text>
+      )}
     </View>
   );
 };
@@ -182,6 +201,23 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginLeft: "auto",
     marginRight: "auto",
-    marginBottom: 10,
+    marginBottom: "auto",
+    marginTop: "auto",
+  },
+  icon: {
+    marginBottom: "auto",
+    marginTop: "auto",
+    position: "absolute",
+    left: 0,
+  },
+  logo: {
+    borderColor: "black",
+    borderWidth: 1,
+    position: "relative",
+    top: 10,
+    marginLeft: "auto",
+    marginRight: "auto",
+    width: 150,
+    height: 40,
   },
 });

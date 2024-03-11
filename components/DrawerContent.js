@@ -147,7 +147,21 @@ export const DrawerContent = () => {
 
   const handleSendFeedback = () => {
     if (feedbackText.length > 0) {
-      // Luo toiminnallisuus lähettää palautetta
+      try {
+        fetch(BACKEND_URL + "feedback", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Auth-Token": `${token}`,
+          },
+          body: JSON.stringify({
+            text: feedbackText,
+          }),
+        });
+      } catch (error) {
+        setError("Check your internet connection");
+        console.error("Error:", error);
+      }
       setFeedbackText("");
       setFeedbackSent(true);
       setTimeout(() => {
@@ -188,7 +202,7 @@ export const DrawerContent = () => {
       paddingVertical: 10,
       paddingHorizontal: 20,
       backgroundColor: ThemeColors.secondary,
-      width: 250,
+      width: 225,
       borderRadius: 5,
       marginHorizontal: 5,
       textAlign: "center",
@@ -340,7 +354,7 @@ export const DrawerContent = () => {
               name="send"
               size={24}
               color={ThemeColors.tertiary}
-              style={{ fontSize: 22 }}
+              style={{ fontSize: 22, padding: 5 }}
             />
           </TouchableOpacity>
         </View>

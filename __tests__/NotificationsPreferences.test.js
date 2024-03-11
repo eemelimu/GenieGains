@@ -2,6 +2,7 @@ import React from "react";
 import renderer from "react-test-renderer";
 import { act } from "react-dom/test-utils";
 import NotificationsPreferences from "../components/NotificationsPreferences";
+import { SettingsProvider } from "../components/SettingsContext";
 import { createStackNavigator } from "@react-navigation/stack";
 import { ThemeProvider } from "../components/ThemeContext";
 import { AuthProvider } from "../components/AuthContext";
@@ -22,19 +23,21 @@ test("Notification settings component renders correctly and that the theme conte
     component = renderer.create(
       <NavigationContainer>
         <NotificationProvider>
-          <AuthProvider>
-            <ThemeProvider>
-              <Stack.Navigator>
-                <Stack.Screen
-                  name="Notification Settings"
-                  component={NotificationsPreferences}
-                />
-                <Stack.Screen name="Login" component={Login} />
-              </Stack.Navigator>
-              <Notification />
-            </ThemeProvider>
-          </AuthProvider>
-          <Toast />
+          <SettingsProvider>
+            <AuthProvider>
+              <ThemeProvider>
+                <Stack.Navigator>
+                  <Stack.Screen
+                    name="Notification Settings"
+                    component={NotificationsPreferences}
+                  />
+                  <Stack.Screen name="Login" component={Login} />
+                </Stack.Navigator>
+                <Notification />
+              </ThemeProvider>
+            </AuthProvider>
+            <Toast />
+          </SettingsProvider>
         </NotificationProvider>
       </NavigationContainer>
     );

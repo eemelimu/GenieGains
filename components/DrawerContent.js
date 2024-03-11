@@ -90,7 +90,7 @@ const ThemeBtn = ({ colors, name }) => {
 };
 
 export const DrawerContent = () => {
-  const { disableNotifications } = useSettings();
+  const { disableNotifications, enableTips } = useSettings();
   const { state, dispatch } = useAuth();
   const token = state.token;
   const { setError, setSuccess, startLoading, stopLoading } = useNotification();
@@ -120,6 +120,7 @@ export const DrawerContent = () => {
       if (!response.ok) {
         setError("Something went wrong! Please try again later.");
       } else {
+        enableTips();
         disableNotifications();
         dispatch({ type: "LOGOUT" });
         resetTheme();
@@ -134,6 +135,7 @@ export const DrawerContent = () => {
 
   const handleLogout = () => {
     disableNotifications();
+    enableTips();
     dispatch({
       type: "LOGOUT",
     });

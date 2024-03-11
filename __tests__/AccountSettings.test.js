@@ -5,6 +5,7 @@ import AccountSettings from "../components/AccountSettings";
 import { createStackNavigator } from "@react-navigation/stack";
 import { ThemeProvider } from "../components/ThemeContext";
 import { AuthProvider } from "../components/AuthContext";
+import { SettingsProvider } from "../components/SettingsContext";
 import { waitFor } from "@testing-library/react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import Login from "../components/Login";
@@ -22,20 +23,22 @@ test("Account settings component renders correctly and that the theme context ap
     component = renderer.create(
       <NavigationContainer>
         <NotificationProvider>
-          <AuthProvider>
-            <ThemeProvider>
-              <Stack.Navigator>
-                <Stack.Screen
-                  name="Account Settings"
-                  component={AccountSettings}
-                />
-                <Stack.Screen name="Login" component={Login} />
-              </Stack.Navigator>
-              <Notification />
-            </ThemeProvider>
-          </AuthProvider>
+          <SettingsProvider>
+            <AuthProvider>
+              <ThemeProvider>
+                <Stack.Navigator>
+                  <Stack.Screen
+                    name="Account Settings"
+                    component={AccountSettings}
+                  />
+                  <Stack.Screen name="Login" component={Login} />
+                </Stack.Navigator>
+                <Notification />
+              </ThemeProvider>
+            </AuthProvider>
 
-          <Toast />
+            <Toast />
+          </SettingsProvider>
         </NotificationProvider>
       </NavigationContainer>
     );

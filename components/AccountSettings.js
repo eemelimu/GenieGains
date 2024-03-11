@@ -21,7 +21,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import { useNotification } from "./NotificationContext";
 
 const AccountSettings = () => {
-  const { disableNotifications, enableNotifications } = useSettings();
+  const { disableNotifications, enableTips } = useSettings();
   const { setError, setSuccess, startLoading, stopLoading } = useNotification();
   const { dispatch, state } = useAuth();
   const token = state.token;
@@ -51,6 +51,7 @@ const AccountSettings = () => {
       if (!response.ok) {
         setError("Something went wrong! Please try again later.");
       } else {
+        enableTips();
         disableNotifications();
         dispatch({ type: "LOGOUT" });
         resetTheme();
@@ -147,6 +148,7 @@ const AccountSettings = () => {
   };
 
   const handleLogout = () => {
+    enableTips();
     setLogoutModalVisible(false);
     disableNotifications();
     dispatch({ type: "LOGOUT" });

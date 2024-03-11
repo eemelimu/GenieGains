@@ -187,6 +187,18 @@ const SettingsScreen = () => {
           />
         </SettingsButton>
         <SettingsButton
+          navigationPage={"Tip Settings"}
+          color={ThemeColors.tertiary}
+          text="Tip Settings"
+        >
+          <MaterialIcons
+            name="lightbulb"
+            style={{ paddingRight: 15}}
+            size={24}
+            color={ThemeColors.tertiary}
+          />
+        </SettingsButton>
+        <SettingsButton
           navigationPage={"Preferences Settings"}
           color={ThemeColors.tertiary}
           text="Preferences"

@@ -3,13 +3,12 @@ import { View, Text, TouchableOpacity, Modal, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { ThemeContext } from "./ThemeContext";
 import { useSettings } from "./SettingsContext";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
-const NotificationsPreferences = () => {
-  const { settings, enableNotifications, disableNotifications } = useSettings();
+const TipsPreferences = () => {
+  const { settings, enableTips, disableTips } = useSettings();
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [notificationsEnabled, setNotificationsEnabled] = useState(
-    settings.notifications
-  );
+  const [tipsEnabled, setTipsEnabled] = useState(settings.tips);
   const {
     theme: ThemeColors,
     resetTheme,
@@ -20,15 +19,15 @@ const NotificationsPreferences = () => {
     setIsModalVisible(!isModalVisible);
   };
 
-  const handleDisableNotifications = () => {
-    disableNotifications();
-    setNotificationsEnabled(false);
+  const handleDisableTips = () => {
+    disableTips();
+    setTipsEnabled(false);
     setIsModalVisible(false);
   };
 
-  const handleEnableNotifications = () => {
-    enableNotifications();
-    setNotificationsEnabled(true);
+  const handleEnableTips = () => {
+    enableTips();
+    setTipsEnabled(true);
     setIsModalVisible(false);
   };
 
@@ -93,17 +92,17 @@ const NotificationsPreferences = () => {
     <View style={styles.container}>
       <TouchableOpacity style={styles.button} onPress={handleToggleModal}>
         <Text style={styles.buttonText}>
-          Slacker Notifications: {notificationsEnabled ? "Enabled" : "Disabled"}
+          Tips: {tipsEnabled ? "Enabled" : "Disabled"}
         </Text>
-        {notificationsEnabled ? (
-          <Ionicons
-            name="notifications-circle"
-            size={24}
-            color={ThemeColors.tertiary}
-          />
+        {tipsEnabled ? (
+          <MaterialCommunityIcons
+          name="lightbulb-on"
+          size={24}
+          color={ThemeColors.tertiary}
+        />
         ) : (
-          <Ionicons
-            name="notifications-off-circle"
+          <MaterialCommunityIcons
+            name="lightbulb-off"
             size={24}
             color={ThemeColors.tertiary}
           />
@@ -119,19 +118,14 @@ const NotificationsPreferences = () => {
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
             <TouchableOpacity
-              style={[
-                styles.modalButton,
-                notificationsEnabled && styles.selectedButton,
-              ]}
+              style={[styles.modalButton, tipsEnabled && styles.selectedButton]}
               onPress={() => {
-                handleEnableNotifications();
+                handleEnableTips();
               }}
             >
-              <Text style={styles.modalButtonText}>
-                Enable Slacker Notifications
-              </Text>
-              <Ionicons
-                name="notifications-circle"
+              <Text style={styles.modalButtonText}>Enable Tips</Text>
+              <MaterialCommunityIcons
+                name="lightbulb-on"
                 size={24}
                 color={ThemeColors.tertiary}
               />
@@ -139,17 +133,15 @@ const NotificationsPreferences = () => {
             <TouchableOpacity
               style={[
                 styles.modalButton,
-                !notificationsEnabled && styles.selectedButton,
+                !tipsEnabled && styles.selectedButton,
               ]}
               onPress={() => {
-                handleDisableNotifications();
+                handleDisableTips();
               }}
             >
-              <Text style={styles.modalButtonText}>
-                Disable Slacker Notifications
-              </Text>
-              <Ionicons
-                name="notifications-off-circle"
+              <Text style={styles.modalButtonText}>Disable Tips</Text>
+              <MaterialCommunityIcons
+                name="lightbulb-off"
                 size={24}
                 color={ThemeColors.tertiary}
               />
@@ -168,4 +160,4 @@ const NotificationsPreferences = () => {
   );
 };
 
-export default NotificationsPreferences;
+export default TipsPreferences;

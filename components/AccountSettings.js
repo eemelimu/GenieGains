@@ -2,6 +2,7 @@ import React, { useState, useContext, useCallback, useEffect } from "react";
 import { useAuth } from "./AuthContext";
 import Button from "./Button";
 import tinycolor from "tinycolor2";
+import { useSettings } from "./SettingsContext";
 import Toast, { ErrorToast } from "react-native-toast-message";
 import { hexToRgba, storeData } from "../assets/utils/utils";
 import {
@@ -20,6 +21,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import { useNotification } from "./NotificationContext";
 
 const AccountSettings = () => {
+  const { disableNotifications, enableNotifications } = useSettings();
   const { setError, setSuccess, startLoading, stopLoading } = useNotification();
   const { dispatch, state } = useAuth();
   const token = state.token;
@@ -49,6 +51,7 @@ const AccountSettings = () => {
       if (!response.ok) {
         setError("Something went wrong! Please try again later.");
       } else {
+        disableNotifications();
         dispatch({ type: "LOGOUT" });
         resetTheme();
         storeData("theme", ThemeColors);
@@ -145,6 +148,7 @@ const AccountSettings = () => {
 
   const handleLogout = () => {
     setLogoutModalVisible(false);
+    disableNotifications();
     dispatch({ type: "LOGOUT" });
     resetTheme();
     storeData("theme", ThemeColors);

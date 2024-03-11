@@ -24,11 +24,13 @@ import { Ionicons } from "@expo/vector-icons";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { useAuth } from "./AuthContext";
 import { useNotification } from "./NotificationContext";
+import { useSettings } from "./SettingsContext";
 
 // TODO
 // Search barin hightlightaus (aktivointi) kun painaa search iconia
 
 const HomeScreen = () => {
+  const {settings} = useSettings();
   const seed =
     new Date().getDate() + new Date().getMonth() + new Date().getFullYear();
   const { setError, setSuccess, startLoading, stopLoading } = useNotification();
@@ -36,7 +38,8 @@ const HomeScreen = () => {
   const [date] = useState(new Date());
   const [greeting, setGreeting] = useState("");
   const [experience, setExperience] = useState("beginner");
-  const [name, setName] = useState("name");  const [workouts, setWorkouts] = useState([]);
+  const [name, setName] = useState("name");
+  const [workouts, setWorkouts] = useState([]);
   const { state } = useAuth();
   const token = state.token;
   const navigation = useNavigation();
@@ -497,14 +500,14 @@ const HomeScreen = () => {
           <Text style={styles.greetings}>
             {greeting}, {name}!
           </Text>
-          <Text style={styles.regularText}>
+          {settings.tips?<Text style={styles.regularText}>
             Your {experience} tip for today:{"\n"}
             {experience === "beginner"
               ? beginnerTips[(seed * 1337) % beginnerTips.length]
               : experience === "intermediate"
               ? intermediateTips[(seed * 1337) % intermediateTips.length]
               : expertTips[(seed * 1337) % expertTips.length]}
-          </Text>
+          </Text>:null}
         </View>
         {searchMenuVisible ? (
           <View style={styles.searchItem}>

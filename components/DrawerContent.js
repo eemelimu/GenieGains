@@ -2,6 +2,7 @@ import React, { useState, useContext } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { storeData, hexToRgba } from "../assets/utils/utils";
 import Toast, { ErrorToast } from "react-native-toast-message";
+import { useSettings } from "./SettingsContext";
 import {
   StyleSheet,
   View,
@@ -89,6 +90,7 @@ const ThemeBtn = ({ colors, name }) => {
 };
 
 export const DrawerContent = () => {
+  const { disableNotifications } = useSettings();
   const { state, dispatch } = useAuth();
   const token = state.token;
   const { setError, setSuccess, startLoading, stopLoading } = useNotification();
@@ -118,6 +120,7 @@ export const DrawerContent = () => {
       if (!response.ok) {
         setError("Something went wrong! Please try again later.");
       } else {
+        disableNotifications();
         dispatch({ type: "LOGOUT" });
         resetTheme();
         storeData("theme", ThemeColors);
@@ -130,6 +133,7 @@ export const DrawerContent = () => {
   };
 
   const handleLogout = () => {
+    disableNotifications();
     dispatch({
       type: "LOGOUT",
     });

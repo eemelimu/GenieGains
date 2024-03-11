@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import * as Notifications from "expo-notifications";
-import { AppState } from "react-native";
+import { AppState, Settings } from "react-native";
+import PushNotificationHandler from "./components/PushNotificationHandler";
+import TipsPreferences from "./components/TipsPreferences";
 import {
   StyleSheet,
   View,
@@ -10,6 +12,7 @@ import {
   Image,
   StatusBar,
 } from "react-native";
+import { SettingsProvider } from "./components/SettingsContext";
 import Tos from "./components/Tos";
 import Notification from "./components/Notification";
 import { NotificationProvider } from "./components/NotificationContext";
@@ -145,84 +148,13 @@ const HomeStack = () => {
         name="Notification Settings"
         component={NotificationsPreferences}
       />
+      <Stack.Screen name="Tip Settings" component={TipsPreferences} />
       <Stack.Screen name="Goals" component={GoalsPage} />
     </Stack.Navigator>
   );
 };
 
-const sendNotification = async (title, text, seconds) => {
-  await Notifications.scheduleNotificationAsync({
-    content: {
-      title: title,
-      body: text,
-    },
-    trigger: {
-      seconds: seconds,
-    },
-  });
-};
-
 export default function App() {
-  const [notifPermission, setNotifPermission] = useState(false);
-  Notifications.setNotificationHandler({
-    handleNotification: async () => ({
-      shouldShowAlert: true,
-      shouldPlaySound: true,
-      shouldSetBadge: true,
-    }),
-  });
-  const getPermission = async () => {
-    const { status } = await Notifications.requestPermissionsAsync();
-    if (status !== "granted") {
-      setNotifPermission(false);
-      return;
-    }
-    setNotifPermission(true);
-  };
-  const newNotification = async () => {
-    if (notifPermission) {
-      await sendNotification("BRO SLACKING??", "Cant believe this!", 5);
-      await sendNotification(
-        "SLACKER TRACKER",
-        "OUR SLACKER TRACKER SYSTEM CAUGHT HOMIE SLACKING",
-        10
-      );
-      await sendNotification(
-        "What bro you doing?",
-        "You really doing this for me, huh?",
-        15
-      );
-      await sendNotification("??", "??????", 20);
-      await sendNotification("??????", "????????????????????", 25);
-      await sendNotification("GET", "GET", 30);
-      await sendNotification("BACK", "BACK", 35);
-      await sendNotification("TO", "TO", 40);
-      await sendNotification("GRIND", "GRIND", 45);
-      await sendNotification(
-        "SLACKER",
-        "Come back and get your workout in!",
-        50
-      );
-      await sendNotification(
-        "!!!!!!",
-        "Come back and get your workout in!",
-        55
-      );
-      await sendNotification("IM NOT GOING TO STOP", ":)", 60);
-    }
-  };
-  useEffect(() => {
-    getPermission();
-    const handleAppStateChange = (nextAppState) => {
-      if (nextAppState === "background") {
-        newNotification();
-      }
-    };
-    AppState.addEventListener(
-      "change",
-      handleAppStateChange
-    );
-  }, []);
   return (
     <>
       <StatusBar
@@ -237,15 +169,18 @@ export default function App() {
           <NotificationProvider>
             <AuthProvider>
               <ThemeProvider>
-                <Drawer.Navigator
-                  drawerContent={(props) => <DrawerContent {...props} />}
-                >
-                  <Drawer.Screen
-                    options={{ headerShown: false }}
-                    name=" "
-                    component={HomeStack}
-                  />
-                </Drawer.Navigator>
+                <SettingsProvider>
+                  <PushNotificationHandler />
+                  <Drawer.Navigator
+                    drawerContent={(props) => <DrawerContent {...props} />}
+                  >
+                    <Drawer.Screen
+                      options={{ headerShown: false }}
+                      name=" "
+                      component={HomeStack}
+                    />
+                  </Drawer.Navigator>
+                </SettingsProvider>
                 <Notification />
               </ThemeProvider>
             </AuthProvider>

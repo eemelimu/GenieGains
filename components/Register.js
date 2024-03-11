@@ -96,14 +96,22 @@ const Register = () => {
       flex: 1,
       justifyContent: "center",
       alignItems: "center",
+      backgroundColor: "#2F2F2F",
     },
     Logo: {
-      marginTop: 10,
+      borderRadius: 2,
       width: 300,
-      height: 100,
+      height: 70,
+      alignSelf: "center",
+    },
+    logoContainer: {
+      marginTop: 10,
+      height: 70,
+      width: 320,
+      justifyContent: "center",
       borderColor: ThemeColors.tertiary,
       borderWidth: 1,
-      marginBottom: 60,
+      marginBottom: 50,
     },
     information: {
       paddingTop: 20,
@@ -130,6 +138,7 @@ const Register = () => {
       fontSize: 20,
       fontFamily: "DMRegular",
       textAlign: "center",
+      color: ThemeColors.tertiary,
     },
     showPassword: {
       position: "absolute",
@@ -150,6 +159,7 @@ const Register = () => {
       marginBottom: 25,
       borderBottomWidth: 1,
       borderBottomColor: ThemeColors.tertiary,
+      color: ThemeColors.tertiary,
     },
     buttonContainer: {
       paddingVertical: 50,
@@ -161,16 +171,18 @@ const Register = () => {
 
   return (
     <View style={styles.container}>
-      <Image
-        style={styles.Logo}
-        source={require("../assets/GJunkie_02.png")}
-        resizeMode="contain"
-      />
+      <View style={styles.logoContainer}>
+        <Image
+          style={styles.Logo}
+          source={require("../assets/GymJunkieLogo.png")}
+          resizeMode="contain"
+        />
+      </View>
       <View style={styles.inputRow}>
         <AntDesign
           name="user"
           size={24}
-          color="black"
+          color={ThemeColors.tertiary}
           style={styles.iconStyle}
         />
         <TextInput
@@ -180,13 +192,14 @@ const Register = () => {
           onChangeText={setUsername}
           autoComplete="username"
           autoCapitalize="none"
+          placeholderTextColor={ThemeColors.tertiary}
         />
       </View>
       <View style={styles.inputRow}>
         <AntDesign
           name="lock"
           size={24}
-          color="black"
+          color={ThemeColors.tertiary}
           style={styles.iconStyle}
         />
         <TextInput
@@ -197,20 +210,24 @@ const Register = () => {
           onChangeText={setPassword}
           autoComplete="new-password"
           autoCapitalize="none"
+          placeholderTextColor={ThemeColors.tertiary}
         />
         <TouchableOpacity
           onPress={() => setShowPassword(!showPassword)}
-          style={[styles.showPassword, password.length === 0 && { opacity: 0}]}
+          style={[styles.showPassword, password.length === 0 && { opacity: 0 }]}
         >
-        {showPassword ? <Feather name="eye-off" size={24} color="black" /> : <Feather name="eye" size={24} color="black" />
-        }
+          {showPassword ? (
+            <Feather name="eye-off" size={24} color={ThemeColors.tertiary} />
+          ) : (
+            <Feather name="eye" size={24} color={ThemeColors.tertiary} />
+          )}
         </TouchableOpacity>
       </View>
       <View style={styles.inputRow}>
         <AntDesign
           name="lock"
           size={24}
-          color="black"
+          color={ThemeColors.tertiary}
           style={styles.iconStyle}
         />
         <TextInput
@@ -221,20 +238,27 @@ const Register = () => {
           onChangeText={setPassword2}
           autoComplete="password"
           autoCapitalize="none"
+          placeholderTextColor={ThemeColors.tertiary}
         />
         <TouchableOpacity
           onPress={() => setShowPassword2(!showPassword2)}
-          style={[styles.showPassword, password2.length === 0 && { opacity: 0}]}
+          style={[
+            styles.showPassword,
+            password2.length === 0 && { opacity: 0 },
+          ]}
         >
-        {showPassword2 ? <Feather name="eye-off" size={24} color="black" /> : <Feather name="eye" size={24} color="black" />
-        }
+          {showPassword2 ? (
+            <Feather name="eye-off" size={24} color={ThemeColors.tertiary} />
+          ) : (
+            <Feather name="eye" size={24} color={ThemeColors.tertiary} />
+          )}
         </TouchableOpacity>
       </View>
       <View style={styles.inputRow}>
         <Fontisto
           name="email"
           size={24}
-          color="black"
+          color={ThemeColors.tertiary}
           style={styles.iconStyle}
         />
         <TextInput
@@ -244,6 +268,7 @@ const Register = () => {
           onChangeText={setEmail}
           autoComplete="email"
           autoCapitalize="none"
+          placeholderTextColor={ThemeColors.tertiary}
         />
       </View>
       <View style={styles.buttonContainer}>

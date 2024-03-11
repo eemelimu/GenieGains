@@ -1,6 +1,7 @@
 import React, { useState, useContext } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { storeData, hexToRgba } from "../assets/utils/utils";
+import Toast, { ErrorToast } from "react-native-toast-message";
 import {
   StyleSheet,
   View,
@@ -157,7 +158,6 @@ export const DrawerContent = () => {
 
   const styles = StyleSheet.create({
     drawerContainer: {
-      marginTop: 50,
       flex: 1,
       backgroundColor: ThemeColors.primary,
     },
@@ -424,6 +424,7 @@ export const DrawerContent = () => {
             />
           </View>
         </View>
+        <Toast />
       </Modal>
     </View>
   );

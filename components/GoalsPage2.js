@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext, useCallback } from "react";
 import { useAuth } from "./AuthContext";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import Toast, { ErrorToast } from "react-native-toast-message";
 import Button from "./Button";
 import * as Clipboard from "expo-clipboard";
 import {
@@ -706,6 +707,7 @@ const GoalsPage = () => {
             />
           </View>
         </View>
+        <Toast />
       </Modal>
       <Button
         width={"100%"}
@@ -795,6 +797,7 @@ const GoalsPage = () => {
             />
           </View>
         </View>
+        <Toast />
       </Modal>
     </View>
   );

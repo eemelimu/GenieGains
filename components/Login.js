@@ -83,15 +83,23 @@ const Login = () => {
 
   const styles = StyleSheet.create({
     container: {
+      flex: 1,
       width: "100%",
-      color: ThemeColors.white,
+      backgroundColor: "#2F2F2F",
       justifyContent: "center",
       alignItems: "center",
     },
     Logo: {
-      marginTop: 50,
+      borderRadius: 2,
       width: 300,
-      height: 100,
+      height: 70,
+      alignSelf: "center",
+    },
+    logoContainer: {
+      marginTop: 50,
+      height: 70,
+      width: 320,
+      justifyContent: "center",
       borderColor: ThemeColors.tertiary,
       borderWidth: 1,
       marginBottom: 150,
@@ -120,6 +128,7 @@ const Login = () => {
       fontSize: 20,
       fontFamily: "DMRegular",
       textAlign: "center",
+      color: ThemeColors.tertiary,
     },
     registerBtn: {
       paddingTop: 25,
@@ -183,16 +192,18 @@ const Login = () => {
 
   return (
     <View style={styles.container}>
-      <Image
-        resizeMode={"contain"}
-        style={styles.Logo}
-        source={require("../assets/GJunkie_02.png")}
-      ></Image>
+      <View style={styles.logoContainer}>
+        <Image
+          resizeMode={"contain"}
+          style={styles.Logo}
+          source={require("../assets/GymJunkieLogo.png")}
+        ></Image>
+      </View>
       <View style={styles.inputRow}>
         <AntDesign
           name="user"
           size={24}
-          color="black"
+          color={ThemeColors.tertiary}
           style={styles.iconStyle}
         />
         <TextInput
@@ -200,7 +211,7 @@ const Login = () => {
           onChangeText={setUsername}
           style={styles.input}
           placeholder="Username"
-          placeholderTextColor={`${ThemeColors.tertiary}80`}
+          placeholderTextColor={ThemeColors.tertiary}
           autoComplete="username"
           autoCapitalize="none"
         />
@@ -209,7 +220,7 @@ const Login = () => {
         <AntDesign
           name="lock"
           size={24}
-          color="black"
+          color={ThemeColors.tertiary}
           style={styles.iconStyle}
         />
         <TextInput
@@ -218,7 +229,7 @@ const Login = () => {
           onChangeText={setPassword}
           style={styles.input}
           placeholder="Password"
-          placeholderTextColor={`${ThemeColors.tertiary}80`}
+          placeholderTextColor={`${ThemeColors.tertiary}`}
           autoComplete="current-password"
           autoCapitalize="none"
         />
@@ -227,9 +238,9 @@ const Login = () => {
           style={[styles.showPassword, password.length === 0 && { opacity: 0 }]}
         >
           {showPassword ? (
-            <Feather name="eye-off" size={24} color="black" />
+            <Feather name="eye-off" size={24} color={ThemeColors.tertiary} />
           ) : (
-            <Feather name="eye" size={24} color="black" />
+            <Feather name="eye" size={24} color={ThemeColors.tertiary} />
           )}
         </TouchableOpacity>
       </View>

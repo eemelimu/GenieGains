@@ -1,12 +1,6 @@
 import React, { useState } from "react";
-import {
-  View,
-  Button,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  Image,
-} from "react-native";
+import { View, Text, TextInput, TouchableOpacity, Image } from "react-native";
+import Button from "./Button";
 import { useNavigation } from "@react-navigation/native";
 import { StyleSheet } from "react-native";
 import { useFonts } from "expo-font";
@@ -48,7 +42,7 @@ const Preferences = ({ route }) => {
             style={styles.checkbox}
             value={selectedSkill === "Beginner"}
             onValueChange={() => setSelectedSkill("Beginner")}
-            color="#DB8300"
+            color={ThemeColors.tertiary}
           />
           <Text style={styles.skills}>Beginner</Text>
         </TouchableOpacity>
@@ -61,7 +55,7 @@ const Preferences = ({ route }) => {
             style={styles.checkbox}
             value={selectedSkill === "Intermediate"}
             onValueChange={() => setSelectedSkill("Intermediate")}
-            color="#DB8300"
+            color={ThemeColors.tertiary}
           />
           <Text style={styles.skills}>Intermediate</Text>
         </TouchableOpacity>
@@ -74,12 +68,12 @@ const Preferences = ({ route }) => {
             style={styles.checkbox}
             value={selectedSkill === "Professional"}
             onValueChange={() => setSelectedSkill("Professional")}
-            color="#DB8300"
+            color={ThemeColors.tertiary}
           />
           <Text style={styles.skills}>Professional</Text>
         </TouchableOpacity>
       </View>
-      <TouchableOpacity
+      {/* <TouchableOpacity
         style={styles.NextBtn}
         onPress={() => {
           moveToPreferences2();
@@ -87,17 +81,24 @@ const Preferences = ({ route }) => {
         }}
       >
         <Text style={styles.NextBtnText}>Next</Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
+      <Button
+        textSize={22}
+        width={120}
+        height={50}
+        text={"Next"}
+        onPress={moveToPreferences2}
+      />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     width: "100%",
-    color: ThemeColors.white,
+    backgroundColor: "#2F2F2F",
     alignItems: "center",
-    justifyContent: "center",
   },
 
   checkboxContainer: {
@@ -108,6 +109,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     marginBottom: 70,
+    color: ThemeColors.tertiary,
   },
 
   checkbox: {
@@ -120,6 +122,7 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     fontSize: 35,
     marginBottom: 80,
+    color: ThemeColors.tertiary,
     fontFamily: "DMBold",
     paddingHorizontal: 20,
     textAlign: "center",
@@ -129,14 +132,15 @@ const styles = StyleSheet.create({
     fontSize: 30,
     fontFamily: "DMRegular",
     paddingLeft: 40,
+    color: ThemeColors.tertiary,
   },
   NextBtnText: {
-    backgroundColor: ThemeColors.orange,
-    color: ThemeColors.black,
+    backgroundColor: ThemeColors.secondary,
+    color: ThemeColors.tertiary,
     fontSize: 30,
     padding: 10,
     borderRadius: 25,
-    textShadowColor: ThemeColors.black,
+    textShadowColor: ThemeColors.quaternary,
     fontFamily: "DMBold",
   },
 });

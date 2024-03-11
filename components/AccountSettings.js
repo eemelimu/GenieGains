@@ -2,6 +2,7 @@ import React, { useState, useContext, useCallback, useEffect } from "react";
 import { useAuth } from "./AuthContext";
 import Button from "./Button";
 import tinycolor from "tinycolor2";
+import Toast, { ErrorToast } from "react-native-toast-message";
 import { hexToRgba, storeData } from "../assets/utils/utils";
 import {
   View,
@@ -298,6 +299,7 @@ const AccountSettings = () => {
             />
           </View>
         </View>
+        <Toast />
       </Modal>
 
       <Modal
@@ -348,6 +350,7 @@ const AccountSettings = () => {
             />
           </View>
         </View>
+        <Toast />
       </Modal>
       <Modal
         animationType="slide"
@@ -379,6 +382,7 @@ const AccountSettings = () => {
             />
           </View>
         </View>
+        <Toast />
       </Modal>
     </View>
   );

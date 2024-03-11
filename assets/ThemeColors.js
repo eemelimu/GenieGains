@@ -1,6 +1,7 @@
+//colors={["#212121", "#141313", "#b8bfc9", "#797979"]}
 export const ThemeColors = {
-  primary: "#f8f9fa",
-  secondary: "#e9ecef",
-  tertiary: "#212529",
-  quaternary: "#495057",
+  primary: "#212121",
+  secondary: "#141313",
+  tertiary: "#b8bfc9",
+  quaternary: "#797979",
 };

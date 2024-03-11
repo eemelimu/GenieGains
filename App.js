@@ -8,6 +8,7 @@ import {
   SafeAreaView,
   TouchableOpacity,
   Image,
+  StatusBar,
 } from "react-native";
 import Tos from "./components/Tos";
 import Notification from "./components/Notification";
@@ -65,16 +66,12 @@ const CustomHeader = ({
   return (
     <View style={styles.header}>
       {showMenuButton ? (
-        <TouchableOpacity onPress={handleDrawer}>
-          <SimpleLineIcons
-            style={styles.icon}
-            name="menu"
-            size={24}
-            color="black"
-          />
+        <TouchableOpacity style={styles.icon} onPress={handleDrawer}>
+          <SimpleLineIcons name="menu" size={24} color="white" />
         </TouchableOpacity>
       ) : (
         <TouchableOpacity
+          style={styles.icon}
           onPress={() => {
             if (route !== "Workout" || clickCounter === 1) {
               setClickCounter(0);
@@ -90,19 +87,14 @@ const CustomHeader = ({
             }
           }}
         >
-          <Ionicons
-            style={styles.icon}
-            name="arrow-back"
-            size={28}
-            color="black"
-          />
+          <Ionicons name="arrow-back" size={28} color="white" />
         </TouchableOpacity>
       )}
       {route === "Home" ? (
         <Image
           style={styles.logo}
           resizeMode={"contain"}
-          source={require("./assets/GJunkie_02.png")}
+          source={require("./assets/GymJunkieLogo.png")}
         ></Image>
       ) : (
         <Text style={styles.headerTitle}>{title}</Text>
@@ -205,6 +197,13 @@ export default function App() {
   }, []);
   return (
     <>
+      <StatusBar
+        animated={true}
+        backgroundColor={"grey"}
+        barStyle={"dark-content"}
+        showHideTransition={"fade"}
+        hidden={false}
+      />
       <SafeAreaView style={styles.container}>
         <NavigationContainer>
           <NotificationProvider>
@@ -233,34 +232,36 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
   },
   header: {
     flexDirection: "row",
     alignItems: "center",
     paddingHorizontal: 20,
-    paddingTop: 30,
-    height: 110,
+    justifyContent: "center",
+    paddingTop: 0,
+    height: 70,
+    backgroundColor: "black",
   },
   headerTitle: {
+    position: "relative",
     fontSize: 20,
     fontWeight: "bold",
     marginLeft: "auto",
     marginRight: "auto",
     marginBottom: "auto",
     marginTop: "auto",
+    color: "white",
   },
   icon: {
-    marginBottom: "auto",
-    marginTop: "auto",
+    top: 0,
     position: "absolute",
     left: 0,
+    padding: 10,
+    marginTop: 12,
   },
   logo: {
-    borderColor: "black",
-    borderWidth: 1,
     position: "relative",
-    top: 10,
+    top: 0,
     marginLeft: "auto",
     marginRight: "auto",
     width: 150,

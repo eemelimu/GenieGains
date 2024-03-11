@@ -23,7 +23,7 @@ const LoadingPageAnim = () => {
   const handleVideoEnd = () => {
     setVideoFinished(true);
     Animated.timing(fadeAnim, {
-      toValue: 0,
+      toValue: 0.1,
       duration: 1000,
       useNativeDriver: true,
     }).start(() => {
@@ -36,10 +36,12 @@ const LoadingPageAnim = () => {
       flex: 1,
       justifyContent: "center",
       alignItems: "center",
-      backgroundColor: "white",
+      backgroundColor: "black",
     },
     video: {
-      width: "100%",
+      backgroundColor: "black",
+      width: 400,
+      alignSelf: "center",
       height: "100%",
       position: "absolute",
     },
@@ -50,7 +52,7 @@ const LoadingPageAnim = () => {
       <Animated.View style={[styles.container, { opacity: fadeAnim }]}>
         <Video
           ref={videoRef}
-          source={require("../assets/gymjunkie.mp4")}
+          source={require("../assets/GymJunkieIntro.mp4")}
           style={styles.video}
           resizeMode="cover"
           shouldPlay

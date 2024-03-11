@@ -235,7 +235,7 @@ const AccountSettings = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.username}>Username:{username}</Text>
+      <Text style={styles.username}>{username}</Text>
 
       <Pressable
         style={styles.button}

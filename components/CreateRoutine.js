@@ -65,6 +65,7 @@ const CreateRoutine = () => {
       height: 50,
       backgroundColor: ThemeColors.secondary,
       marginVertical: 7,
+      marginBottom: 50,
       justifyContent: "center",
       alignItems: "center",
       borderRadius: 15,
@@ -332,7 +333,7 @@ const CreateRoutine = () => {
             color: ThemeColors.tertiary,
           }}
         >
-          Finish routine
+          Save
         </Text>
       </TouchableOpacity>
     </SafeAreaView>

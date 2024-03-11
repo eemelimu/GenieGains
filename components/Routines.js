@@ -275,7 +275,7 @@ const Routines = () => {
         <Button
           width={170}
           isHighlighted={true}
-          text="Create movement"
+          text="Create Movement"
           onPress={moveToCreateMovement}
           renderIcon={(color) => (
             <AntDesign name="plus" size={24} color={color} />
@@ -284,7 +284,7 @@ const Routines = () => {
 
         <Button
           width={170}
-          text="Create routine"
+          text="Create Routine"
           onPress={moveToCreateRoutine}
           isHighlighted={true}
           renderIcon={(color) => (

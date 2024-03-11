@@ -30,7 +30,7 @@ import { useSettings } from "./SettingsContext";
 // Search barin hightlightaus (aktivointi) kun painaa search iconia
 
 const HomeScreen = () => {
-  const {settings} = useSettings();
+  const { settings } = useSettings();
   const seed =
     new Date().getDate() + new Date().getMonth() + new Date().getFullYear();
   const { setError, setSuccess, startLoading, stopLoading } = useNotification();
@@ -295,16 +295,16 @@ const HomeScreen = () => {
       flexDirection: "column",
     },
     searchItem: {
-      marginTop: 10,
+      marginTop: 26,
       position: "absolute",
-      right: 20,
+      right: 30,
       color: ThemeColors.tertiary,
     },
     searchItemInput: {
       position: "absolute",
       right: 30,
       width: 125,
-      backgroundColor: ThemeColors.secondary,
+      backgroundColor: `${ThemeColors.secondary}80`,
       borderRadius: 5,
       paddingVertical: 5,
       paddingHorizontal: 10,
@@ -442,6 +442,11 @@ const HomeScreen = () => {
       padding: 20,
       width: "80%",
     },
+    noWorkouts: {
+      flex: 1,
+      justifyContent: "center",
+      alignItems: "center",
+    },
   });
 
   const SingleWorkout = ({ name, date, id }) => {
@@ -500,19 +505,22 @@ const HomeScreen = () => {
           <Text style={styles.greetings}>
             {greeting}, {name}!
           </Text>
-          {settings.tips?<Text style={styles.regularText}>
-            Your {experience} tip for today:{"\n"}
-            {experience === "beginner"
-              ? beginnerTips[(seed * 1337) % beginnerTips.length]
-              : experience === "intermediate"
-              ? intermediateTips[(seed * 1337) % intermediateTips.length]
-              : expertTips[(seed * 1337) % expertTips.length]}
-          </Text>:null}
+          {settings.tips ? (
+            <Text style={styles.regularText}>
+              Your {experience} tip for today:{"\n"}
+              {experience === "beginner"
+                ? beginnerTips[(seed * 1337) % beginnerTips.length]
+                : experience === "intermediate"
+                ? intermediateTips[(seed * 1337) % intermediateTips.length]
+                : expertTips[(seed * 1337) % expertTips.length]}
+            </Text>
+          ) : null}
         </View>
         {searchMenuVisible ? (
           <View style={styles.searchItem}>
             <TextInput
               style={styles.searchItemInput}
+              placeholderTextColor={ThemeColors.tertiary}
               placeholder="Search..."
               value={searchText}
               onChangeText={handleSearchTextChange}
@@ -546,9 +554,9 @@ const HomeScreen = () => {
             horizontal={false}
             data={searchedWorkouts}
             ListEmptyComponent={() => (
-              <>
+              <View style={styles.noWorkouts}>
                 <Text style={styles.regularText}>No Workouts</Text>
-              </>
+              </View>
             )}
             renderItem={({ item }) => (
               <SingleWorkout
@@ -568,9 +576,9 @@ const HomeScreen = () => {
             horizontal={false}
             data={workouts}
             ListEmptyComponent={() => (
-              <>
+              <View style={styles.noWorkouts}>
                 <Text style={styles.regularText}>No Workouts</Text>
-              </>
+              </View>
             )}
             renderItem={({ item }) => (
               <SingleWorkout

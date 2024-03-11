@@ -26,9 +26,7 @@ import { useAuth } from "./AuthContext";
 import { useNotification } from "./NotificationContext";
 
 // TODO
-// Search bar styles paremmaksi
 // Search barin hightlightaus (aktivointi) kun painaa search iconia
-// Workout notet ja movementit näkyviin SingleWorkoutissa
 
 const HomeScreen = () => {
   const seed =

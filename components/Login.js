@@ -25,7 +25,6 @@ const Login = () => {
   const navigation = useNavigation();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [openModal, setOpenModal] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
   let [fontsLoaded] = useFonts({
@@ -101,7 +100,7 @@ const Login = () => {
       width: 320,
       justifyContent: "center",
       borderColor: ThemeColors.tertiary,
-      borderWidth: 1,
+      // borderWidth: 1,
       marginBottom: 150,
     },
     userName: {

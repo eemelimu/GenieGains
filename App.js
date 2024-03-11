@@ -150,12 +150,24 @@ const HomeStack = () => {
   );
 };
 
+const sendNotification = async (title, text, seconds) => {
+  await Notifications.scheduleNotificationAsync({
+    content: {
+      title: title,
+      body: text,
+    },
+    trigger: {
+      seconds: seconds,
+    },
+  });
+}
+
 export default function App() {
   const [notifPermission, setNotifPermission] = useState(false);
   Notifications.setNotificationHandler({
     handleNotification: async () => ({
       shouldShowAlert: true,
-      shouldPlaySound: false,
+      shouldPlaySound: true,
       shouldSetBadge: true,
     }),
   });
@@ -169,15 +181,18 @@ export default function App() {
   };
   const newNotification = async () => {
     if (notifPermission) {
-      await Notifications.scheduleNotificationAsync({
-        content: {
-          title: "We miss you!",
-          body: "Come back and get your workout in!",
-        },
-        trigger: {
-          seconds: 5,
-        },
-      });
+      await sendNotification("BRO SLACKING??", "Cant believe this!", 5);
+      await sendNotification("SLACKER TRACKER", "OUR SLACKER TRACKER SYSTEM CAUGHT HOMIE SLACKING", 10);
+      await sendNotification("What bro you doing?", "You really doing this for me, huh?", 15);
+      await sendNotification("??", "??????", 20);
+      await sendNotification("??????", "????????????????????", 25);
+      await sendNotification("GET", "GET", 30);
+      await sendNotification("BACK", "BACK", 35);
+      await sendNotification("TO", "TO", 40);
+      await sendNotification("GRIND", "GRIND", 45);
+      await sendNotification("SLACKER", "Come back and get your workout in!", 50);
+      await sendNotification("!!!!!!", "Come back and get your workout in!", 55);
+      await sendNotification("IM NOT GOING TO STOP", ":)", 60);
     }
   };
   useEffect(() => {

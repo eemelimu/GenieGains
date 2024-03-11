@@ -60,6 +60,11 @@ const Routines = () => {
       const data = await res.json();
       console.log(data);
       setSuccess("Routine deleted successfully");
+      if (res.ok) {
+        setTrainingPlans(
+          trainingPlans.filter((t) => t.id !== routineId)
+        );
+      }
     } catch (error) {
       setError("Check your internet connection");
       console.log("Error: ", error);

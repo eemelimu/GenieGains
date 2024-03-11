@@ -26,22 +26,17 @@ import { useAuth } from "./AuthContext";
 import { useNotification } from "./NotificationContext";
 
 // TODO
-// Search bar styles paremmaksi
 // Search barin hightlightaus (aktivointi) kun painaa search iconia
-// Workout notet ja movementit näkyviin SingleWorkoutissa
 
 const HomeScreen = () => {
   const seed =
     new Date().getDate() + new Date().getMonth() + new Date().getFullYear();
   const { setError, setSuccess, startLoading, stopLoading } = useNotification();
   const { theme: ThemeColors } = useContext(ThemeContext);
-  const [isModalVisible, setIsModalVisible] = useState(false);
   const [date] = useState(new Date());
   const [greeting, setGreeting] = useState("");
   const [experience, setExperience] = useState("beginner");
-  const [name, setName] = useState("name");
-  const [selectedWorkout, setSelectedWorkout] = useState({});
-  const [workouts, setWorkouts] = useState([]);
+  const [name, setName] = useState("name");  const [workouts, setWorkouts] = useState([]);
   const { state } = useAuth();
   const token = state.token;
   const navigation = useNavigation();
@@ -97,11 +92,6 @@ const HomeScreen = () => {
     month: "short",
     day: "numeric",
   });
-
-  const handleWorkoutClose = () => {
-    setIsModalVisible(false);
-    setSelectedWorkout({});
-  };
 
   useFocusEffect(
     useCallback(() => {

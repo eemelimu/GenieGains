@@ -61,9 +61,7 @@ const Routines = () => {
       console.log(data);
       setSuccess("Routine deleted successfully");
       if (res.ok) {
-        setTrainingPlans(
-          trainingPlans.filter((t) => t.id !== routineId)
-        );
+        setTrainingPlans(trainingPlans.filter((t) => t.id !== routineId));
       }
     } catch (error) {
       setError("Check your internet connection");
@@ -209,6 +207,13 @@ const Routines = () => {
       right: 10,
       top: 10,
     },
+    notFoundText: {
+      fontSize: 20,
+      fontFamily: "DMRegular",
+      color: ThemeColors.tertiary,
+      textAlign: "center",
+      marginTop: 50,
+    },
   });
 
   const Routine = ({ name, routine }) => {
@@ -243,20 +248,27 @@ const Routines = () => {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={{ flex: 1 }}>
-        {trainingPlans.map((trainingPlan) => (
-          <TouchableOpacity
-            style={styles.main}
-            key={trainingPlan.id}
-            onPress={() =>
-              moveToInspectRoutine(trainingPlan.training_plan_name)
-            }
-          >
-            <Routine
-              name={trainingPlan.training_plan_name}
-              routine={trainingPlan}
-            />
-          </TouchableOpacity>
-        ))}
+        {trainingPlans.length === 0 ? (
+          <View>
+            <Text style={styles.notFoundText}>No training plans available.</Text>
+            <Text style={styles.notFoundText}>Press Create Routine to make your first routine!</Text>
+          </View>
+        ) : (
+          trainingPlans.map((trainingPlan) => (
+            <TouchableOpacity
+              style={styles.main}
+              key={trainingPlan.id}
+              onPress={() =>
+                moveToInspectRoutine(trainingPlan.training_plan_name)
+              }
+            >
+              <Routine
+                name={trainingPlan.training_plan_name}
+                routine={trainingPlan}
+              />
+            </TouchableOpacity>
+          ))
+        )}
       </ScrollView>
 
       <View style={styles.footer}>

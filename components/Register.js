@@ -110,7 +110,6 @@ const Register = () => {
       width: 320,
       justifyContent: "center",
       borderColor: ThemeColors.tertiary,
-      borderWidth: 1,
       marginBottom: 50,
     },
     information: {

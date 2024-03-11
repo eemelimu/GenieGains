@@ -48,6 +48,7 @@ import InspectRoutine from "./components/InspectRoutine";
 import CreateRoutine from "./components/CreateRoutine";
 import { ViewWorkout } from "./components/ViewWorkout";
 import { Troubleshooting } from "./components/Troubleshooting";
+import { ThemeColors } from "./assets/ThemeColors";
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -159,8 +160,8 @@ export default function App() {
     <>
       <StatusBar
         animated={true}
-        backgroundColor={"grey"}
-        barStyle={"dark-content"}
+        backgroundColor={ThemeColors.secondary}
+        barStyle={"light-content"}
         showHideTransition={"fade"}
         hidden={false}
       />
@@ -203,7 +204,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     paddingTop: 0,
     height: 70,
-    backgroundColor: "black",
+    backgroundColor: ThemeColors.secondary,
   },
   headerTitle: {
     position: "relative",

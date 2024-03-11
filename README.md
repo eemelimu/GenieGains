@@ -3,7 +3,7 @@
 
 <br />
 <div align="center">
-  <a href="https://github.com/othneildrew/Best-README-Template">
+  <a>
     <img src="./assets/GJunkie_02.png" alt="GymJunkieLogo" width="450" height="100">
   </a>
   <h4 align="center">

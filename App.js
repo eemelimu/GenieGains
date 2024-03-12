@@ -160,7 +160,7 @@ export default function App() {
     <>
       <StatusBar
         animated={true}
-        backgroundColor={ThemeColors.secondary}
+        backgroundColor={ThemeColors.primary}
         barStyle={"light-content"}
         showHideTransition={"fade"}
         hidden={false}
@@ -204,7 +204,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     paddingTop: 0,
     height: 70,
-    backgroundColor: ThemeColors.secondary,
+    backgroundColor: ThemeColors.primary,
   },
   headerTitle: {
     position: "relative",

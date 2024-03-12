@@ -94,13 +94,15 @@ const Preferences = ({ route }) => {
           </View>
         </TouchableOpacity>
       </View>
-      <Button
-        textSize={22}
-        width={250}
-        height={50}
-        text={"Next"}
-        onPress={moveToPreferences2}
-      />
+      <View style={{marginTop: 100}}>
+        <Button
+          textSize={22}
+          width={250}
+          height={50}
+          text={"Next"}
+          onPress={moveToPreferences2}
+        />
+      </View>
     </View>
   );
 };
@@ -133,8 +135,11 @@ const styles = StyleSheet.create({
   },
   checkbox: {
     alignSelf: "center",
-    width: 35,
-    height: 35,
+    width: 30,
+    height: 30,
+    position: "absolute",
+    left: 0,
+    top: 5,
   },
   preferenceText: {
     paddingTop: 50,
@@ -147,7 +152,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     paddingRight: 10,
     fontFamily: "DMRegular",
-    paddingLeft: 20,
+    paddingLeft: 50,
     color: ThemeColors.tertiary,
   },
   NextBtnText: {

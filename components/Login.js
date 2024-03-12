@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useRef } from "react";
 import {
   View,
   Text,
@@ -26,7 +26,7 @@ const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-
+  const passwordRef = useRef(null);
   let [fontsLoaded] = useFonts({
     DMBold: require("../assets/fonts/DMSans-Bold.ttf"),
     DMRegular: require("../assets/fonts/DMSans-Regular.ttf"),
@@ -84,7 +84,7 @@ const Login = () => {
     container: {
       flex: 1,
       width: "100%",
-      backgroundColor: "#2F2F2F",
+      backgroundColor: ThemeColors.primary,
       justifyContent: "center",
       alignItems: "center",
     },
@@ -100,7 +100,6 @@ const Login = () => {
       width: 320,
       justifyContent: "center",
       borderColor: ThemeColors.tertiary,
-      // borderWidth: 1,
       marginBottom: 150,
     },
     userName: {
@@ -162,7 +161,6 @@ const Login = () => {
       fontSize: 20,
     },
     inputRow: {
-      position: "aboslute",
       flexDirection: "row",
       paddingTop: 50,
       marginBottom: 25,
@@ -213,6 +211,8 @@ const Login = () => {
           placeholderTextColor={ThemeColors.tertiary}
           autoComplete="username"
           autoCapitalize="none"
+          returnKeyType="next"
+          onSubmitEditing={() => passwordRef.current.focus()}
         />
       </View>
       <View style={styles.inputRow}>
@@ -223,6 +223,7 @@ const Login = () => {
           style={styles.iconStyle}
         />
         <TextInput
+          ref={passwordRef}
           secureTextEntry={!showPassword}
           value={password}
           onChangeText={setPassword}

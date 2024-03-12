@@ -20,8 +20,7 @@ const Preferences = ({ route }) => {
     return null;
   }
   const moveToPreferences2 = () => {
-    console.log("called movetoPreferences2");
-    navigation.navigate("Preferences2", {
+    navigation.navigate("Unit Selection", {
       data: {
         ...route.params.data,
         selectedSkill: selectedSkill,
@@ -75,18 +74,18 @@ const Preferences = ({ route }) => {
 
         <TouchableOpacity
           style={styles.checkboxItem}
-          onPress={() => setSelectedSkill("Professional")}
+          onPress={() => setSelectedSkill("Expert")}
         >
           <CheckBox
             style={styles.checkbox}
-            value={selectedSkill === "Professional"}
-            onValueChange={() => setSelectedSkill("Professional")}
+            value={selectedSkill === "Expert"}
+            onValueChange={() => setSelectedSkill("Expert")}
             color={
-              selectedSkill === "Professional" ? "orange" : ThemeColors.tertiary
+              selectedSkill === "Expert" ? "orange" : ThemeColors.tertiary
             }
           />
           <View>
-            <Text style={styles.skills}>Professional</Text>
+            <Text style={styles.skills}>Expert</Text>
             <Text style={[styles.skills, { fontSize: 15, paddingTop: 10 }]}>
               You have been lifing consistently for a many years, you know your
               stuff and probably compete.
@@ -94,7 +93,7 @@ const Preferences = ({ route }) => {
           </View>
         </TouchableOpacity>
       </View>
-      <View style={{marginTop: 100}}>
+      <View style={styles.nextButton}>
         <Button
           textSize={22}
           width={250}
@@ -108,6 +107,10 @@ const Preferences = ({ route }) => {
 };
 
 const styles = StyleSheet.create({
+  nextButton: {
+    position: "absolute",
+    bottom: 50,
+  },
   boxContainer: {
     width: "100%",
     backgroundColor: ThemeColors.primary,

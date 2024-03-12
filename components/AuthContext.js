@@ -3,6 +3,7 @@ import React, { createContext, useReducer, useContext, useEffect } from "react";
 import { getData, storeData, deleteData } from "../assets/utils/utils";
 import { useNavigation } from "@react-navigation/native";
 import { BACKEND_URL } from "../assets/config";
+import { ThemeContext } from "./ThemeContext";
 
 const AuthContext = createContext();
 
@@ -39,6 +40,7 @@ const reducer = (state, action) => {
 export const AuthProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const navigation = useNavigation();
+  const { resetTheme } = useContext(ThemeContext);
 
   useEffect(() => {
     const initializeAuth = async () => {
@@ -91,6 +93,7 @@ export const AuthProvider = ({ children }) => {
           navigation.navigate("Home");
         } else {
           deleteData("token");
+          resetTheme();
           navigation.navigate("Login");
         }
       } catch (error) {

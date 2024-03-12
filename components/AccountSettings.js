@@ -137,7 +137,12 @@ const AccountSettings = () => {
         setError("Invalid password");
         throw new Error("HTTP status " + response.status);
       } else {
-        setSuccess("Password changed successfully");
+        const data = await response.json();
+        console.log(data);
+        setSuccess(
+          "Password changed successfully!"
+        );
+        dispatch({ type: "LOGIN", payload: { token: data.token } });
         setPassword("");
         setConfirmPassword("");
       }

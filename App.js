@@ -168,8 +168,8 @@ export default function App() {
       <SafeAreaView style={styles.container}>
         <NavigationContainer>
           <NotificationProvider>
-            <AuthProvider>
-              <ThemeProvider>
+            <ThemeProvider>
+              <AuthProvider>
                 <SettingsProvider>
                   <PushNotificationHandler />
                   <Drawer.Navigator
@@ -183,8 +183,8 @@ export default function App() {
                   </Drawer.Navigator>
                 </SettingsProvider>
                 <Notification />
-              </ThemeProvider>
-            </AuthProvider>
+              </AuthProvider>
+            </ThemeProvider>
           </NotificationProvider>
         </NavigationContainer>
       </SafeAreaView>

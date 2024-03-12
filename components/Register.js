@@ -42,9 +42,11 @@ const Register = () => {
           username: username,
         }),
       });
+      console.log(await response.text());
       if (!response.ok) {
         return true;
       }
+
       stopLoading();
       return false;
     } catch (error) {

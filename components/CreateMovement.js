@@ -99,6 +99,7 @@ const CreateMovement = () => {
       backgroundColor: ThemeColors.secondary,
       borderWidth: 1,
       borderColor: ThemeColors.quaternary,
+      color: ThemeColors.tertiary,
     },
     dropdownItem: {
       display: "flex",
@@ -107,6 +108,7 @@ const CreateMovement = () => {
       paddingHorizontal: 5,
       paddingVertical: 7,
       backgroundColor: ThemeColors.secondary,
+      color: ThemeColors.tertiary,
     },
     createButton: {
       backgroundColor: ThemeColors.quaternary,
@@ -115,7 +117,7 @@ const CreateMovement = () => {
       alignItems: "center",
     },
     buttonText: {
-      color: ThemeColors.secondary,
+      color: ThemeColors.tertiary,
       fontSize: 16,
     },
   });

@@ -39,7 +39,7 @@ import Register from "./components/Register";
 import { useAuth } from "./components/AuthContext";
 import LoadingPage from "./components/LoadingPage";
 import { Workout } from "./components/Workout";
-import Toast, { ErrorToast } from "react-native-toast-message";
+import Toast, { BaseToast, ErrorToast } from "react-native-toast-message";
 import CreateMovement from "./components/CreateMovement";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { DrawerContent } from "./components/DrawerContent";
@@ -53,6 +53,53 @@ import { ThemeColors } from "./assets/ThemeColors";
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 
+const toastConfig = {
+  success: (props) => (
+    <BaseToast
+      {...props}
+      style={{
+        borderLeftColor: "lightgreen",
+        backgroundColor: "white",
+        top: 35,
+      }}
+      contentContainerStyle={{
+        paddingHorizontal: 15,
+      }}
+      text1Style={{
+        color: "white",
+        fontSize: 15,
+        fontWeight: "bold",
+      }}
+      text2Style={{
+        color: "white",
+        fontSize: 13,
+      }}
+    />
+  ),
+  error: (props) => (
+    <ErrorToast
+      {...props}
+      style={{
+        borderLeftColor: "lightcoral",
+        backgroundColor: "white",
+        top: 35,
+      }}
+      contentContainerStyle={{
+        paddingHorizontal: 15,
+      }}
+      text1Style={{
+        color: "white",
+        fontSize: 15,
+        fontWeight: "bold",
+      }}
+      text2Style={{
+        color: "white",
+        fontSize: 13,
+      }}
+    />
+  ),
+};
+
 const CustomHeader = ({
   navigation,
   title,
@@ -65,7 +112,7 @@ const CustomHeader = ({
     navigation.openDrawer();
   };
   if (showNothing) {
-    return null;//<View style={styles.header}></View>;
+    return null; //<View style={styles.header}></View>;
   }
   return (
     <View style={styles.header}>
@@ -188,7 +235,7 @@ export default function App() {
           </NotificationProvider>
         </NavigationContainer>
       </SafeAreaView>
-      <Toast />
+      <Toast config={toastConfig} />
     </>
   );
 }

@@ -387,7 +387,7 @@ const GoalsPage = () => {
     modalContainer: {
       flex: 1,
       position: "absolute",
-      top: 60,
+      top: 0,
       left: 0,
       right: 0,
       bottom: 0,
@@ -635,11 +635,11 @@ const GoalsPage = () => {
               placeholder="Goal Name"
               value={goalName}
               onChangeText={(text) => setGoalName(text)}
-              placeholderTextColor={ThemeColors.quaternary}
+              placeholderTextColor={ThemeColors.tertiary}
             />
             <Text style={styles.informationText}>Goal's unit:</Text>
             <TextInput
-              placeholderTextColor={ThemeColors.quaternary}
+              placeholderTextColor={ThemeColors.tertiary}
               style={styles.input}
               placeholder={
                 unit === "metric"
@@ -657,7 +657,7 @@ const GoalsPage = () => {
               value={targetAmount}
               onChangeText={(text) => setTargetAmount(text)}
               keyboardType="numeric"
-              placeholderTextColor={ThemeColors.quaternary}
+              placeholderTextColor={ThemeColors.tertiary}
             />
             {/* <Pressable
               style={styles.button}
@@ -741,7 +741,7 @@ const GoalsPage = () => {
               onChangeText={(val) => {
                 setAdditionNote(val);
               }}
-              placeholderTextColor={ThemeColors.quaternary}
+              placeholderTextColor={ThemeColors.tertiary}
             ></TextInput>
             <Text style={styles.informationText}>Unit:</Text>
             <TextInput
@@ -754,7 +754,7 @@ const GoalsPage = () => {
               }
               value={additionUnits}
               onChangeText={(val) => setAdditionUnits(val)}
-              placeholderTextColor={ThemeColors.quaternary}
+              placeholderTextColor={ThemeColors.tertiary}
             />
             <Text style={styles.informationText}>Amount:</Text>
             <TextInput
@@ -763,7 +763,7 @@ const GoalsPage = () => {
               value={additionTargetAmount}
               onChangeText={(val) => setAdditionTargetAmount(val)}
               keyboardType="numeric"
-              placeholderTextColor={ThemeColors.quaternary}
+              placeholderTextColor={ThemeColors.tertiary}
             />
             <DropDownPicker
               mode="BADGE"

@@ -129,7 +129,7 @@ const Preferences = () => {
     modalContainer: {
       flex: 1,
       position: "absolute",
-      top: 60,
+      top: 0,
       left: 0,
       right: 0,
       bottom: 0,

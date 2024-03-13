@@ -23,15 +23,16 @@ test("Preferences2 component renders correctly and that the theme context applie
     component = renderer.create(
       <NavigationContainer>
         <NotificationProvider>
-        <ThemeProvider> <AuthProvider>
-            
+          <ThemeProvider>
+            {" "}
+            <AuthProvider>
               <Stack.Navigator>
                 <Stack.Screen name="Preferences2" component={Preferences2} />
                 <Stack.Screen name="Login" component={Login} />
               </Stack.Navigator>
               <Notification />
-            
-          </AuthProvider></ThemeProvider>
+            </AuthProvider>
+          </ThemeProvider>
 
           <Toast />
         </NotificationProvider>
@@ -54,22 +55,22 @@ test("Next button can be pressed and works as expected", async () => {
   component = render(
     <NavigationContainer>
       <NotificationProvider>
-      <ThemeProvider><AuthProvider>
-          
+        <ThemeProvider>
+          <AuthProvider>
             <Stack.Navigator>
               <Stack.Screen name="Preferences2" component={Preferences2} />
               <Stack.Screen name="Login" component={Login} />
             </Stack.Navigator>
             <Notification />
             <Toast />
-          
-        </AuthProvider></ThemeProvider>
+          </AuthProvider>
+        </ThemeProvider>
       </NotificationProvider>
     </NavigationContainer>
   );
 
   await waitFor(() => {
-    const nextButton = component.getByText("Next");
+    const nextButton = component.getByText("Register");
     fireEvent.press(nextButton);
   });
 });

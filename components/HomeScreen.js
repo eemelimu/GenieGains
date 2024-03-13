@@ -449,6 +449,19 @@ const HomeScreen = () => {
       justifyContent: "center",
       alignItems: "center",
     },
+    tipsContainer: {
+      marginTop: 10,
+      backgroundColor: `${ThemeColors.tertiary}25`,
+      borderRadius: 10,
+      padding: 10,
+      textAlign: "center",
+    },
+    regularTextTitle: {
+      fontSize: 16,
+      fontWeight: "bold",
+      color: ThemeColors.tertiary,
+      alignSelf: "center",
+    },
   });
 
   const SingleWorkout = ({ name, date, id }) => {
@@ -491,14 +504,18 @@ const HomeScreen = () => {
             {greeting}, {name}!
           </Text>
           {settings.tips ? (
-            <Text style={styles.regularText}>
-              Your {experience} tip for today:{"\n"}
-              {experience === "beginner"
-                ? beginnerTips[(seed * 1337) % beginnerTips.length]
-                : experience === "intermediate"
-                ? intermediateTips[(seed * 1337) % intermediateTips.length]
-                : expertTips[(seed * 1337) % expertTips.length]}
-            </Text>
+            <View style={styles.tipsContainer}>
+              <Text style={styles.regularTextTitle}>
+                Your {experience} tip for today{"\n"}
+              </Text>
+              <Text style={styles.regularText}>
+                {experience === "beginner"
+                  ? beginnerTips[(seed * 1337) % beginnerTips.length]
+                  : experience === "intermediate"
+                  ? intermediateTips[(seed * 1337) % intermediateTips.length]
+                  : expertTips[(seed * 1337) % expertTips.length]}
+              </Text>
+            </View>
           ) : null}
         </View>
         {searchMenuVisible ? (

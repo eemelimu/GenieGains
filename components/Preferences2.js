@@ -9,12 +9,15 @@ import { ThemeColors } from "../assets/ThemeColors";
 import { BACKEND_URL } from "../assets/config";
 import { useAuth } from "./AuthContext";
 import { useNotification } from "./NotificationContext";
+
 const Preferences = ({ route }) => {
   const { setError, setSuccess, startLoading, stopLoading } = useNotification();
   const { dispatch } = useAuth();
   const navigation = useNavigation();
   const [SelectedUnit, setSelectedUnit] = useState(null);
+
   console.log("data from register and preferences?", route.params);
+
   const registerUser = async () => {
     startLoading();
     try {
@@ -32,6 +35,16 @@ const Preferences = ({ route }) => {
           experience: route.params.data.selectedSkill.toLowerCase(),
         }),
       });
+      console.log(
+        JSON.stringify({
+          username: route.params.data.username,
+          password: route.params.data.password,
+          confirmPassword: route.params.data.confirmPassword,
+          email: route.params.data.email,
+          unit: SelectedUnit.toLowerCase(),
+          experience: route.params.data.selectedSkill.toLowerCase(),
+        })
+      );
       const data = await response.json();
       console.log(data);
       if (!response.ok) {
@@ -41,8 +54,6 @@ const Preferences = ({ route }) => {
         console.log(data.token);
         dispatch({ type: "LOGIN", payload: { token: data.token } });
       }
-      //console.log(response.status);
-      //navigation.navigate("Login");
     } catch (error) {
       setError("Check your internet connection");
       console.error("Error registering user:", error);
@@ -58,7 +69,7 @@ const Preferences = ({ route }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.preferenceText}>
-        Lastly you need to select units!
+        Select which measurement unit you would like to use
       </Text>
       <View style={styles.checkboxContainer}>
         <TouchableOpacity
@@ -69,11 +80,15 @@ const Preferences = ({ route }) => {
             style={styles.checkbox}
             value={SelectedUnit === "Metric"}
             onValueChange={() => setSelectedUnit("Metric")}
-            color={ThemeColors.tertiary}
+            color={SelectedUnit === "Metric" ? "orange" : ThemeColors.tertiary}
           />
-          <Text style={styles.skills}>Metric </Text>
+          <View>
+            <Text style={styles.skills}>Metric</Text>
+            <Text style={[styles.skills, { fontSize: 15, paddingTop: 10 }]}>
+              Eg. Kilograms, Meters, etc.
+            </Text>
+          </View>
         </TouchableOpacity>
-
         <TouchableOpacity
           style={styles.checkboxItem}
           onPress={() => setSelectedUnit("Imperial")}
@@ -82,42 +97,60 @@ const Preferences = ({ route }) => {
             style={styles.checkbox}
             value={SelectedUnit === "Imperial"}
             onValueChange={() => setSelectedUnit("Imperial")}
-            color={ThemeColors.tertiary}
+            color={
+              SelectedUnit === "Imperial" ? "orange" : ThemeColors.tertiary
+            }
           />
-          <Text style={styles.skills}>Imperial</Text>
+          <View>
+            <Text style={styles.skills}>Imperial</Text>
+            <Text style={[styles.skills, { fontSize: 15, paddingTop: 10 }]}>
+              Eg. Pounds, Feet, etc.
+            </Text>
+          </View>
         </TouchableOpacity>
       </View>
-      {/* <TouchableOpacity
-        style={styles.NextBtn}
-        onPress={() => {
-          registerUser();
-        }}
-      >
-        <Text style={styles.NextBtnText}>Next</Text>
-      </TouchableOpacity> */}
-      <Button
-        textSize={22}
-        width={120}
-        height={50}
-        text="Next"
-        onPress={() => {
-          registerUser();
-        }}
-      />
+      <View style={styles.nextButton}>
+        <Button
+          textSize={20}
+          width={120}
+          height={50}
+          text="Back"
+          onPress={() => {
+            navigation.goBack();
+          }}
+        />
+        <View style={{ paddingLeft: 10 }}>
+          <Button
+            textSize={20}
+            width={120}
+            height={50}
+            text="Register"
+            onPress={() => {
+              registerUser();
+            }}
+          />
+        </View>
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  nextButton: {
+    position: "absolute",
+    bottom: 50,
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
   container: {
     flex: 1,
     width: "100%",
-    backgroundColor: "#2F2F2F",
+    backgroundColor: ThemeColors.primary,
     alignItems: "center",
   },
-
   checkboxContainer: {
     flexDirection: "column",
+    marginTop: 80,
     marginBottom: 20,
   },
   checkboxItem: {
@@ -126,24 +159,23 @@ const styles = StyleSheet.create({
     marginBottom: 70,
     color: ThemeColors.tertiary,
   },
-
   checkbox: {
     alignSelf: "center",
-    width: 35,
-    height: 35,
+    width: 30,
+    height: 30,
+    position: "absolute",
+    top: 5,
+    left: 0,
   },
-
   preferenceText: {
-    paddingTop: 10,
-    fontSize: 35,
-    marginBottom: 80,
-    fontFamily: "DMBold",
-    paddingHorizontal: 20,
+    paddingTop: 50,
+    fontSize: 25,
+    marginBottom: 40,
+    color: ThemeColors.tertiary,
     textAlign: "center",
   },
-
   skills: {
-    fontSize: 30,
+    fontSize: 20,
     fontFamily: "DMRegular",
     paddingLeft: 40,
     color: ThemeColors.tertiary,
@@ -158,4 +190,5 @@ const styles = StyleSheet.create({
     fontFamily: "DMBold",
   },
 });
+
 export default Preferences;

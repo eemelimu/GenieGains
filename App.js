@@ -129,8 +129,8 @@ const HomeStack = () => {
       <Stack.Screen name="Workout" component={Workout} />
       <Stack.Screen name="ViewWorkout" component={ViewWorkout} />
       <Stack.Screen name="Login" component={Login} />
-      <Stack.Screen name="Preferences" component={Preferences} />
-      <Stack.Screen name="Preferences2" component={Preferences2} />
+      <Stack.Screen name="Skill Level" component={Preferences} />
+      <Stack.Screen name="Unit Selection" component={Preferences2} />
       <Stack.Screen name="Register" component={Register} />
       <Stack.Screen name="Settings" component={SettingsScreen} />
       <Stack.Screen name="Troubleshooting" component={Troubleshooting} />
@@ -160,7 +160,7 @@ export default function App() {
     <>
       <StatusBar
         animated={true}
-        backgroundColor={ThemeColors.secondary}
+        backgroundColor={ThemeColors.primary}
         barStyle={"light-content"}
         showHideTransition={"fade"}
         hidden={false}
@@ -204,7 +204,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     paddingTop: 0,
     height: 70,
-    backgroundColor: ThemeColors.secondary,
+    backgroundColor: ThemeColors.primary,
   },
   headerTitle: {
     position: "relative",

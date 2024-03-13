@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import {
   View,
   Text,
@@ -26,6 +26,10 @@ const Register = () => {
   const [email, setEmail] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showPassword2, setShowPassword2] = useState(false);
+  const passwordRef = useRef(null);
+  const password2Ref = useRef(null);
+  const emailRef = useRef(null);
+  
   // add unit & experience
   // add password2
 
@@ -76,7 +80,7 @@ const Register = () => {
       setError("Invalid email");
       return;
     }
-    navigation.navigate("Preferences", {
+    navigation.navigate("Skill Level", {
       data: {
         password: password,
         confirmPassword: password2,
@@ -98,7 +102,7 @@ const Register = () => {
       flex: 1,
       justifyContent: "center",
       alignItems: "center",
-      backgroundColor: "#2F2F2F",
+      backgroundColor: ThemeColors.primary,
     },
     Logo: {
       borderRadius: 2,
@@ -194,6 +198,7 @@ const Register = () => {
           autoComplete="username"
           autoCapitalize="none"
           placeholderTextColor={ThemeColors.tertiary}
+          onSubmitEditing={() => passwordRef.current.focus()}
         />
       </View>
       <View style={styles.inputRow}>
@@ -204,6 +209,7 @@ const Register = () => {
           style={styles.iconStyle}
         />
         <TextInput
+        ref={passwordRef}
           style={styles.input}
           placeholder="Password"
           secureTextEntry={!showPassword}
@@ -212,6 +218,7 @@ const Register = () => {
           autoComplete="new-password"
           autoCapitalize="none"
           placeholderTextColor={ThemeColors.tertiary}
+          onSubmitEditing={() => password2Ref.current.focus()}
         />
         <TouchableOpacity
           onPress={() => setShowPassword(!showPassword)}
@@ -232,6 +239,7 @@ const Register = () => {
           style={styles.iconStyle}
         />
         <TextInput
+          ref={password2Ref}
           style={styles.input}
           placeholder="Retype Password"
           secureTextEntry={!showPassword2}
@@ -240,6 +248,7 @@ const Register = () => {
           autoComplete="password"
           autoCapitalize="none"
           placeholderTextColor={ThemeColors.tertiary}
+          onSubmitEditing={() => emailRef.current.focus()}
         />
         <TouchableOpacity
           onPress={() => setShowPassword2(!showPassword2)}
@@ -263,6 +272,7 @@ const Register = () => {
           style={styles.iconStyle}
         />
         <TextInput
+          ref={emailRef}
           style={styles.input}
           placeholder="Email"
           value={email}

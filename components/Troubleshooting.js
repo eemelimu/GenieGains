@@ -1,16 +1,59 @@
-import React, { useState } from "react";
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from "react-native";
-import { MaterialIcons } from '@expo/vector-icons';
+import React, { useState, useContext } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+} from "react-native";
+import { MaterialIcons } from "@expo/vector-icons";
+import { ThemeContext } from "./ThemeContext";
 
 export const Troubleshooting = () => {
+  const { theme: ThemeColors } = useContext(ThemeContext);
   const [expandedSections, setExpandedSections] = useState({});
 
   const toggleSection = (index) => {
-    setExpandedSections(prevState => ({
+    setExpandedSections((prevState) => ({
       ...prevState,
-      [index]: !prevState[index]
+      [index]: !prevState[index],
     }));
   };
+
+  const styles = StyleSheet.create({
+    line: {
+      position: "relative",
+      borderBottomWidth: 1,
+      borderBottomColor: ThemeColors.quaternary,
+      width: "100%",
+      marginBottom: 20,
+      paddingBottom: 20,
+    },
+    container: {
+      flex: 1,
+      padding: 20,
+      backgroundColor: ThemeColors.primary,
+    },
+    titleContainer: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
+      backgroundColor: ThemeColors.secondary,
+    },
+    title: {
+      fontSize: 20,
+      fontWeight: "bold",
+      paddingHorizontal: 20,
+      paddingBottom: 20,
+      color: ThemeColors.tertiary,
+    },
+    description: {
+      color: ThemeColors.tertiary,
+      fontSize: 18,
+      marginBottom: 30,
+      paddingHorizontal: 20,
+    },
+  });
 
   return (
     <ScrollView style={styles.container}>
@@ -20,7 +63,7 @@ export const Troubleshooting = () => {
           <MaterialIcons
             name={expandedSections[1] ? "arrow-drop-down" : "arrow-right"}
             size={24}
-            color="black"
+            color={ThemeColors.tertiary}
           />
         </View>
       </TouchableOpacity>
@@ -45,16 +88,19 @@ export const Troubleshooting = () => {
       </TouchableOpacity>
       {expandedSections[2] && (
         <Text style={styles.description}>
-          To delete a workout, you need to go to the homescreen and click on
-          the workout you want to delete. Then you can delete the workout by clicking
-          the three dots on the top right corner and then click on the "Delete" button.
+          To delete a workout, you need to go to the homescreen and click on the
+          workout you want to delete. Then you can delete the workout by
+          clicking the three dots on the top right corner and then click on the
+          "Delete" button.
         </Text>
       )}
       <View style={styles.line} />
 
       <TouchableOpacity onPress={() => toggleSection(3)}>
         <View style={styles.titleContainer}>
-          <Text style={styles.title}>3. How to create new workout templates?</Text>
+          <Text style={styles.title}>
+            3. How to create new workout templates?
+          </Text>
           <MaterialIcons
             name={expandedSections[3] ? "arrow-drop-down" : "arrow-right"}
             size={24}
@@ -64,12 +110,15 @@ export const Troubleshooting = () => {
       </TouchableOpacity>
       {expandedSections[3] && (
         <Text style={styles.description}>
-          To create a new workout template, you need to go to the homescreen and tap on the "Routines" from the bottom navigation. Then you can create a new workout template by clicking on the "Create Routine" button.
-          From there, you can add new movements to the workout template, and then save the workout template by clicking on the "Save" button.
+          To create a new workout template, you need to go to the homescreen and
+          tap on the "Routines" from the bottom navigation. Then you can create
+          a new workout template by clicking on the "Create Routine" button.
+          From there, you can add new movements to the workout template, and
+          then save the workout template by clicking on the "Save" button.
         </Text>
       )}
       <View style={styles.line} />
-      
+
       <TouchableOpacity onPress={() => toggleSection(4)}>
         <View style={styles.titleContainer}>
           <Text style={styles.title}>4. How to add new movements?</Text>
@@ -82,42 +131,14 @@ export const Troubleshooting = () => {
       </TouchableOpacity>
       {expandedSections[4] && (
         <Text style={styles.description}>
-          To add new movements, you need to go to the homescreen and tap on the "Routines" from the bottom navigation. Then you can create a new workout template by clicking on the "Create Movement" button.
-          From there, you can specify the name and the muscle group of the movement, and then save the movement by clicking on the "Save" button.
+          To add new movements, you need to go to the homescreen and tap on the
+          "Routines" from the bottom navigation. Then you can create a new
+          workout template by clicking on the "Create Movement" button. From
+          there, you can specify the name and the muscle group of the movement,
+          and then save the movement by clicking on the "Save" button.
         </Text>
       )}
       <View style={styles.line} />
     </ScrollView>
   );
 };
-
-const styles = StyleSheet.create({
-  line: {
-    position: "relative",
-    borderBottomWidth: 1,
-    borderBottomColor: "#ccc",
-    width: "100%",
-    marginBottom: 20,
-    paddingBottom: 20,
-  },
-  container: {
-    flex: 1,
-    padding: 20,
-  },
-  titleContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: "bold",
-    paddingHorizontal: 20,
-    paddingBottom: 20,
-  },
-  description: {
-    fontSize: 18,
-    marginBottom: 30,
-    paddingHorizontal: 20,
-  },
-});

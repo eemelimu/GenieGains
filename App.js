@@ -65,7 +65,7 @@ const CustomHeader = ({
     navigation.openDrawer();
   };
   if (showNothing) {
-    return <View style={styles.header}></View>;
+    return null;//<View style={styles.header}></View>;
   }
   return (
     <View style={styles.header}>

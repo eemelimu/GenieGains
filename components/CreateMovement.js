@@ -6,6 +6,7 @@ import { ThemeContext } from "./ThemeContext";
 import { useNotification } from "./NotificationContext";
 import { BACKEND_URL } from "../assets/config";
 import { useAuth } from "./AuthContext";
+import Button from "./Button";
 
 const muscleCategories = [
   { label: "Triceps", value: "triceps" },
@@ -147,9 +148,17 @@ const CreateMovement = () => {
         setValue={setMuscleCategory}
         theme={lightOrDark(ThemeColors.primary).toUpperCase() || "DEFAULT"}
       />
-      <Pressable style={styles.createButton} onPress={handleCreateMovement}>
+      {/* <Pressable style={styles.createButton} onPress={handleCreateMovement}>
         <Text style={styles.buttonText}>Create Movement</Text>
-      </Pressable>
+      </Pressable> */}
+      <Button
+        width={"100%"}
+        height={50}
+        textSize={16}
+        isHighlighted={true}
+        text="Create Movement"
+        onPress={handleCreateMovement}
+      />
     </View>
   );
 };

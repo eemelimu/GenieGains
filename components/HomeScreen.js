@@ -351,7 +351,7 @@ const HomeScreen = () => {
       fontSize: 14,
       color: ThemeColors.tertiary,
       position: "absolute",
-      top: 12,
+      top: 14,
       right: 40,
     },
     container: {

@@ -347,11 +347,12 @@ const HomeScreen = () => {
       color: ThemeColors.tertiary,
     },
     workoutDate: {
+      fontStyle: "italic",
       fontSize: 14,
       color: ThemeColors.tertiary,
       position: "absolute",
-      top: 10,
-      right: 10,
+      top: 12,
+      right: 40,
     },
     container: {
       flex: 1,
@@ -383,7 +384,8 @@ const HomeScreen = () => {
     },
     deleteBtn: {
       position: "absolute",
-      right: 10,
+      right: 5,
+      top: 10,
     },
     footer: {
       bottom: 0,
@@ -478,23 +480,6 @@ const HomeScreen = () => {
         />
       </TouchableOpacity>
     );
-  };
-
-  const getRoutine = async (id) => {
-    try {
-      const res = await fetch(BACKEND_URL + "trainingplan/" + id, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          "Auth-Token": token,
-        },
-      });
-      const data = await res.json();
-      console.log(data);
-    } catch (error) {
-      console.log("Error fetching routine: ", error);
-    }
-    return null;
   };
 
   return (
@@ -604,29 +589,6 @@ const HomeScreen = () => {
           )}
           onPress={handleLog}
         />
-        {/* <TouchableOpacity style={styles.footerButton} onPress={handleLog}>
-          <SimpleLineIcons
-            name="notebook"
-            size={24}
-            color={ThemeColors.tertiary}
-          />
-          <Text style={styles.regularText}>Routines</Text>
-        </TouchableOpacity> */}
-        {/* <TouchableOpacity
-          style={[styles.startWorkoutButton, styles.footerButton]}
-          onPress={() => navigation.navigate("Workout")}
-        >
-          <AntDesign name="plus" size={24} color={ThemeColors.secondary} />
-          <Text
-            style={{
-              fontWeight: "bold",
-              fontSize: 15,
-              color: ThemeColors.secondary,
-            }}
-          >
-            Start Workout
-          </Text>
-        </TouchableOpacity> */}
         <Button
           isHighlighted={true}
           width={150}
@@ -638,13 +600,6 @@ const HomeScreen = () => {
             <AntDesign name="plus" size={24} color={color} />
           )}
         />
-        {/* <TouchableOpacity
-          style={styles.footerButton}
-          onPress={() => navigation.navigate("Goals")}
-        >
-          <Ionicons name="stats-chart" size={24} color={ThemeColors.tertiary} />
-          <Text style={styles.regularText}>Progress</Text>
-        </TouchableOpacity> */}
         <Button
           isHighlighted={false}
           width={120}

@@ -381,8 +381,9 @@ const GoalsPage = () => {
       backgroundColor: ThemeColors.secondary,
     },
     informationText: {
-      fontSize: 16,
+      fontSize: 18,
       color: ThemeColors.tertiary,
+      marginBottom: 10,
     },
     modalContainer: {
       flex: 1,

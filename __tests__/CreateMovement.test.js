@@ -22,8 +22,9 @@ test("Create Movement component renders correctly", async () => {
     component = renderer.create(
       <NavigationContainer>
         <NotificationProvider>
+        <ThemeProvider>
           <AuthProvider>
-            <ThemeProvider>
+            
               <Stack.Navigator>
                 <Stack.Screen
                   name="Create Movement"
@@ -32,9 +33,9 @@ test("Create Movement component renders correctly", async () => {
                 <Stack.Screen name="Login" component={Login} />
               </Stack.Navigator>
               <Notification />
-            </ThemeProvider>
+            
           </AuthProvider>
-
+          </ThemeProvider>
           <Toast />
         </NotificationProvider>
       </NavigationContainer>

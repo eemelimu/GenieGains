@@ -22,8 +22,8 @@ test("Account settings component renders correctly and that the theme context ap
     component = renderer.create(
       <NavigationContainer>
         <NotificationProvider>
-          <AuthProvider>
-            <ThemeProvider>
+        <ThemeProvider><AuthProvider>
+            
               <Stack.Navigator>
                 <Stack.Screen
                   name="Preferences Settings"
@@ -32,9 +32,9 @@ test("Account settings component renders correctly and that the theme context ap
                 <Stack.Screen name="Login" component={Login} />
               </Stack.Navigator>
               <Notification />
-            </ThemeProvider>
+            
           </AuthProvider>
-          
+          </ThemeProvider>
           <Toast />
         </NotificationProvider>
       </NavigationContainer>

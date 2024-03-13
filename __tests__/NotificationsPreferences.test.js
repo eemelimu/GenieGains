@@ -24,8 +24,8 @@ test("Notification settings component renders correctly and that the theme conte
       <NavigationContainer>
         <NotificationProvider>
           <SettingsProvider>
-            <AuthProvider>
-              <ThemeProvider>
+          <ThemeProvider><AuthProvider>
+              
                 <Stack.Navigator>
                   <Stack.Screen
                     name="Notification Settings"
@@ -34,8 +34,8 @@ test("Notification settings component renders correctly and that the theme conte
                   <Stack.Screen name="Login" component={Login} />
                 </Stack.Navigator>
                 <Notification />
-              </ThemeProvider>
-            </AuthProvider>
+              
+            </AuthProvider></ThemeProvider>
             <Toast />
           </SettingsProvider>
         </NotificationProvider>

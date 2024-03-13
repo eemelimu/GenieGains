@@ -4,31 +4,36 @@
     "slug": "GymJunkie",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
+    "icon": "./assets/GymJunkieLogo.png",
+    "userInterfaceStyle": "dark",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/GymJunkieLogo.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#000000"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSCameraUsageDescription": "Allow $(PRODUCT_NAME) to access your camera"
+      }
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "foregroundImage": "./assets/GymJunkieLogo.png",
+        "backgroundColor": "#000000"
       },
-      "package": "com.gymjunkie.GymJunkie"
+      "package": "com.gymjunkie.GymJunkie",
+      "permissions": ["android.permission.CAMERA"]
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "plugins": [
-      "react-native-vision-camera"
-    ]
+    "plugins": ["react-native-vision-camera"],
+    "extra": {
+      "eas": {
+        "projectId": "9e218849-9ec2-4164-a7e5-1c04a9a2464c"
+      }
+    }
   }
 }

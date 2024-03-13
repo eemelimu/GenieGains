@@ -22,16 +22,16 @@ test("Register renders correctly and that the theme context applies themes corre
     component = renderer.create(
       <NavigationContainer>
         <NotificationProvider>
-          <AuthProvider>
-            <ThemeProvider>
+        <ThemeProvider><AuthProvider>
+            
               <Stack.Navigator>
                 <Stack.Screen name="Register" component={Register} />
                 <Stack.Screen name="Login" component={Login} />
               </Stack.Navigator>
               <Notification />
-            </ThemeProvider>
+            
           </AuthProvider>
-          
+          </ThemeProvider>
           <Toast />
         </NotificationProvider>
       </NavigationContainer>

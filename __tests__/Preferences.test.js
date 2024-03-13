@@ -22,15 +22,15 @@ test("Preferences component renders correctly and that the theme context applies
     component = renderer.create(
       <NavigationContainer>
         <NotificationProvider>
-          <AuthProvider>
-            <ThemeProvider>
+        <ThemeProvider><AuthProvider>
+            
               <Stack.Navigator>
                 <Stack.Screen name="Preferences" component={Preferences} />
                 <Stack.Screen name="Login" component={Login} />
               </Stack.Navigator>
               <Notification />
-            </ThemeProvider>
-          </AuthProvider>
+            
+          </AuthProvider></ThemeProvider>
           <Toast />
         </NotificationProvider>
       </NavigationContainer>

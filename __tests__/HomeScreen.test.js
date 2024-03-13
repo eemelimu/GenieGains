@@ -24,15 +24,15 @@ test("Home screen component renders correctly and that the theme context applies
       <NavigationContainer>
         <NotificationProvider>
           <SettingsProvider>
-            <AuthProvider>
-              <ThemeProvider>
+          <ThemeProvider><AuthProvider>
+              
                 <Stack.Navigator>
                   <Stack.Screen name="Home" component={HomeScreen} />
                   <Stack.Screen name="Login" component={Login} />
                 </Stack.Navigator>
                 <Notification />
-              </ThemeProvider>
-            </AuthProvider>
+              
+            </AuthProvider></ThemeProvider>
             <Toast />
           </SettingsProvider>
         </NotificationProvider>

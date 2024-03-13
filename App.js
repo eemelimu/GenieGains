@@ -112,7 +112,7 @@ const CustomHeader = ({
     navigation.openDrawer();
   };
   if (showNothing) {
-    return null; //<View style={styles.header}></View>;
+    return null;
   }
   return (
     <View style={styles.header}>

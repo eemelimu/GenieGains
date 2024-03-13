@@ -26,9 +26,6 @@ import { useAuth } from "./AuthContext";
 import { useNotification } from "./NotificationContext";
 import { useSettings } from "./SettingsContext";
 
-// TODO
-// Search barin hightlightaus (aktivointi) kun painaa search iconia
-
 const HomeScreen = () => {
   const { settings } = useSettings();
   const seed =

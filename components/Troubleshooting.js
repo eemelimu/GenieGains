@@ -38,7 +38,7 @@ export const Troubleshooting = () => {
       flexDirection: "row",
       justifyContent: "space-between",
       alignItems: "center",
-      backgroundColor: ThemeColors.secondary,
+      backgroundColor: ThemeColors.primary,
     },
     title: {
       fontSize: 20,
@@ -82,7 +82,8 @@ export const Troubleshooting = () => {
           <MaterialIcons
             name={expandedSections[2] ? "arrow-drop-down" : "arrow-right"}
             size={24}
-            color="black"
+            color={ThemeColors.tertiary}
+
           />
         </View>
       </TouchableOpacity>
@@ -104,7 +105,7 @@ export const Troubleshooting = () => {
           <MaterialIcons
             name={expandedSections[3] ? "arrow-drop-down" : "arrow-right"}
             size={24}
-            color="black"
+            color={ThemeColors.tertiary}
           />
         </View>
       </TouchableOpacity>
@@ -125,7 +126,7 @@ export const Troubleshooting = () => {
           <MaterialIcons
             name={expandedSections[4] ? "arrow-drop-down" : "arrow-right"}
             size={24}
-            color="black"
+            color={ThemeColors.tertiary}
           />
         </View>
       </TouchableOpacity>

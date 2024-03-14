@@ -22,7 +22,7 @@ const InspectRoutine = ({ route }) => {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            "Auth-Token": token,
+            Authorization: `Token ${token}`,
           },
         });
         const data = await res.json();

@@ -128,7 +128,8 @@ const GoalsPage = () => {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          "Auth-Token": token,
+          "Authorization": `Token ${token}`,
+
         },
       });
       const data = await res.json();
@@ -151,7 +152,8 @@ const GoalsPage = () => {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          "Auth-Token": token,
+          "Authorization": `Token ${token}`,
+
         },
       });
       const data = await res.json();
@@ -162,8 +164,6 @@ const GoalsPage = () => {
         const additionsCopy = additions.map((addition, index) => {
           return { ...addition, created: addition.created + index };
         });
-        //additionsCopy.push({ number: 0, created: data.end });
-        //additionsCopy.push({ number: 0, created: data.created - 1 });
         setSelectedGoal({ ...data, data: additionsCopy });
       } else {
         setError("Something went wrong");
@@ -181,7 +181,8 @@ const GoalsPage = () => {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          "Auth-Token": token,
+          "Authorization": `Token ${token}`,
+
         },
       });
       const data = await res.json();
@@ -252,7 +253,8 @@ const GoalsPage = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Auth-Token": token,
+          "Authorization": `Token ${token}`,
+
         },
         body: JSON.stringify({
           name: goalName,
@@ -300,7 +302,8 @@ const GoalsPage = () => {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            "Auth-Token": token,
+            "Authorization": `Token ${token}`,
+
           },
           body: JSON.stringify({
             goal_id: additionValue[i],

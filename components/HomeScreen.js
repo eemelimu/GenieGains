@@ -4,6 +4,7 @@ import { SimpleLineIcons } from "@expo/vector-icons";
 import { ThemeContext } from "./ThemeContext";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { deleteData, getData, storeData } from "../assets/utils/utils";
+import * as Clipboard from "expo-clipboard";
 import Container from "./Container";
 import {
   BackHandler,
@@ -32,6 +33,7 @@ const HomeScreen = () => {
     new Date().getDate() + new Date().getMonth() + new Date().getFullYear();
   const { setError, setSuccess, startLoading, stopLoading } = useNotification();
   const { theme: ThemeColors } = useContext(ThemeContext);
+  const [unit, setUnit] = useState("metric");
   const [date] = useState(new Date());
   const [greeting, setGreeting] = useState("");
   const [experience, setExperience] = useState("beginner");
@@ -204,6 +206,7 @@ const HomeScreen = () => {
           })
           .then((data) => {
             setName(data.username);
+            setUnit(data.unit);
             setExperience(data.experience);
           })
           .catch((error) => {
@@ -247,6 +250,30 @@ const HomeScreen = () => {
       console.log("Error fetching workout movements: ", error);
     }
     return null;
+  };
+
+  const handleShareWorkout = async (id) => {
+    const clickedWorkout = workoutMovements.find(
+      (workout) => workout.exercise_id == id
+    );
+
+    const weightUnit = unit === "metric" ? "kg" : "lbs";
+    //const note=clickedWorkout.notes.length==0?"":`\nNote:${clickedWorkout.notes}`;
+    const clickedWorkoutMovements = clickedWorkout.movements;
+    const workoutInfo = `${clickedWorkout.name}(${clickedWorkout.updated})\n\n`;
+    const copiedWorkout = clickedWorkoutMovements.map(
+      (movement) =>
+        "\n" +
+        movement.name +
+        ": " +
+        movement.weight +
+        " " +
+        weightUnit +
+        " x" +
+        movement.reps
+    );
+    await Clipboard.setStringAsync(workoutInfo + copiedWorkout.join("\n"));
+    setSuccess("Workout copied to clipboard");
   };
 
   const getworkoutInformation = async (id) => {
@@ -384,6 +411,11 @@ const HomeScreen = () => {
       right: 5,
       top: 10,
     },
+    shareBtn: {
+      position: "absolute",
+      right: 5,
+      bottom: 10,
+    },
     footer: {
       bottom: 0,
       width: "100%",
@@ -485,6 +517,13 @@ const HomeScreen = () => {
           onPress={() => handleDeleteWorkout(id)}
           style={styles.deleteBtn}
           name="delete"
+          size={24}
+          color={ThemeColors.tertiary}
+        />
+        <Entypo
+          onPress={() => handleShareWorkout(id)}
+          style={styles.shareBtn}
+          name="share"
           size={24}
           color={ThemeColors.tertiary}
         />

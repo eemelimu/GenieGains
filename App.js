@@ -53,52 +53,6 @@ import { ThemeColors } from "./assets/ThemeColors";
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 
-const toastConfig = {
-  success: (props) => (
-    <BaseToast
-      {...props}
-      style={{
-        borderLeftColor: "lightgreen",
-        backgroundColor: "white",
-        top: 35,
-      }}
-      contentContainerStyle={{
-        paddingHorizontal: 15,
-      }}
-      text1Style={{
-        color: "white",
-        fontSize: 15,
-        fontWeight: "bold",
-      }}
-      text2Style={{
-        color: "white",
-        fontSize: 13,
-      }}
-    />
-  ),
-  error: (props) => (
-    <ErrorToast
-      {...props}
-      style={{
-        borderLeftColor: "lightcoral",
-        backgroundColor: "white",
-        top: 35,
-      }}
-      contentContainerStyle={{
-        paddingHorizontal: 15,
-      }}
-      text1Style={{
-        color: "white",
-        fontSize: 15,
-        fontWeight: "bold",
-      }}
-      text2Style={{
-        color: "white",
-        fontSize: 13,
-      }}
-    />
-  ),
-};
 
 const CustomHeader = ({
   navigation,
@@ -235,7 +189,7 @@ export default function App() {
           </NotificationProvider>
         </NavigationContainer>
       </SafeAreaView>
-      <Toast config={toastConfig} />
+      <Toast />
     </>
   );
 }

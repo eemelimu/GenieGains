@@ -40,7 +40,7 @@ const reducer = (state, action) => {
 export const AuthProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const navigation = useNavigation();
-  const { resetTheme } = useContext(ThemeContext);
+  const { resetTheme, theme: ThemeColors } = useContext(ThemeContext);
 
   useEffect(() => {
     const initializeAuth = async () => {
@@ -94,6 +94,7 @@ export const AuthProvider = ({ children }) => {
         } else {
           deleteData("token");
           resetTheme();
+          storeData("theme", ThemeColors);
           navigation.navigate("Login");
         }
       } catch (error) {

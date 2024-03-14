@@ -1,7 +1,7 @@
 import React from "react";
 import renderer from "react-test-renderer";
 import { act } from "react-dom/test-utils";
-import PreferencesSettings from "../components/PreferencesSettings";
+import Register from "../components/Register";
 import { createStackNavigator } from "@react-navigation/stack";
 import { ThemeProvider } from "../components/ThemeContext";
 import { AuthProvider } from "../components/AuthContext";
@@ -14,7 +14,7 @@ import Toast, { ErrorToast } from "react-native-toast-message";
 
 jest.useFakeTimers();
 
-test("Preferences settings component renders correctly and that the theme context applies themes correctly", async () => {
+test("Login renders correctly and that the theme context applies themes correctly", async () => {
   const Stack = createStackNavigator();
   let component;
 
@@ -25,10 +25,6 @@ test("Preferences settings component renders correctly and that the theme contex
           <ThemeProvider>
             <AuthProvider>
               <Stack.Navigator>
-                <Stack.Screen
-                  name="Preferences Settings"
-                  component={PreferencesSettings}
-                />
                 <Stack.Screen name="Login" component={Login} />
               </Stack.Navigator>
               <Notification />
@@ -42,7 +38,9 @@ test("Preferences settings component renders correctly and that the theme contex
 
   await waitFor(() => {
     let tree;
-    tree = component.toJSON();
+    act(() => {
+      tree = component.toJSON();
+    });
     expect(tree).toMatchSnapshot();
   });
 });

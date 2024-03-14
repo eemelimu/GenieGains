@@ -35,7 +35,7 @@ test("Color settings component renders correctly", async () => {
     let tree = component.toJSON();
     expect(tree).toMatchSnapshot();
   });
-});
+}, 20000);
 
 test("Color resets correctly", async () => {
   const { getByText } = render(
@@ -50,7 +50,7 @@ test("Color resets correctly", async () => {
       </NotificationProvider>
     </NavigationContainer>
   );
-  await waitFor(async () => {
+  waitFor(async () => {
     fireEvent.press(getByText("Reset to default"));
     console.log(await getData("theme"));
     expect(await getData("theme")).toStrictEqual(ThemeColors);

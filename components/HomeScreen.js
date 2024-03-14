@@ -5,7 +5,6 @@ import { ThemeContext } from "./ThemeContext";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { deleteData, getData, storeData } from "../assets/utils/utils";
 import * as Clipboard from "expo-clipboard";
-import Container from "./Container";
 import {
   BackHandler,
   StyleSheet,
@@ -112,7 +111,7 @@ const HomeScreen = () => {
 
           const groupedMovements = {};
           console.log(data);
-          data.exercisemovementconnection_list.forEach((workout) => {
+          (data.exercisemovementconnection_list || []).forEach((workout) => {
             const {
               exercise_id,
               id,

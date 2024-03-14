@@ -22,26 +22,24 @@ test("Preferences component renders correctly and that the theme context applies
     component = renderer.create(
       <NavigationContainer>
         <NotificationProvider>
-        <ThemeProvider><AuthProvider>
-            
+          <ThemeProvider>
+            <AuthProvider>
               <Stack.Navigator>
                 <Stack.Screen name="Preferences" component={Preferences} />
                 <Stack.Screen name="Login" component={Login} />
               </Stack.Navigator>
               <Notification />
-            
-          </AuthProvider></ThemeProvider>
+            </AuthProvider>
+          </ThemeProvider>
           <Toast />
         </NotificationProvider>
       </NavigationContainer>
     );
   });
 
-  await waitFor(() => {
-    let tree;
-    act(() => {
-      tree = component.toJSON();
-    });
-    expect(tree).toMatchSnapshot();
+  let tree;
+  act(() => {
+    tree = component.toJSON();
   });
+  expect(tree).toMatchSnapshot();
 });

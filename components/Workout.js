@@ -16,10 +16,11 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { BACKEND_URL } from "../assets/config";
 import { ThemeContext } from "./ThemeContext";
+import { LogBox } from 'react-native';
 
 export const Workout = ({ route }) => {
+  LogBox.ignoreAllLogs();
   const { theme: ThemeColors } = useContext(ThemeContext);
-
   //styles dont move
   const styles = StyleSheet.create({
     // Single Movement Styles

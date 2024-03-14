@@ -577,9 +577,9 @@ const GoalsPage = () => {
                   <>
                     <Text
                       style={styles.informationText}
-                    >{`Selected value is:${state.y?.number?.value?.value} ${selectedGoal.unit}`}</Text>
+                    >{`Selected value is: ${state.y?.number?.value?.value} ${selectedGoal.unit}`}</Text>
                     <Text style={styles.informationText}>
-                      {"On Date:" + epochToDate(state.x?.value?.value)}
+                      {"On Date: " + epochToDate(state.x?.value?.value)}
                     </Text>
                     <Text style={styles.informationText}>{`Note: ${
                       getDataByDateAndValue(

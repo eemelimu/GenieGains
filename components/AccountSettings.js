@@ -71,7 +71,7 @@ const AccountSettings = () => {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          "Auth-Token": `${token}`,
+          Authorization: `Token ${token}`,
         },
       });
       if (!response.ok) {

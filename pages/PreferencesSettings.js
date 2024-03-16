@@ -69,7 +69,7 @@ const Preferences = () => {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
-          "Auth-Token": `${token}`,
+          Authorization: `Token ${token}`,
         },
         body: JSON.stringify({ unit: selectedUnit.toLowerCase() }),
       });
@@ -92,7 +92,7 @@ const Preferences = () => {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
-          "Auth-Token": `${token}`,
+          Authorization: `Token ${token}`,
         },
         body: JSON.stringify({ experience: selectedExperience.toLowerCase() }),
       });

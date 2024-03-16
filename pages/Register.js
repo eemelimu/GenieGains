@@ -7,11 +7,11 @@ import {
   Image,
   StyleSheet,
 } from "react-native";
-import Button from "./Button";
+import Button from "../components/Button";
 import { useNavigation } from "@react-navigation/native";
 import { useFonts } from "expo-font";
-import { ThemeColors } from "../assets/ThemeColors";
-import { useNotification } from "./NotificationContext";
+import { ThemeColors } from "../assets/theme/ThemeColors";
+import { useNotification } from "../contexts/NotificationContext";
 import { BACKEND_URL } from "../assets/config";
 import { AntDesign } from "@expo/vector-icons";
 import { Fontisto } from "@expo/vector-icons";
@@ -224,7 +224,7 @@ const Register = () => {
           style={styles.iconStyle}
         />
         <TextInput
-        ref={passwordRef}
+          ref={passwordRef}
           style={styles.input}
           placeholder="Password"
           secureTextEntry={!showPassword}

@@ -1,10 +1,10 @@
 import React, { useState, useContext, useCallback, useEffect } from "react";
-import { useAuth } from "./AuthContext";
-import Button from "./Button";
+import { useAuth } from "../contexts/AuthContext";
+import Button from "../components/Button";
 import tinycolor from "tinycolor2";
-import { useSettings } from "./SettingsContext";
+import { useSettings } from "../contexts/SettingsContext";
 import Toast, { ErrorToast } from "react-native-toast-message";
-import { hexToRgba, storeData } from "../assets/utils/utils";
+import { hexToRgba, storeData } from "../utils/utils";
 import {
   View,
   Text,
@@ -14,11 +14,10 @@ import {
   StyleSheet,
 } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
-//import { ThemeColors } from "../assets/ThemeColors";
-import { ThemeContext } from "./ThemeContext";
+import { ThemeContext } from "../contexts/ThemeContext";
 import { BACKEND_URL } from "../assets/config";
 import { useFocusEffect } from "@react-navigation/native";
-import { useNotification } from "./NotificationContext";
+import { useNotification } from "../contexts/NotificationContext";
 
 const AccountSettings = () => {
   const { disableNotifications, enableTips } = useSettings();
@@ -45,7 +44,7 @@ const AccountSettings = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Token ${token}`,
+          Authorization: `Token ${token}`,
         },
       });
       if (!response.ok) {
@@ -95,7 +94,7 @@ const AccountSettings = () => {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
-          "Auth-Token": `${token}`,
+          Authorization: `Token ${token}`,
         },
         body: JSON.stringify({ email: email }),
       });
@@ -129,7 +128,7 @@ const AccountSettings = () => {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
-          "Auth-Token": `${token}`,
+          Authorization: `Token ${token}`,
         },
         body: JSON.stringify({ password: password }),
       });
@@ -139,9 +138,7 @@ const AccountSettings = () => {
       } else {
         const data = await response.json();
         console.log(data);
-        setSuccess(
-          "Password changed successfully!"
-        );
+        setSuccess("Password changed successfully!");
         dispatch({ type: "LOGIN", payload: { token: data.token } });
         setPassword("");
         setConfirmPassword("");

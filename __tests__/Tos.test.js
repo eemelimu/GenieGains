@@ -1,8 +1,7 @@
 import React from "react";
 import renderer from "react-test-renderer";
-import Tos from "../components/Tos";
-import { ThemeProvider } from "../components/ThemeContext";
-import { waitFor } from "@testing-library/react-native";
+import Tos from "../pages/Tos";
+import { ThemeProvider } from "../contexts/ThemeContext";
 import { act } from "@testing-library/react-native";
 
 jest.useFakeTimers();

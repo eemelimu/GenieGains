@@ -8,9 +8,9 @@ import {
   Animated,
 } from "react-native";
 import Toast from "react-native-toast-message";
-import { useNotification } from "./NotificationContext";
+import { useNotification } from "../contexts/NotificationContext";
 import { Fontisto } from "@expo/vector-icons";
-import { ThemeContext } from "./ThemeContext";
+import { ThemeContext } from "../contexts/ThemeContext";
 
 const NotificationComponent = () => {
   const { theme: ThemeColors } = useContext(ThemeContext);

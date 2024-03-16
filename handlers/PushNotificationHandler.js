@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import * as Notifications from "expo-notifications";
 import { AppState, Settings } from "react-native";
-import { useSettings } from "./SettingsContext";
+import { useSettings } from "../contexts/SettingsContext";
 
 const sendNotification = async (title, text, seconds) => {
   await Notifications.scheduleNotificationAsync({

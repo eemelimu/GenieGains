@@ -2,10 +2,10 @@ import React, { useState, useContext, useCallback } from "react";
 import { View, Text, TouchableOpacity, Modal, StyleSheet } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
 //import { ThemeColors } from "../assets/ThemeColors";
-import { ThemeContext } from "./ThemeContext";
-import { useAuth } from "./AuthContext";
+import { ThemeContext } from "../contexts/ThemeContext";
+import { useAuth } from "../contexts/AuthContext";
 import { BACKEND_URL } from "../assets/config";
-import { useNotification } from "./NotificationContext";
+import { useNotification } from "../contexts/NotificationContext";
 
 const Preferences = () => {
   const { dispatch, state } = useAuth();

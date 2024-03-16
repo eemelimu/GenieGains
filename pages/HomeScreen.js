@@ -1,9 +1,8 @@
 import { useState, useEffect, useCallback, useContext } from "react";
 import { BACKEND_URL } from "../assets/config";
 import { SimpleLineIcons } from "@expo/vector-icons";
-import { ThemeContext } from "./ThemeContext";
+import { ThemeContext } from "../contexts/ThemeContext";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { deleteData, getData, storeData } from "../assets/utils/utils";
 import * as Clipboard from "expo-clipboard";
 import {
   BackHandler,
@@ -18,13 +17,13 @@ import {
   Pressable,
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
-import Button from "./Button";
+import Button from "../components/Button";
 import { Entypo } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
-import { useAuth } from "./AuthContext";
-import { useNotification } from "./NotificationContext";
-import { useSettings } from "./SettingsContext";
+import { useAuth } from "../contexts/AuthContext";
+import { useNotification } from "../contexts/NotificationContext";
+import { useSettings } from "../contexts/SettingsContext";
 
 const HomeScreen = () => {
   const { settings } = useSettings();
@@ -107,6 +106,7 @@ const HomeScreen = () => {
               Authorization: `Token ${token}`,
             },
           });
+          console.log("token for this req was",token);
           const data = await res.json();
 
           const groupedMovements = {};

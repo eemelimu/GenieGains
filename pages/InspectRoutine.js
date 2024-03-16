@@ -2,10 +2,9 @@ import { useEffect, useState, useContext } from "react";
 import { View, Text, StyleSheet, ScrollView } from "react-native";
 import { useFonts } from "expo-font";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { ThemeColors } from "../assets/ThemeColors";
 import { BACKEND_URL } from "../assets/config";
-import { useAuth } from "./AuthContext";
-import { ThemeContext } from "./ThemeContext";
+import { useAuth } from "../contexts/AuthContext";
+import { ThemeContext } from "../contexts/ThemeContext";
 
 const InspectRoutine = ({ route }) => {
   const { theme: ThemeColors } = useContext(ThemeContext);

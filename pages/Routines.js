@@ -8,15 +8,14 @@ import {
   ScrollView,
   Pressable,
 } from "react-native";
-import Button from "./Button";
+import Button from "../components/Button";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { BACKEND_URL } from "../assets/config";
-import { useAuth } from "./AuthContext";
-import { ThemeColors } from "../assets/ThemeColors";
+import { useAuth } from "../contexts/AuthContext";
 import { AntDesign } from "@expo/vector-icons";
 import { useFonts } from "expo-font";
-import { ThemeContext } from "./ThemeContext";
-import { useNotification } from "./NotificationContext";
+import { ThemeContext } from "../contexts/ThemeContext";
+import { useNotification } from "../contexts/NotificationContext";
 import { MaterialIcons } from "@expo/vector-icons";
 
 const Routines = () => {

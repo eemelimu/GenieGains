@@ -1,12 +1,12 @@
 import React, { useState, useContext } from "react";
 import { View, Text, TextInput, StyleSheet, Pressable } from "react-native";
 import DropDownPicker from "react-native-dropdown-picker";
-import { epochToDate, lightOrDark } from "../assets/utils/utils";
-import { ThemeContext } from "./ThemeContext";
-import { useNotification } from "./NotificationContext";
+import { epochToDate, lightOrDark } from "../utils/utils";
+import { ThemeContext } from "../contexts/ThemeContext";
+import { useNotification } from "../contexts/NotificationContext";
 import { BACKEND_URL } from "../assets/config";
-import { useAuth } from "./AuthContext";
-import Button from "./Button";
+import { useAuth } from "../contexts/AuthContext";
+import Button from "../components/Button";
 
 const muscleCategories = [
   { label: "Triceps", value: "triceps" },
@@ -47,8 +47,7 @@ const CreateMovement = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Token ${token}`,
-
+          Authorization: `Token ${token}`,
         },
         body: JSON.stringify({
           name: movementName,

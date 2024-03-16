@@ -5,11 +5,11 @@ import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { MaterialIcons } from "@expo/vector-icons";
 import { ScrollView } from "react-native-gesture-handler";
 import { AntDesign } from "@expo/vector-icons";
-import { ThemeContext } from "./ThemeContext";
+import { ThemeContext } from "../contexts/ThemeContext";
 import { FontAwesome } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { BACKEND_URL } from "../assets/config";
-import { useAuth } from "./AuthContext";
+import { useAuth } from "../contexts/AuthContext";
 
 const SettingsButton = ({ color, text, children, navigationPage }) => {
   const navigation = useNavigation();
@@ -193,7 +193,7 @@ const SettingsScreen = () => {
         >
           <MaterialIcons
             name="lightbulb"
-            style={{ paddingRight: 15}}
+            style={{ paddingRight: 15 }}
             size={24}
             color={ThemeColors.tertiary}
           />

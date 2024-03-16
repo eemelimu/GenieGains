@@ -8,14 +8,14 @@ import {
   Modal,
   Pressable,
 } from "react-native";
-import Button from "./Button";
+import Button from "../components/Button";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { StyleSheet, BackHandler } from "react-native";
 import { useFonts } from "expo-font";
-import { ThemeColors } from "../assets/ThemeColors";
-import { useAuth } from "./AuthContext";
+import { ThemeColors } from "../assets/theme/ThemeColors";
+import { useAuth } from "../contexts/AuthContext";
 import { BACKEND_URL } from "../assets/config";
-import { useNotification } from "./NotificationContext";
+import { useNotification } from "../contexts/NotificationContext";
 import { AntDesign } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 import { Fontisto } from "@expo/vector-icons";
@@ -28,10 +28,6 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const passwordRef = useRef(null);
-  let [fontsLoaded] = useFonts({
-    DMBold: require("../assets/fonts/DMSans-Bold.ttf"),
-    DMRegular: require("../assets/fonts/DMSans-Regular.ttf"),
-  });
 
   useFocusEffect(
     useCallback(() => {
@@ -47,9 +43,6 @@ const Login = () => {
       };
     }, [])
   );
-  if (!fontsLoaded) {
-    return <></>;
-  }
 
   const handleLogin = async () => {
     startLoading();
@@ -198,7 +191,7 @@ const Login = () => {
         ></Image>
       </View>
       <View style={styles.inputRow}>
-                <Fontisto
+        <Fontisto
           name="email"
           size={24}
           color={ThemeColors.tertiary}

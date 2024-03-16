@@ -1,8 +1,8 @@
 import React, { useState, useContext } from "react";
 import { LinearGradient } from "expo-linear-gradient";
-import { storeData, hexToRgba } from "../assets/utils/utils";
+import { storeData, hexToRgba } from "../utils/utils";
 import Toast, { ErrorToast } from "react-native-toast-message";
-import { useSettings } from "./SettingsContext";
+import { useSettings } from "../contexts/SettingsContext";
 import {
   StyleSheet,
   View,
@@ -13,16 +13,16 @@ import {
   Modal,
 } from "react-native";
 import { BACKEND_URL } from "../assets/config";
-import Button from "./Button";
-import { useNotification } from "./NotificationContext";
+import Button from "../components/Button";
+import { useNotification } from "../contexts/NotificationContext";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 import { SimpleLineIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { AntDesign } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
-import { useAuth } from "./AuthContext";
-import { ThemeContext } from "./ThemeContext";
+import { useAuth } from "../contexts/AuthContext";
+import { ThemeContext } from "../contexts/ThemeContext";
 
 // TODO
 // - FEEDBACK: Animoi inputin avaaminen ja sulkeminen
@@ -114,8 +114,7 @@ export const DrawerContent = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Token ${token}`,
-
+          Authorization: `Token ${token}`,
         },
       });
       if (!response.ok) {
@@ -153,8 +152,7 @@ export const DrawerContent = () => {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            "Authorization": `Token ${token}`,
-
+            Authorization: `Token ${token}`,
           },
           body: JSON.stringify({
             text: feedbackText,

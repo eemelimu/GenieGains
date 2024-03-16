@@ -1,14 +1,14 @@
 import React, { useState } from "react";
-import Button from "./Button";
+import Button from "../components/Button";
 import { View, Text, TextInput, TouchableOpacity, Image } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { StyleSheet } from "react-native";
 import { useFonts } from "expo-font";
 import CheckBox from "expo-checkbox";
-import { ThemeColors } from "../assets/ThemeColors";
+import { ThemeColors } from "../assets/theme/ThemeColors";
 import { BACKEND_URL } from "../assets/config";
-import { useAuth } from "./AuthContext";
-import { useNotification } from "./NotificationContext";
+import { useAuth } from "../contexts/AuthContext";
+import { useNotification } from "../contexts/NotificationContext";
 
 const Preferences = ({ route }) => {
   const { setError, setSuccess, startLoading, stopLoading } = useNotification();
@@ -39,7 +39,6 @@ const Preferences = ({ route }) => {
         JSON.stringify({
           username: route.params.data.username,
           password: route.params.data.password,
-          confirmPassword: route.params.data.confirmPassword,
           email: route.params.data.email,
           unit: SelectedUnit.toLowerCase(),
           experience: route.params.data.selectedSkill.toLowerCase(),
@@ -59,13 +58,6 @@ const Preferences = ({ route }) => {
       console.error("Error registering user:", error);
     }
   };
-  let [fontsLoaded] = useFonts({
-    DMBold: require("../assets/fonts/DMSans-Bold.ttf"),
-    DMRegular: require("../assets/fonts/DMSans-Regular.ttf"),
-  });
-  if (!fontsLoaded) {
-    return null;
-  }
   return (
     <View style={styles.container}>
       <Text style={styles.preferenceText}>

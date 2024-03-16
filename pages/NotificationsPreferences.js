@@ -1,14 +1,15 @@
 import React, { useState, useContext } from "react";
 import { View, Text, TouchableOpacity, Modal, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { ThemeContext } from "./ThemeContext";
-import { useSettings } from "./SettingsContext";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { ThemeContext } from "../contexts/ThemeContext";
+import { useSettings } from "../contexts/SettingsContext";
 
-const TipsPreferences = () => {
-  const { settings, enableTips, disableTips } = useSettings();
+const NotificationsPreferences = () => {
+  const { settings, enableNotifications, disableNotifications } = useSettings();
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [tipsEnabled, setTipsEnabled] = useState(settings.tips);
+  const [notificationsEnabled, setNotificationsEnabled] = useState(
+    settings.notifications
+  );
   const {
     theme: ThemeColors,
     resetTheme,
@@ -19,15 +20,15 @@ const TipsPreferences = () => {
     setIsModalVisible(!isModalVisible);
   };
 
-  const handleDisableTips = () => {
-    disableTips();
-    setTipsEnabled(false);
+  const handleDisableNotifications = () => {
+    disableNotifications();
+    setNotificationsEnabled(false);
     setIsModalVisible(false);
   };
 
-  const handleEnableTips = () => {
-    enableTips();
-    setTipsEnabled(true);
+  const handleEnableNotifications = () => {
+    enableNotifications();
+    setNotificationsEnabled(true);
     setIsModalVisible(false);
   };
 
@@ -92,17 +93,17 @@ const TipsPreferences = () => {
     <View style={styles.container}>
       <TouchableOpacity style={styles.button} onPress={handleToggleModal}>
         <Text style={styles.buttonText}>
-          Tips: {tipsEnabled ? "Enabled" : "Disabled"}
+          Slacker Notifications: {notificationsEnabled ? "Enabled" : "Disabled"}
         </Text>
-        {tipsEnabled ? (
-          <MaterialCommunityIcons
-          name="lightbulb-on"
-          size={24}
-          color={ThemeColors.tertiary}
-        />
+        {notificationsEnabled ? (
+          <Ionicons
+            name="notifications-circle"
+            size={24}
+            color={ThemeColors.tertiary}
+          />
         ) : (
-          <MaterialCommunityIcons
-            name="lightbulb-off"
+          <Ionicons
+            name="notifications-off-circle"
             size={24}
             color={ThemeColors.tertiary}
           />
@@ -118,14 +119,19 @@ const TipsPreferences = () => {
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
             <TouchableOpacity
-              style={[styles.modalButton, tipsEnabled && styles.selectedButton]}
+              style={[
+                styles.modalButton,
+                notificationsEnabled && styles.selectedButton,
+              ]}
               onPress={() => {
-                handleEnableTips();
+                handleEnableNotifications();
               }}
             >
-              <Text style={styles.modalButtonText}>Enable Tips</Text>
-              <MaterialCommunityIcons
-                name="lightbulb-on"
+              <Text style={styles.modalButtonText}>
+                Enable Slacker Notifications
+              </Text>
+              <Ionicons
+                name="notifications-circle"
                 size={24}
                 color={ThemeColors.tertiary}
               />
@@ -133,15 +139,17 @@ const TipsPreferences = () => {
             <TouchableOpacity
               style={[
                 styles.modalButton,
-                !tipsEnabled && styles.selectedButton,
+                !notificationsEnabled && styles.selectedButton,
               ]}
               onPress={() => {
-                handleDisableTips();
+                handleDisableNotifications();
               }}
             >
-              <Text style={styles.modalButtonText}>Disable Tips</Text>
-              <MaterialCommunityIcons
-                name="lightbulb-off"
+              <Text style={styles.modalButtonText}>
+                Disable Slacker Notifications
+              </Text>
+              <Ionicons
+                name="notifications-off-circle"
                 size={24}
                 color={ThemeColors.tertiary}
               />
@@ -160,4 +168,4 @@ const TipsPreferences = () => {
   );
 };
 
-export default TipsPreferences;
+export default NotificationsPreferences;

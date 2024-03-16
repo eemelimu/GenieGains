@@ -1,6 +1,6 @@
 // AuthContext.js
 import React, { createContext, useReducer, useContext, useEffect } from "react";
-import { getData, storeData, deleteData } from "../assets/utils/utils";
+import { getData, storeData, deleteData } from "../utils/utils";
 import { useNavigation } from "@react-navigation/native";
 import { BACKEND_URL } from "../assets/config";
 import { ThemeContext } from "./ThemeContext";
@@ -32,6 +32,11 @@ const reducer = (state, action) => {
         ...state,
         isLoading: false,
       };
+      case "START_LOADING":
+      return {
+        ...state,
+        isLoading: true,
+      };
     default:
       return state;
   }
@@ -50,12 +55,12 @@ export const AuthProvider = ({ children }) => {
           const res = await fetch(BACKEND_URL + "token_login", {
             method: "POST",
             headers: {
-              "Authorization": `Token ${token}`,
+              Authorization: `Token ${token}`,
             },
           });
 
           const ok = res.status === 200;
-          console.log("token check is :", ok);
+          console.log("token check with token is :",token, ok);
           if (ok) {
             dispatch({ type: "LOGIN", payload: { token } });
             //dispatch({ type: "STOPPED_LOADING" });

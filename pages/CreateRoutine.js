@@ -10,17 +10,16 @@ import {
   ScrollView,
 } from "react-native";
 
-import { useAuth } from "./AuthContext";
+import { useAuth } from "../contexts/AuthContext";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { useFonts } from "expo-font";
-import { ThemeColors } from "../assets/ThemeColors";
 import { AntDesign } from "@expo/vector-icons";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import ModalDropdown from "react-native-modal-dropdown";
 import { BACKEND_URL } from "../assets/config";
-import { ThemeContext } from "./ThemeContext";
-import { useNotification } from "./NotificationContext";
+import { ThemeContext } from "../contexts/ThemeContext";
+import { useNotification } from "../contexts/NotificationContext";
 import DropDownPicker from "react-native-dropdown-picker";
 
 const CreateRoutine = () => {
@@ -181,8 +180,7 @@ const CreateRoutine = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Token ${token}`,
-
+          Authorization: `Token ${token}`,
         },
         body: JSON.stringify({
           name: routineName,
@@ -209,8 +207,7 @@ const CreateRoutine = () => {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
-              "Authorization": `Token ${token}`,
-
+              Authorization: `Token ${token}`,
             },
           });
           const data = await res.json();
@@ -232,8 +229,7 @@ const CreateRoutine = () => {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
-              "Authorization": `Token ${token}`,
-
+              Authorization: `Token ${token}`,
             },
           });
           const data = await res.json();

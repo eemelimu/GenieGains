@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { Pressable, Text, View, StyleSheet } from "react-native";
-import { ThemeContext } from "./ThemeContext";
+import { ThemeContext } from "../contexts/ThemeContext";
 import tinycolor from "tinycolor2";
 
 const Button = ({

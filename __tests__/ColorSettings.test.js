@@ -1,12 +1,12 @@
 import React from "react";
 import renderer from "react-test-renderer";
-import ColorSettings from "../components/ColorSettings";
+import ColorSettings from "../pages/ColorSettings";
 import { waitFor, render, fireEvent } from "@testing-library/react-native";
 import { NavigationContainer } from "@react-navigation/native";
-import { getData } from "../assets/utils/utils";
-import { ThemeProvider } from "../components/ThemeContext";
-import { ThemeColors } from "../assets/ThemeColors";
-import { NotificationProvider } from "../components/NotificationContext";
+import { getData } from "../utils/utils";
+import { ThemeProvider } from "../contexts/ThemeContext";
+import { ThemeColors } from "../assets/theme/ThemeColors";
+import { NotificationProvider } from "../contexts/NotificationContext";
 import Notification from "../components/Notification";
 import Toast, { ErrorToast } from "react-native-toast-message";
 import { createStackNavigator } from "@react-navigation/stack";

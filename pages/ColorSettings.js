@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Modal, Pressable, StyleSheet, Text, View } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import Button from "./Button";
+import Button from "../components/Button";
 import tinycolor from "tinycolor2";
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
 } from "react-native-reanimated";
-import { getData, storeData } from "../assets/utils/utils";
+import { getData, storeData } from "../utils/utils";
 import ColorPicker, {
   LuminanceSlider,
   OpacitySlider,
@@ -16,8 +16,8 @@ import ColorPicker, {
   Swatches,
   colorKit,
 } from "reanimated-color-picker";
-import { ThemeContext } from "./ThemeContext";
-import { useNotification } from "./NotificationContext";
+import { ThemeContext } from "../contexts/ThemeContext";
+import { useNotification } from "../contexts/NotificationContext";
 
 export default function ColorSettings({}) {
   const { setError, setSuccess, startLoading, stopLoading } = useNotification();

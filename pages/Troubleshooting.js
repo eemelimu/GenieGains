@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
-import { ThemeContext } from "./ThemeContext";
+import { ThemeContext } from "../contexts/ThemeContext";
 
 export const Troubleshooting = () => {
   const { theme: ThemeColors } = useContext(ThemeContext);
@@ -83,7 +83,6 @@ export const Troubleshooting = () => {
             name={expandedSections[2] ? "arrow-drop-down" : "arrow-right"}
             size={24}
             color={ThemeColors.tertiary}
-
           />
         </View>
       </TouchableOpacity>

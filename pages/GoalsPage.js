@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useContext, useCallback } from "react";
-import { useAuth } from "./AuthContext";
+import { useAuth } from "../contexts/AuthContext";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import Toast, { ErrorToast } from "react-native-toast-message";
-import Button from "./Button";
+import Button from "../components/Button";
 import * as Clipboard from "expo-clipboard";
 import {
   View,
@@ -19,7 +19,7 @@ import {
   ScrollView,
 } from "react-native";
 import { CartesianChart, Line, useChartPressState } from "victory-native";
-import { ThemeContext } from "./ThemeContext";
+import { ThemeContext } from "../contexts/ThemeContext";
 import {
   Canvas,
   Text as CanvasText,
@@ -29,12 +29,12 @@ import {
   Rect,
 } from "@shopify/react-native-skia";
 import DMSansBold from "../assets/fonts/DMSans-Bold.ttf";
-import { epochToDate, lightOrDark, hexToRgba } from "../assets/utils/utils";
+import { epochToDate, lightOrDark, hexToRgba } from "../utils/utils";
 import DropDownPicker from "react-native-dropdown-picker";
 import { Text as TextSVG, Svg } from "react-native-svg";
 //import { ThemeColors } from "../assets/ThemeColors";
 import { BACKEND_URL } from "../assets/config";
-import { useNotification } from "./NotificationContext";
+import { useNotification } from "../contexts/NotificationContext";
 import { useFocusEffect } from "@react-navigation/native";
 import { FontAwesome } from "@expo/vector-icons";
 
@@ -128,8 +128,7 @@ const GoalsPage = () => {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Token ${token}`,
-
+          Authorization: `Token ${token}`,
         },
       });
       const data = await res.json();
@@ -152,8 +151,7 @@ const GoalsPage = () => {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Token ${token}`,
-
+          Authorization: `Token ${token}`,
         },
       });
       const data = await res.json();
@@ -181,8 +179,7 @@ const GoalsPage = () => {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Token ${token}`,
-
+          Authorization: `Token ${token}`,
         },
       });
       const data = await res.json();
@@ -253,8 +250,7 @@ const GoalsPage = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Token ${token}`,
-
+          Authorization: `Token ${token}`,
         },
         body: JSON.stringify({
           name: goalName,
@@ -302,8 +298,7 @@ const GoalsPage = () => {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            "Authorization": `Token ${token}`,
-
+            Authorization: `Token ${token}`,
           },
           body: JSON.stringify({
             goal_id: additionValue[i],

@@ -4,7 +4,7 @@ import {
   storeData,
   getData,
   deleteData,
-} from "../assets/utils/utils";
+} from "../utils/utils";
 
 test("lightOrDark function returns correct value", () => {
   expect(lightOrDark("rgb(0,0,0)")).toBe("dark");

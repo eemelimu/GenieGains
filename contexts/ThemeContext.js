@@ -1,6 +1,6 @@
 import React, { createContext, useReducer, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { ThemeColors } from "../assets/ThemeColors";
+import { ThemeColors } from "../assets/theme/ThemeColors";
 
 const RESET_THEME = "RESET_THEME";
 const CHANGE_THEME_COLOR = "CHANGE_THEME_COLOR";

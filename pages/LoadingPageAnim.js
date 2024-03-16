@@ -1,9 +1,9 @@
 import React, { useRef, useState, useEffect } from "react";
 import { View, Animated, StyleSheet } from "react-native";
 import { Video } from "expo-av";
-import { useAuth } from "./AuthContext";
+import { useAuth } from "../contexts/AuthContext";
 import { useContext } from "react";
-import { ThemeContext } from "./ThemeContext";
+import { ThemeContext } from "../contexts/ThemeContext";
 import { useFocusEffect } from "@react-navigation/native";
 
 const LoadingPageAnim = () => {
@@ -15,6 +15,7 @@ const LoadingPageAnim = () => {
   const [animationCompleted, setAnimationCompleted] = useState(false);
 
   useEffect(() => {
+    dispatch({ type: "START_LOADING" });
     if (videoFinished && animationCompleted) {
       dispatch({ type: "STOPPED_LOADING" });
     }
@@ -23,7 +24,7 @@ const LoadingPageAnim = () => {
   const handleVideoEnd = () => {
     setVideoFinished(true);
     Animated.timing(fadeAnim, {
-      toValue: 0.1,
+      toValue: 0.0,
       duration: 1000,
       useNativeDriver: true,
     }).start(() => {

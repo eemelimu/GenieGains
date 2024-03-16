@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 //import { ThemeColors } from "../assets/ThemeColors";
-import { ThemeContext } from "./ThemeContext";
+import { ThemeContext } from "../contexts/ThemeContext";
 
 const Tos = () => {
   const {

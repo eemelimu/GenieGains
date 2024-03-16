@@ -1,15 +1,15 @@
 import React from "react";
 import renderer from "react-test-renderer";
 import { act } from "react-dom/test-utils";
-import HomeScreen from "../components/HomeScreen";
-import { SettingsProvider } from "../components/SettingsContext";
+import HomeScreen from "../pages/HomeScreen";
+import { SettingsProvider } from "../contexts/SettingsContext";
 import { createStackNavigator } from "@react-navigation/stack";
-import { ThemeProvider } from "../components/ThemeContext";
-import { AuthProvider } from "../components/AuthContext";
+import { ThemeProvider } from "../contexts/ThemeContext";
+import { AuthProvider } from "../contexts/AuthContext";
 import { waitFor } from "@testing-library/react-native";
 import { NavigationContainer } from "@react-navigation/native";
-import Login from "../components/Login";
-import { NotificationProvider } from "../components/NotificationContext";
+import Login from "../pages/Login";
+import { NotificationProvider } from "../contexts/NotificationContext";
 import Notification from "../components/Notification";
 import Toast, { ErrorToast } from "react-native-toast-message";
 
@@ -24,15 +24,15 @@ test("Home screen component renders correctly and that the theme context applies
       <NavigationContainer>
         <NotificationProvider>
           <SettingsProvider>
-          <ThemeProvider><AuthProvider>
-              
+            <ThemeProvider>
+              <AuthProvider>
                 <Stack.Navigator>
                   <Stack.Screen name="Home" component={HomeScreen} />
                   <Stack.Screen name="Login" component={Login} />
                 </Stack.Navigator>
                 <Notification />
-              
-            </AuthProvider></ThemeProvider>
+              </AuthProvider>
+            </ThemeProvider>
             <Toast />
           </SettingsProvider>
         </NotificationProvider>

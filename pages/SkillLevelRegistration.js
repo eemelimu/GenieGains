@@ -1,24 +1,16 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, Image } from "react-native";
-import Button from "./Button";
+import Button from "../components/Button";
 import { useNavigation } from "@react-navigation/native";
 import { StyleSheet } from "react-native";
 import { useFonts } from "expo-font";
 import CheckBox from "expo-checkbox";
-import { ThemeColors } from "../assets/ThemeColors";
+import { ThemeColors } from "../assets/theme/ThemeColors";
 
 const Preferences = ({ route }) => {
   const navigation = useNavigation();
   const [selectedSkill, setSelectedSkill] = useState(null);
   console.log("data from register?", route.params);
-
-  let [fontsLoaded] = useFonts({
-    DMBold: require("../assets/fonts/DMSans-Bold.ttf"),
-    DMRegular: require("../assets/fonts/DMSans-Regular.ttf"),
-  });
-  if (!fontsLoaded) {
-    return null;
-  }
   const moveToPreferences2 = () => {
     navigation.navigate("Unit Selection", {
       data: {
@@ -80,9 +72,7 @@ const Preferences = ({ route }) => {
             style={styles.checkbox}
             value={selectedSkill === "Expert"}
             onValueChange={() => setSelectedSkill("Expert")}
-            color={
-              selectedSkill === "Expert" ? "orange" : ThemeColors.tertiary
-            }
+            color={selectedSkill === "Expert" ? "orange" : ThemeColors.tertiary}
           />
           <View>
             <Text style={styles.skills}>Expert</Text>

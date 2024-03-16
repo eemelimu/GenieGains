@@ -1,5 +1,5 @@
 import React, { createContext, useState, useContext, useEffect } from "react";
-import { storeData, getData } from "../assets/utils/utils";
+import { storeData, getData } from "../utils/utils";
 const SettingsContext = createContext();
 
 const ENABLE_NOTIFICATIONS = "ENABLE_NOTIFICATIONS";

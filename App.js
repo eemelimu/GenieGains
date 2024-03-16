@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import * as Notifications from "expo-notifications";
 import { AppState, Settings } from "react-native";
-import PushNotificationHandler from "./components/PushNotificationHandler";
-import TipsPreferences from "./components/TipsPreferences";
+import PushNotificationHandler from "./handlers/PushNotificationHandler";
+import TipsPreferences from "./pages/TipsPreferences";
 import {
   StyleSheet,
   View,
@@ -12,47 +12,44 @@ import {
   Image,
   StatusBar,
 } from "react-native";
-import { SettingsProvider } from "./components/SettingsContext";
-import Tos from "./components/Tos";
+import { SettingsProvider } from "./contexts/SettingsContext";
+import Tos from "./pages/Tos";
 import Notification from "./components/Notification";
-import { NotificationProvider } from "./components/NotificationContext";
-import About from "./components/About";
-import ColorSettings from "./components/ColorSettings";
-import AccountSettings from "./components/AccountSettings";
-import NotificationsPreferences from "./components/NotificationsPreferences";
-import SettingsScreen from "./components/SettingsScreen";
-import PreferencesSettings from "./components/PreferencesSettings";
-import { ThemeProvider } from "./components/ThemeContext";
+import { NotificationProvider } from "./contexts/NotificationContext";
+import About from "./pages/About";
+import ColorSettings from "./pages/ColorSettings";
+import AccountSettings from "./pages/AccountSettings";
+import NotificationsPreferences from "./pages/NotificationsPreferences";
+import SettingsScreen from "./pages/SettingsScreen";
+import PreferencesSettings from "./pages/PreferencesSettings";
+import { ThemeProvider } from "./contexts/ThemeContext";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { SimpleLineIcons } from "@expo/vector-icons";
-import HomeScreen from "./components/HomeScreen";
-//import HomeScreen from "./components/LoadingPageAnim"
-import LoadingPageAnim from "./components/LoadingPageAnim";
-import GoalsPage from "./components/GoalsPage2";
+import HomeScreen from "./pages/HomeScreen";
+import LoadingPageAnim from "./pages/LoadingPageAnim";
+import GoalsPage from "./pages/GoalsPage";
 import { Ionicons } from "@expo/vector-icons";
-import { AuthProvider } from "./components/AuthContext";
-import Login from "./components/Login";
-import Preferences from "./components/Preferences";
-import Preferences2 from "./components/Preferences2";
-import Register from "./components/Register";
-import { useAuth } from "./components/AuthContext";
-import LoadingPage from "./components/LoadingPage";
-import { Workout } from "./components/Workout";
+import { AuthProvider } from "./contexts/AuthContext";
+import Login from "./pages/Login";
+import UnitRegistration from "./pages/UnitRegistration";
+import SkillLevelRegistration from "./pages/SkillLevelRegistration";
+import Register from "./pages/Register";
+import { Workout } from "./pages/Workout";
 import Toast, { BaseToast, ErrorToast } from "react-native-toast-message";
-import CreateMovement from "./components/CreateMovement";
+import CreateMovement from "./pages/CreateMovement";
 import { createDrawerNavigator } from "@react-navigation/drawer";
-import { DrawerContent } from "./components/DrawerContent";
-import Routines from "./components/Routines";
-import InspectRoutine from "./components/InspectRoutine";
-import CreateRoutine from "./components/CreateRoutine";
-import { ViewWorkout } from "./components/ViewWorkout";
-import { Troubleshooting } from "./components/Troubleshooting";
-import { ThemeColors } from "./assets/ThemeColors";
+import { DrawerContent } from "./pages/DrawerContent";
+import Routines from "./pages/Routines";
+import InspectRoutine from "./pages/InspectRoutine";
+import CreateRoutine from "./pages/CreateRoutine";
+import { ViewWorkout } from "./pages/ViewWorkout";
+import { Troubleshooting } from "./pages/Troubleshooting";
+import { ThemeColors } from "./assets/theme/ThemeColors";
+import FontHandler from "./handlers/FontHandler";
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
-
 
 const CustomHeader = ({
   navigation,
@@ -130,8 +127,8 @@ const HomeStack = () => {
       <Stack.Screen name="Workout" component={Workout} />
       <Stack.Screen name="ViewWorkout" component={ViewWorkout} />
       <Stack.Screen name="Login" component={Login} />
-      <Stack.Screen name="Skill Level" component={Preferences} />
-      <Stack.Screen name="Unit Selection" component={Preferences2} />
+      <Stack.Screen name="Skill Level" component={SkillLevelRegistration} />
+      <Stack.Screen name="Unit Selection" component={UnitRegistration} />
       <Stack.Screen name="Register" component={Register} />
       <Stack.Screen name="Settings" component={SettingsScreen} />
       <Stack.Screen name="Troubleshooting" component={Troubleshooting} />
@@ -167,27 +164,29 @@ export default function App() {
         hidden={false}
       />
       <SafeAreaView style={styles.container}>
-        <NavigationContainer>
-          <NotificationProvider>
-            <ThemeProvider>
-              <AuthProvider>
-                <SettingsProvider>
-                  <PushNotificationHandler />
-                  <Drawer.Navigator
-                    drawerContent={(props) => <DrawerContent {...props} />}
-                  >
-                    <Drawer.Screen
-                      options={{ headerShown: false }}
-                      name=" "
-                      component={HomeStack}
-                    />
-                  </Drawer.Navigator>
-                </SettingsProvider>
-                <Notification />
-              </AuthProvider>
-            </ThemeProvider>
-          </NotificationProvider>
-        </NavigationContainer>
+        <FontHandler>
+          <NavigationContainer>
+            <NotificationProvider>
+              <ThemeProvider>
+                <AuthProvider>
+                  <SettingsProvider>
+                    <PushNotificationHandler />
+                    <Drawer.Navigator
+                      drawerContent={(props) => <DrawerContent {...props} />}
+                    >
+                      <Drawer.Screen
+                        options={{ headerShown: false }}
+                        name=" "
+                        component={HomeStack}
+                      />
+                    </Drawer.Navigator>
+                  </SettingsProvider>
+                  <Notification />
+                </AuthProvider>
+              </ThemeProvider>
+            </NotificationProvider>
+          </NavigationContainer>
+        </FontHandler>
       </SafeAreaView>
       <Toast />
     </>

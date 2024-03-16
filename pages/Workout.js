@@ -11,12 +11,12 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import ModalDropdown from "react-native-modal-dropdown";
-import { useAuth } from "./AuthContext";
+import { useAuth } from "../contexts/AuthContext";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { BACKEND_URL } from "../assets/config";
-import { ThemeContext } from "./ThemeContext";
-import { LogBox } from 'react-native';
+import { ThemeContext } from "../contexts/ThemeContext";
+import { LogBox } from "react-native";
 
 export const Workout = ({ route }) => {
   LogBox.ignoreAllLogs();
@@ -237,8 +237,7 @@ export const Workout = ({ route }) => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Token ${token}`,
-
+          Authorization: `Token ${token}`,
         },
         body: JSON.stringify({
           name: name,
@@ -271,8 +270,7 @@ export const Workout = ({ route }) => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Token ${token}`,
-
+          Authorization: `Token ${token}`,
         },
         body: JSON.stringify({
           exercise_id: exerciseId,
@@ -315,8 +313,7 @@ export const Workout = ({ route }) => {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Token ${token}`,
-
+          Authorization: `Token ${token}`,
         },
       })
         .then((response) => response.json())

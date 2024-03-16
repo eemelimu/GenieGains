@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext, useCallback } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import Toast, { ErrorToast } from "react-native-toast-message";
+import Toast, { ErrorToast, BaseToast } from "react-native-toast-message";
 import Button from "../components/Button";
 import * as Clipboard from "expo-clipboard";
 import {
@@ -29,6 +29,7 @@ import {
   Rect,
 } from "@shopify/react-native-skia";
 import DMSansBold from "../assets/fonts/DMSans-Bold.ttf";
+import useRequest from "../hooks/useRequest";
 import { epochToDate, lightOrDark, hexToRgba } from "../utils/utils";
 import DropDownPicker from "react-native-dropdown-picker";
 import { Text as TextSVG, Svg } from "react-native-svg";
@@ -93,10 +94,9 @@ const GoalsPage = () => {
   const [goalName, setGoalName] = useState("");
   const { state: authState } = useAuth();
   const token = authState.token;
+  const { fetcher } = useRequest(token);
   const [units, setUnits] = useState("");
-  const [additionUnits, setAdditionUnits] = useState("");
   const [additionTargetAmount, setAdditionTargetAmount] = useState("");
-  const [additionDate, setAdditionDate] = useState(new Date().getTime());
   const [additionNote, setAdditionNote] = useState("");
   const [targetAmount, setTargetAmount] = useState("");
   const [goalsData, setGoalsData] = useState([]);
@@ -106,7 +106,7 @@ const GoalsPage = () => {
   const [open, setOpen] = useState(false);
   const [date, setDate] = useState(new Date().getTime());
   const [value, setValue] = useState(null);
-  const [additionValue, setAdditionValue] = useState([]);
+  const [additionGoalsList, setadditionGoalsList] = useState([]);
   const [items, setItems] = useState([]);
   const [additionItems, setAdditionItems] = useState([]);
   const [selectedGoal, setSelectedGoal] = useState(null);
@@ -123,83 +123,51 @@ const GoalsPage = () => {
   const [SecondinitialXPosition, setSecondInitialXPosition] = useState(null);
 
   const getUserData = async () => {
-    try {
-      const res = await fetch(BACKEND_URL + "user", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Token ${token}`,
-        },
-      });
-      const data = await res.json();
-      console.log("data", data);
-      if (res.ok) {
-        setUnit(data.unit);
-      } else {
-        setError("Something went wrong");
-        throw new Error("Failed to fetch user data");
-      }
-    } catch (error) {
-      setError("Check your internet connection");
-      console.error("Error:", error);
+    const res = await fetcher({
+      url: BACKEND_URL + "user",
+      reqMethod: "GET",
+      errorMessage: "Failed to fetch user data",
+      showLoading: true,
+    });
+    if (res) {
+      console.log(res);
+      setUnit(res.unit);
     }
   };
 
   const getGoalsData = async (id) => {
-    try {
-      const res = await fetch(BACKEND_URL + `goal/${id}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Token ${token}`,
-        },
+    const res = await fetcher({
+      url: BACKEND_URL + `goal/${id}`,
+      reqMethod: "GET",
+      errorMessage: "Something went wrong",
+      showLoading: true,
+    });
+    if (res) {
+      console.log(res);
+      const additions = res.data;
+      const additionsCopy = additions.map((addition, index) => {
+        return { ...addition, created: addition.created + index };
       });
-      const data = await res.json();
-      console.log("data", data);
-      if (res.ok) {
-        console.log(data);
-        const additions = data.data;
-        const additionsCopy = additions.map((addition, index) => {
-          return { ...addition, created: addition.created + index };
-        });
-        setSelectedGoal({ ...data, data: additionsCopy });
-      } else {
-        setError("Something went wrong");
-        throw new Error("Failed to fetch goals");
-      }
-    } catch (error) {
-      setError("Check your internet connection");
-      console.error("Error:", error);
+      setSelectedGoal({ ...res, data: additionsCopy });
     }
   };
 
   const getGoalsDataList = async () => {
-    try {
-      const res = await fetch(BACKEND_URL + "goal", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Token ${token}`,
-        },
-      });
-      const data = await res.json();
-      console.log("data", data);
-      if (res.ok) {
-        setGoalsData(data.goal_list);
-      } else {
-        setError("Something went wrong");
-        throw new Error("Failed to fetch goals");
-      }
-    } catch (error) {
-      setError("Check your internet connection");
-      console.error("Error:", error);
+    const res = await fetcher({
+      url: BACKEND_URL + "goal",
+      reqMethod: "GET",
+      errorMessage: "Something went wrong",
+      showLoading: true,
+    });
+    if (res) {
+      console.log(res);
+      setGoalsData(res.goal_list);
     }
   };
 
   useEffect(() => {
     getGoalsDataList();
     getUserData();
-    //setGoalsData(data);
   }, []);
 
   useEffect(() => {
@@ -232,7 +200,6 @@ const GoalsPage = () => {
   useEffect(() => {
     if (value) {
       getGoalsData(value);
-      //setSelectedGoal(goalsData.find((goal) => goal.id === value));
     }
   }, [value, goalsData]);
 
@@ -241,91 +208,68 @@ const GoalsPage = () => {
       setError("Please fill in all fields");
       return;
     }
-    console.log("Goal Name:", goalName);
-    console.log("Units:", units);
-    console.log("Target Amount:", targetAmount);
-    console.log("Date:", date);
-    try {
-      const res = await fetch(BACKEND_URL + "goal", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Token ${token}`,
-        },
-        body: JSON.stringify({
-          name: goalName,
-          unit: units,
-          number: targetAmount,
-          end: date,
-        }),
-      });
-      const data = await res.json();
-      console.log(data);
-      if (res.ok) {
+    const res = await fetcher({
+      url: BACKEND_URL + "goal",
+      reqMethod: "POST",
+      successMessage: "Goal created successfully",
+      errorMessage: "Failed to create goal",
+      object: {
+        name: goalName,
+        unit: units,
+        number: targetAmount,
+        end: date,
+      },
+      errorMessage: "Failed to create goal",
+      successMessage: "Goal created successfully",
+      showLoading: true,
+    });
+    if (res) {
+      setDate(new Date());
+      setGoalName("");
+      setUnits("");
+      setTargetAmount("");
+      getGoalsDataList();
+      setTimeout(() => {
+        setIsModalVisible(false);
       }
-    } catch (error) {
-      console.error("Error:", error);
+      , 1000);
     }
-    setIsModalVisible(false);
-    setDate(new Date());
-    setGoalName("");
-    setUnits("");
-    setTargetAmount("");
-    getGoalsDataList();
-    setSuccess("Goal created successfully");
   };
 
   const addAdditionalData = async () => {
-    if (
-      additionUnits == "" ||
-      additionTargetAmount == "" ||
-      additionValue.length == 0 ||
-      additionNote == ""
-    ) {
-      setError("Please fill in all fields");
+    if (additionGoalsList.length == 0) {
+      setError("Please select a goal to add the addition into");
       return;
     }
-    console.log("Addition Units:", additionUnits);
-    console.log("Addition Target Amount:", additionTargetAmount);
-    console.log("Addition Date:", additionDate);
-    console.log("Addition Note:", additionNote);
-    console.log(additionValue);
-
-    const noteWithoutNewLines = additionNote.replace("/\r?\n|\r/g", " ");
-    for (i in additionValue) {
-      try {
-        const res = await fetch(BACKEND_URL + "addition", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Token ${token}`,
-          },
-          body: JSON.stringify({
-            goal_id: additionValue[i],
-            number: additionTargetAmount,
-            unit: additionUnits,
-            note: noteWithoutNewLines,
-          }),
-        });
-        if (res.ok) {
-          console.log("Addition successful");
-          setSuccess("Progress added successfully");
-        } else {
-          console.error("Addition failed");
-          setError("Failed to add progress");
-        }
-      } catch (error) {
-        console.error("Error:", error);
-      }
+    if (additionTargetAmount == "") {
+      setError("Enter amount for your progress");
+      return;
     }
-    getGoalsDataList();
-    setIsAdditionModalVisible(false);
-    setAdditionUnits("");
+    const noteWithoutNewLines = additionNote.replace("/\r?\n|\r/g", " ");
+    for (i in additionGoalsList) {
+      const res = await fetcher({
+        url: BACKEND_URL + "addition",
+        reqMethod: "POST",
+        object: {
+          goal_id: additionGoalsList[i],
+          number: additionTargetAmount,
+          note: noteWithoutNewLines,
+        },
+        errorMessage: "Failed to add progress",
+        successMessage: "Progress added successfully",
+        showLoading: true,
+      });
+    }
+    if(res){
     setAdditionTargetAmount("");
-    setAdditionDate(new Date());
     setAdditionNote("");
-    setAdditionValue([]);
-    setSuccess("Progress added successfully");
+    setadditionGoalsList([]);
+    getGoalsDataList();
+    setTimeout(() => {
+      setIsAdditionModalVisible(false);
+    }
+    , 1000);
+  }
   };
 
   const formatXLabel = (epochDate) => {
@@ -742,19 +686,6 @@ const GoalsPage = () => {
               }}
               placeholderTextColor={ThemeColors.tertiary}
             ></TextInput>
-            <Text style={styles.informationText}>Unit:</Text>
-            <TextInput
-              maxLength={10}
-              style={styles.input}
-              placeholder={
-                unit === "metric"
-                  ? "Units (e.g., steps, cm, kg)"
-                  : "Units (e.g., steps, inches, lbs)"
-              }
-              value={additionUnits}
-              onChangeText={(val) => setAdditionUnits(val)}
-              placeholderTextColor={ThemeColors.tertiary}
-            />
             <Text style={styles.informationText}>Amount:</Text>
             <TextInput
               style={styles.input}
@@ -770,10 +701,10 @@ const GoalsPage = () => {
               min={1}
               max={5}
               open={openAdditionPicker}
-              value={additionValue}
+              value={additionGoalsList}
               items={additionItems}
               setOpen={setOpenAdditionPicker}
-              setValue={setAdditionValue}
+              setValue={setadditionGoalsList}
               setItems={setAdditionItems}
               placeholder={"Choose goal or goals to add progress to"}
               theme={
@@ -787,11 +718,9 @@ const GoalsPage = () => {
               text={"Cancel"}
               onPress={() => {
                 setIsAdditionModalVisible(false);
-                setAdditionDate(new Date());
-                setAdditionUnits("");
                 setAdditionTargetAmount("");
                 setAdditionNote("");
-                setAdditionValue([]);
+                setadditionGoalsList([]);
               }}
             />
           </View>

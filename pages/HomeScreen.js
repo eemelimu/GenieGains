@@ -4,6 +4,7 @@ import { SimpleLineIcons } from "@expo/vector-icons";
 import { ThemeContext } from "../contexts/ThemeContext";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import * as Clipboard from "expo-clipboard";
+import useRequest from "../hooks/useRequest";
 import {
   BackHandler,
   StyleSheet,
@@ -39,6 +40,7 @@ const HomeScreen = () => {
   const [workouts, setWorkouts] = useState([]);
   const { state } = useAuth();
   const token = state.token;
+  const { fetcher } = useRequest(token);
   const navigation = useNavigation();
   const [searchMenuVisible, setSearchMenuVisible] = useState(false);
   const [searchText, setSearchText] = useState("");
@@ -95,23 +97,14 @@ const HomeScreen = () => {
 
   useFocusEffect(
     useCallback(() => {
-      startLoading();
       const fetchData = async () => {
-        console.log("Token is: ", token);
-        try {
-          const res = await fetch(BACKEND_URL + "exercisemovementconnection", {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Token ${token}`,
-            },
-          });
-          console.log("token for this req was",token);
-          const data = await res.json();
-
+        const res = await fetcher({
+          url: BACKEND_URL + "exercisemovementconnection",
+          reqMethod: "GET",
+        });
+        if (res) {
           const groupedMovements = {};
-          console.log(data);
-          (data.exercisemovementconnection_list || []).forEach((workout) => {
+          (res.exercisemovementconnection_list || []).forEach((workout) => {
             const {
               exercise_id,
               id,
@@ -138,20 +131,17 @@ const HomeScreen = () => {
               weight: weight,
             });
           });
-
           setWorkoutMovements(Object.values(groupedMovements));
-          stopLoading();
-        } catch (error) {
-          console.log("Error fetching workout movements: ", error);
-          stopLoading();
         }
       };
-
       fetchData();
     }, [token])
   );
+
   useFocusEffect(
     useCallback(() => {
+      //remove hadrware back button from homexcreen so the user cannot
+      //navigate back to login accidentally
       const backAction = () => {
         return true;
       };
@@ -161,28 +151,18 @@ const HomeScreen = () => {
         backAction
       );
 
-      try {
-        fetch(BACKEND_URL + "exercise", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Token ${token}`,
-          },
-        })
-          .then((response) => response.json())
-          .catch((error) => {
-            console.log("Error fetching workouts: ", error);
-          })
-          .then((data) => {
-            setWorkouts(data.exercise_list || []);
-            setSearchedWorkouts(data.exercise_list || []);
-          })
-          .catch((error) => {
-            console.log("Error fetching workouts: ", error);
-          });
-      } catch (error) {
-        console.log("Error fetching workouts: ", error);
-      }
+      const fetchData = async () => {
+        const res = await fetcher({
+          url: BACKEND_URL + "exercise",
+          reqMethod: "GET",
+          showLoading: true,
+        });
+        if (res) {
+          setWorkouts(res.exercise_list);
+          setSearchedWorkouts(res.exercise_list);
+        }
+      };
+      fetchData();
       return () => {
         backHandler.remove();
       };
@@ -191,54 +171,36 @@ const HomeScreen = () => {
 
   useFocusEffect(
     useCallback(() => {
-      try {
-        fetch(BACKEND_URL + "user", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Token ${token}`,
-          },
-        })
-          .then((response) => response.json())
-          .catch((error) => {
-            console.log("Error fetching workouts: ", error);
-          })
-          .then((data) => {
-            setName(data.username);
-            setUnit(data.unit);
-            setExperience(data.experience);
-          })
-          .catch((error) => {
-            console.log("Error fetching workouts: ", error);
-          });
-      } catch (error) {
-        console.log("Error fetching workouts: ", error);
-      }
+      const fetchData = async () => {
+        const res = await fetcher({
+          url: BACKEND_URL + "user",
+          reqMethod: "GET",
+          errorMessage: "Error fetching user information",
+          showLoading: true,
+        });
+        if (res) {
+          setName(res.username);
+          setUnit(res.unit);
+          setExperience(res.experience);
+        }
+      };
+      fetchData();
     }, [token])
   );
 
   const handleDeleteWorkout = async (id) => {
-    try {
-      const res = await fetch(BACKEND_URL + "exercise/" + id, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Token ${token}`,
-        },
-      });
-      const data = await res.json();
-      if (res.ok) {
-        setWorkouts(workouts.filter((workout) => workout.id !== id));
-        setSearchedWorkouts(
-          searchedWorkouts.filter((workout) => workout.id !== id)
-        );
-        setSuccess("Workout deleted succesfully");
-      } else {
-        setError("Something went wrong");
-      }
-    } catch (error) {
-      setError("Check your internet connection");
-      console.log("Error deleting workout: ", error);
+    const res = await fetcher({
+      url: BACKEND_URL + "exercise/" + id,
+      reqMethod: "DELETE",
+      errorMessage: "Something went wrong",
+      successMessage: "Workout deleted succesfully",
+      showLoading: true,
+    });
+    if (res) {
+      setWorkouts(workouts.filter((workout) => workout.id !== id));
+      setSearchedWorkouts(
+        searchedWorkouts.filter((workout) => workout.id !== id)
+      );
     }
   };
 
@@ -276,20 +238,10 @@ const HomeScreen = () => {
   };
 
   const getworkoutInformation = async (id) => {
-    try {
-      const res = await fetch(BACKEND_URL + "exercise/" + id, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Token ${token}`,
-        },
-      });
-      const data = await res.json();
-      return data;
-    } catch (error) {
-      console.log("Error fetching workout information: ", error);
-    }
-    return null;
+    return await fetcher({
+      url: BACKEND_URL + "exercise/" + id,
+      reqMethod: "GET",
+    });
   };
 
   const handleLog = () => {

@@ -1,4 +1,5 @@
 import React, { useState, useRef } from "react";
+import useRequest from "../hooks/useRequest";
 import {
   View,
   Text,
@@ -19,6 +20,7 @@ import { Feather } from "@expo/vector-icons";
 
 const Register = () => {
   const { setError, setSuccess, startLoading, stopLoading } = useNotification();
+  const { fetcher } = useRequest();
   const navigation = useNavigation();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -30,30 +32,18 @@ const Register = () => {
   const password2Ref = useRef(null);
   const emailRef = useRef(null);
 
-  //check if user already exists from /register/username
   const usernameExists = async () => {
-    startLoading();
-    try {
-      const response = await fetch(BACKEND_URL + "register/username", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          username: username,
-        }),
-      });
-      console.log(await response.text());
-      if (!response.ok) {
-        return true;
-      }
-
-      stopLoading();
-      return false;
-    } catch (error) {
-      setError("Check your internet connection");
-      console.error("Error:", error);
+    const res = await fetcher({
+      url: BACKEND_URL + "register/username",
+      reqMethod: "POST",
+      object: { username: username },
+      showLoading: true,
+    });
+    if (!(await res)) {
+      console.log(await res);
+      return true;
     }
+    return false;
   };
 
   const moveToPreferences = async () => {
@@ -86,13 +76,7 @@ const Register = () => {
       },
     });
   };
-  let [fontsLoaded] = useFonts({
-    DMBold: require("../assets/fonts/DMSans-Bold.ttf"),
-    DMRegular: require("../assets/fonts/DMSans-Regular.ttf"),
-  });
-  if (!fontsLoaded) {
-    return null;
-  }
+  
 
   const styles = StyleSheet.create({
     container: {

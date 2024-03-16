@@ -1,10 +1,10 @@
 import React, { useState, useContext, useCallback, useEffect } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import Button from "../components/Button";
-import tinycolor from "tinycolor2";
 import { useSettings } from "../contexts/SettingsContext";
 import Toast, { ErrorToast } from "react-native-toast-message";
 import { hexToRgba, storeData } from "../utils/utils";
+import useRequest from "../hooks/useRequest";
 import {
   View,
   Text,
@@ -24,6 +24,7 @@ const AccountSettings = () => {
   const { setError, setSuccess, startLoading, stopLoading } = useNotification();
   const { dispatch, state } = useAuth();
   const token = state.token;
+  const { fetcher } = useRequest(token);
   const [username, setUsername] = useState("");
   const [emailModalVisible, setEmailModalVisible] = useState(false);
   const [passwordModalVisible, setPasswordModalVisible] = useState(false);
@@ -39,113 +40,67 @@ const AccountSettings = () => {
 
   const logoutAll = async () => {
     setLogoutModalVisible(false);
-    try {
-      const response = await fetch(BACKEND_URL + "logout", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Token ${token}`,
-        },
-      });
-      if (!response.ok) {
-        setError("Something went wrong! Please try again later.");
-      } else {
-        enableTips();
-        disableNotifications();
-        dispatch({ type: "LOGOUT" });
-        resetTheme();
-        storeData("theme", ThemeColors);
-        setSuccess("Logged out from all devices successfully");
-      }
-    } catch (error) {
-      setError("Check your internet connection");
-      console.error("Error:", error);
+    const res = await fetcher({
+      url: BACKEND_URL + "logout",
+      reqMethod: "POST",
+      errorMessage: "Something went wrong",
+      showLoading: true,
+    });
+    if (res) {
+      enableTips();
+      disableNotifications();
+      dispatch({ type: "LOGOUT" });
+      resetTheme();
+      storeData("theme", ThemeColors);
     }
   };
 
   const getUserData = async () => {
-    //startLoading();
-    try {
-      const response = await fetch(BACKEND_URL + "user", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Token ${token}`,
-        },
-      });
-      if (!response.ok) {
-        console.log(token);
-        throw new Error("HTTP status " + response.status);
-      }
-      stopLoading();
-      //setSuccess("User data fetched successfully");
-      const data = await response.json();
-      setUsername(data.username);
-      setEmail(data.email);
-    } catch (error) {
-      setError("Check your internet connection");
-      console.error("Error:", error);
+    const res = await fetcher({
+      url: BACKEND_URL + "user",
+      reqMethod: "GET",
+      errorMessage: "Something went wrong",
+      showLoading: true,
+    });
+    if (res) {
+      setUsername(res.username);
+      setEmail(res.email);
     }
   };
 
   const handleEmailChange = async () => {
-    try {
-      const response = await fetch(BACKEND_URL + "user", {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Token ${token}`,
-        },
-        body: JSON.stringify({ email: email }),
-      });
-      if (!response.ok) {
-        console.log(JSON.stringify({ email: email }));
-        console.log(token);
-        const data = await response.json();
-        console.log(data);
-        setError("Invalid email or email already taken");
-      } else {
-        getUserData();
-        setEmailModalVisible(false);
-        setSuccess("Email changed successfully");
-      }
-    } catch (error) {
-      console.error("Error:", error);
-      setError("Check your internet connection");
+    const res = await fetcher({
+      url: BACKEND_URL + "user",
+      reqMethod: "PATCH",
+      object: { email: email },
+      errorMessage: "Invalid email or email already taken",
+      successMessage: "Email changed successfully",
+      showLoading: true,
+    });
+    if (res) {
+      getUserData();
+      setEmailModalVisible(false);
     }
   };
 
   const handlePasswordChange = async () => {
-    startLoading();
     if (password !== confirmPassword) {
-      console.log("Passwords do not match");
       setError("Passwords do not match");
       return;
     }
-    setPasswordModalVisible(false);
-    try {
-      const response = await fetch(BACKEND_URL + "user", {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Token ${token}`,
-        },
-        body: JSON.stringify({ password: password }),
-      });
-      if (!response.ok) {
-        setError("Invalid password");
-        throw new Error("HTTP status " + response.status);
-      } else {
-        const data = await response.json();
-        console.log(data);
-        setSuccess("Password changed successfully!");
-        dispatch({ type: "LOGIN", payload: { token: data.token } });
-        setPassword("");
-        setConfirmPassword("");
-      }
-    } catch (error) {
-      setError("Check your internet connection");
-      console.error("Error:", error);
+    const res = await fetcher({
+      url: BACKEND_URL + "user",
+      reqMethod: "PATCH",
+      object: { password: password },
+      errorMessage: "Invalid password",
+      successMessage: "Password changed successfully",
+      showLoading: true,
+    });
+    if (res) {
+      dispatch({ type: "LOGIN", payload: { token: res.token } });
+      setPasswordModalVisible(false);
+      setPassword("");
+      setConfirmPassword("");
     }
   };
 

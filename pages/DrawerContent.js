@@ -23,6 +23,7 @@ import { AntDesign } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
 import { useAuth } from "../contexts/AuthContext";
 import { ThemeContext } from "../contexts/ThemeContext";
+import useRequest from "../hooks/useRequest";
 
 // TODO
 // - FEEDBACK: Animoi inputin avaaminen ja sulkeminen
@@ -93,6 +94,7 @@ export const DrawerContent = () => {
   const { disableNotifications, enableTips } = useSettings();
   const { state, dispatch } = useAuth();
   const token = state.token;
+  const { fetcher } = useRequest(token);
   const { setError, setSuccess, startLoading, stopLoading } = useNotification();
   const [logoutModalVisible, setLogoutModalVisible] = useState(false);
   const {
@@ -144,24 +146,16 @@ export const DrawerContent = () => {
     storeData("theme", ThemeColors);
     setLogoutModalVisible(false);
   };
-
-  const handleSendFeedback = () => {
+  
+  const handleSendFeedback = async () => {
     if (feedbackText.length > 0) {
-      try {
-        fetch(BACKEND_URL + "feedback", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Token ${token}`,
-          },
-          body: JSON.stringify({
-            text: feedbackText,
-          }),
-        });
-      } catch (error) {
-        setError("Check your internet connection");
-        console.error("Error:", error);
-      }
+      fetcher({
+        url: BACKEND_URL + "feedback",
+        reqMethod: "POST",
+        object: {
+          text: feedbackText,
+        },
+      });
       setFeedbackText("");
       setFeedbackSent(true);
       setTimeout(() => {

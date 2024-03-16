@@ -5,6 +5,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { BACKEND_URL } from "../assets/config";
 import { useAuth } from "../contexts/AuthContext";
 import { ThemeContext } from "../contexts/ThemeContext";
+import useRequest from "../hooks/useRequest";
 
 const InspectRoutine = ({ route }) => {
   const { theme: ThemeColors } = useContext(ThemeContext);
@@ -13,28 +14,18 @@ const InspectRoutine = ({ route }) => {
   const [trainingPlan, setTrainingPlan] = useState(null);
   const { state } = useAuth();
   const token = state.token;
+  const { fetcher } = useRequest(token);
 
   useEffect(() => {
     const fetchData = async () => {
-      try {
-        const res = await fetch(BACKEND_URL + "trainingplan", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Token ${token}`,
-          },
-        });
-        const data = await res.json();
-        const selectedPlan = data.trainingplan_list.find(
-          (plan) => plan.training_plan_name === routineName
-        );
-
-        setTrainingPlan(selectedPlan);
-
-        console.log(data);
-      } catch (error) {
-        console.log("Error: ", error);
-      }
+      const res = await fetcher({
+        url: BACKEND_URL + "trainingplan",
+        reqMethod: "GET",
+      });
+      const selectedPlan = res.trainingplan_list.find(
+        (plan) => plan.training_plan_name === routineName
+      );
+      setTrainingPlan(selectedPlan);
     };
     fetchData();
   }, [routineName]);

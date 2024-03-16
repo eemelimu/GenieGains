@@ -16,11 +16,11 @@ import { Ionicons } from "@expo/vector-icons";
 import { useFonts } from "expo-font";
 import { AntDesign } from "@expo/vector-icons";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
-import ModalDropdown from "react-native-modal-dropdown";
 import { BACKEND_URL } from "../assets/config";
 import { ThemeContext } from "../contexts/ThemeContext";
 import { useNotification } from "../contexts/NotificationContext";
 import DropDownPicker from "react-native-dropdown-picker";
+import useRequest from "../hooks/useRequest";
 
 const CreateRoutine = () => {
   const { setError, setSuccess, startLoading, stopLoading } = useNotification();
@@ -36,6 +36,7 @@ const CreateRoutine = () => {
   const navigation = useNavigation();
   const { state } = useAuth();
   const token = state.token;
+  const { fetcher } = useRequest(token);
   const [selectedRoutineMovements, setSelectedMovements] = useState([]);
   const [menuMovements, setMenuMovements] = useState([]);
   const [routineName, setRoutineName] = useState("");
@@ -165,56 +166,43 @@ const CreateRoutine = () => {
   });
 
   const saveRoutine = async () => {
-    try {
-      if (!routineName) {
-        console.log("Routine name is required");
-        setError("Routine name is required");
-        return;
-      }
-      if (selectedRoutineMovements.length === 0) {
-        console.log("Routine movements are required");
-        setError("Routine movements are required");
-        return;
-      }
-      const res = await fetch(BACKEND_URL + "trainingplan", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Token ${token}`,
-        },
-        body: JSON.stringify({
-          name: routineName,
-          movements: selectedRoutineMovements.map((movement) => movement.id),
-        }),
-      });
-
-      if (res.status === 200) {
-        navigation.navigate("Routines");
-        console.log("Routine created");
-      } else {
-        console.log("Error: ", res.status);
-      }
-    } catch (error) {
-      console.log("Fetch error: ", error);
+    if (!routineName) {
+      console.log("Routine name is required");
+      setError("Routine name is required");
+      return;
+    }
+    if (selectedRoutineMovements.length === 0) {
+      console.log("Routine movements are required");
+      setError("Routine movements are required");
+      return;
+    }
+    const res = await fetcher({
+      url: BACKEND_URL + "trainingplan",
+      reqMethod: "POST",
+      object: {
+        name: routineName,
+        movements: selectedRoutineMovements.map((movement) => movement.id),
+        notes: routineNotes,
+      },
+      successMessage: "Routine created",
+      errorMessage: "Error creating routine",
+      showLoading: true,
+    });
+    if (res) {
+      navigation.navigate("Routines");
+      console.log("Routine created");
     }
   };
 
   useFocusEffect(
     useCallback(() => {
       const fetchData = async () => {
-        try {
-          const res = await fetch(BACKEND_URL + "trainingplan", {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Token ${token}`,
-            },
-          });
-          const data = await res.json();
-          setTrainingPlans(data.trainingplan_list);
-          console.log("luk" + data);
-        } catch (error) {
-          console.log("Error: ", error);
+        const res = await fetcher({
+          url: BACKEND_URL + "trainingplan",
+          reqMethod: "GET",
+        });
+        if (res) {
+          setTrainingPlans(res.trainingplan_list);
         }
       };
       fetchData();
@@ -224,18 +212,12 @@ const CreateRoutine = () => {
   useFocusEffect(
     useCallback(() => {
       const fetchMovements = async () => {
-        try {
-          const res = await fetch(BACKEND_URL + "movement", {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Token ${token}`,
-            },
-          });
-          const data = await res.json();
-          setMenuMovements(data.movement_list);
-        } catch (error) {
-          console.log("Error: ", error);
+        const res = await fetcher({
+          url: BACKEND_URL + "movement",
+          reqMethod: "GET",
+        });
+        if (res) {
+          setMenuMovements(res.movement_list);
         }
       };
       fetchMovements();

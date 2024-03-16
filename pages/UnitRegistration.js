@@ -3,15 +3,14 @@ import Button from "../components/Button";
 import { View, Text, TextInput, TouchableOpacity, Image } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { StyleSheet } from "react-native";
-import { useFonts } from "expo-font";
+import useRequest from "../hooks/useRequest";
 import CheckBox from "expo-checkbox";
 import { ThemeColors } from "../assets/theme/ThemeColors";
 import { BACKEND_URL } from "../assets/config";
 import { useAuth } from "../contexts/AuthContext";
-import { useNotification } from "../contexts/NotificationContext";
 
 const Preferences = ({ route }) => {
-  const { setError, setSuccess, startLoading, stopLoading } = useNotification();
+  const { fetcher } = useRequest();
   const { dispatch } = useAuth();
   const navigation = useNavigation();
   const [SelectedUnit, setSelectedUnit] = useState(null);
@@ -19,43 +18,22 @@ const Preferences = ({ route }) => {
   console.log("data from register and preferences?", route.params);
 
   const registerUser = async () => {
-    startLoading();
-    try {
-      const response = await fetch(BACKEND_URL + "register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          username: route.params.data.username,
-          password: route.params.data.password,
-          confirmPassword: route.params.data.confirmPassword,
-          email: route.params.data.email,
-          unit: SelectedUnit.toLowerCase(),
-          experience: route.params.data.selectedSkill.toLowerCase(),
-        }),
-      });
-      console.log(
-        JSON.stringify({
-          username: route.params.data.username,
-          password: route.params.data.password,
-          email: route.params.data.email,
-          unit: SelectedUnit.toLowerCase(),
-          experience: route.params.data.selectedSkill.toLowerCase(),
-        })
-      );
-      const data = await response.json();
-      console.log(data);
-      if (!response.ok) {
-        setError("Something went wrong! Please try again later.");
-      } else {
-        setSuccess("User registered successfully!");
-        console.log(data.token);
-        dispatch({ type: "LOGIN", payload: { token: data.token } });
-      }
-    } catch (error) {
-      setError("Check your internet connection");
-      console.error("Error registering user:", error);
+    const res = await fetcher({
+      url: BACKEND_URL + "register",
+      reqMethod: "POST",
+      object: {
+        username: route.params.data.username,
+        password: route.params.data.password,
+        confirmPassword: route.params.data.confirmPassword,
+        email: route.params.data.email,
+        unit: SelectedUnit.toLowerCase(),
+        experience: route.params.data.selectedSkill.toLowerCase(),
+      },
+      errorMessage: "Something went wrong! Please try again later.",
+      showLoading: true,
+    });
+    if (res) {
+      dispatch({ type: "LOGIN", payload: { token: res.token } });
     }
   };
   return (

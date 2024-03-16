@@ -17,6 +17,7 @@ import { useFonts } from "expo-font";
 import { ThemeContext } from "../contexts/ThemeContext";
 import { useNotification } from "../contexts/NotificationContext";
 import { MaterialIcons } from "@expo/vector-icons";
+import useRequest from "../hooks/useRequest";
 
 const Routines = () => {
   const { setError, setSuccess, startLoading, stopLoading } = useNotification();
@@ -27,7 +28,7 @@ const Routines = () => {
   const navigation = useNavigation();
   const { state } = useAuth();
   const token = state.token;
-
+  const { fetcher } = useRequest(token);
   let [fontsLoaded] = useFonts({
     DMBold: require("../assets/fonts/DMSans-Bold.ttf"),
     DMRegular: require("../assets/fonts/DMSans-Regular.ttf"),
@@ -47,46 +48,29 @@ const Routines = () => {
   };
 
   const handleDeleteRoutine = async (routineId) => {
-    startLoading();
-    try {
-      const res = await fetch(BACKEND_URL + "trainingplan/" + routineId, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Token ${token}`,
-        },
-      });
-      const data = await res.json();
-      console.log(data);
-      setSuccess("Routine deleted successfully");
-      if (res.ok) {
-        setTrainingPlans(trainingPlans.filter((t) => t.id !== routineId));
-      }
-    } catch (error) {
-      setError("Check your internet connection");
-      console.log("Error: ", error);
+    const res = await fetcher({
+      url: BACKEND_URL + "trainingplan/" + routineId,
+      reqMethod: "DELETE",
+      errorMessage: "Something went wrong",
+      successMessage: "Routine deleted successfully",
+      showLoading: true,
+    });
+    if (res) {
+      setTrainingPlans(trainingPlans.filter((t) => t.id !== routineId));
     }
   };
 
   useFocusEffect(
     useCallback(() => {
       const fetchData = async () => {
-        startLoading();
-        try {
-          const res = await fetch(BACKEND_URL + "trainingplan", {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Token ${token}`,
-            },
-          });
-          const data = await res.json();
-          setTrainingPlans(data.trainingplan_list);
-          console.log("luk" + data);
-          stopLoading();
-        } catch (error) {
-          setError("Check your internet connection");
-          console.log("Error: ", error);
+        const res = await fetcher({
+          url: BACKEND_URL + "trainingplan",
+          reqMethod: "GET",
+          errorMessage: "Something went wrong",
+          showLoading: true,
+        });
+        if (res) {
+          setTrainingPlans(res.trainingplan_list);
         }
       };
       fetchData();
@@ -98,9 +82,6 @@ const Routines = () => {
   }
   const styles = StyleSheet.create({
     movementsContainer: {
-      // position: "absolute",
-      // left: 5,
-      // top: 40,
       marginTop: 40,
       justifyContent: "center",
       paddingHorizontal: 10,

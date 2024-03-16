@@ -19,6 +19,7 @@ import { useNotification } from "../contexts/NotificationContext";
 import { AntDesign } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 import { Fontisto } from "@expo/vector-icons";
+import useRequest from "../hooks/useRequest";
 
 const Login = () => {
   const { setError, setSuccess, startLoading, stopLoading } = useNotification();
@@ -28,7 +29,9 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const passwordRef = useRef(null);
+  const { fetcher } = useRequest();
 
+  //remove hardware back button to prevent user from getting back to homscreen after logout
   useFocusEffect(
     useCallback(() => {
       const backAction = () => {
@@ -45,35 +48,23 @@ const Login = () => {
   );
 
   const handleLogin = async () => {
-    startLoading();
-    try {
-      const res = await fetch(BACKEND_URL + "login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: username,
-          password,
-        }),
+    const res = await fetcher({
+      url: BACKEND_URL + "login",
+      reqMethod: "POST",
+      object: {
+        email: username,
+        password,
+      },
+      showLoading: true,
+      errorMessage: "Wrong email or password",
+    });
+    if (res) {
+      dispatch({
+        type: "LOGIN",
+        payload: { token: res.token },
       });
-      const data = await res.json();
-      console.log(data);
-      if (res.ok) {
-        setSuccess("Logged in");
-        dispatch({
-          type: "LOGIN",
-          payload: { token: data.token },
-        });
-      } else {
-        setError("Wrong username or password");
-      }
-    } catch (error) {
-      setError("Check your internet connection");
-      console.error("Error:", error);
     }
   };
-
   const styles = StyleSheet.create({
     container: {
       flex: 1,

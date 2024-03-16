@@ -3,7 +3,6 @@ import { View, Text, TextInput, TouchableOpacity, Image } from "react-native";
 import Button from "../components/Button";
 import { useNavigation } from "@react-navigation/native";
 import { StyleSheet } from "react-native";
-import { useFonts } from "expo-font";
 import CheckBox from "expo-checkbox";
 import { ThemeColors } from "../assets/theme/ThemeColors";
 

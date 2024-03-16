@@ -10,6 +10,7 @@ import { FontAwesome } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { BACKEND_URL } from "../assets/config";
 import { useAuth } from "../contexts/AuthContext";
+import useRequest from "../hooks/useRequest";
 
 const SettingsButton = ({ color, text, children, navigationPage }) => {
   const navigation = useNavigation();
@@ -77,6 +78,7 @@ const SettingsScreen = () => {
   const navigation = useNavigation();
   const { state } = useAuth();
   const token = state.token;
+  const { fetcher } = useRequest(token);
   const {
     theme: ThemeColors,
     resetTheme,
@@ -84,22 +86,12 @@ const SettingsScreen = () => {
   } = useContext(ThemeContext);
 
   const getUsername = async () => {
-    try {
-      const response = await fetch(BACKEND_URL + "user", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          "Auth-Token": `${token}`,
-        },
-      });
-      if (!response.ok) {
-        throw new Error("HTTP status " + response.status);
-      }
-      const data = await response.json();
-      setUsername(data.username);
-    } catch (error) {
-      console.error("Error:", error);
-    }
+    const res = await fetcher({
+      url: BACKEND_URL + "user",
+      reqMethod: "GET",
+      showLoading: true,
+    });
+    if (res) setUsername(res.username);
   };
 
   useFocusEffect(

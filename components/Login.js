@@ -18,6 +18,7 @@ import { BACKEND_URL } from "../assets/config";
 import { useNotification } from "./NotificationContext";
 import { AntDesign } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
+import { Fontisto } from "@expo/vector-icons";
 
 const Login = () => {
   const { setError, setSuccess, startLoading, stopLoading } = useNotification();
@@ -59,7 +60,7 @@ const Login = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          username,
+          email: username,
           password,
         }),
       });
@@ -197,8 +198,8 @@ const Login = () => {
         ></Image>
       </View>
       <View style={styles.inputRow}>
-        <AntDesign
-          name="user"
+                <Fontisto
+          name="email"
           size={24}
           color={ThemeColors.tertiary}
           style={styles.iconStyle}
@@ -207,7 +208,7 @@ const Login = () => {
           value={username}
           onChangeText={setUsername}
           style={styles.input}
-          placeholder="Username"
+          placeholder="Email"
           placeholderTextColor={ThemeColors.tertiary}
           autoComplete="username"
           autoCapitalize="none"

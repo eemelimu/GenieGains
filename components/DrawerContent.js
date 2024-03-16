@@ -114,7 +114,8 @@ export const DrawerContent = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Auth-Token": `${token}`,
+          "Authorization": `Token ${token}`,
+
         },
       });
       if (!response.ok) {
@@ -152,7 +153,8 @@ export const DrawerContent = () => {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            "Auth-Token": `${token}`,
+            "Authorization": `Token ${token}`,
+
           },
           body: JSON.stringify({
             text: feedbackText,

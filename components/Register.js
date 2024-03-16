@@ -29,9 +29,6 @@ const Register = () => {
   const passwordRef = useRef(null);
   const password2Ref = useRef(null);
   const emailRef = useRef(null);
-  
-  // add unit & experience
-  // add password2
 
   //check if user already exists from /register/username
   const usernameExists = async () => {
@@ -184,6 +181,24 @@ const Register = () => {
         />
       </View>
       <View style={styles.inputRow}>
+        <Fontisto
+          name="email"
+          size={24}
+          color={ThemeColors.tertiary}
+          style={styles.iconStyle}
+        />
+        <TextInput
+          ref={emailRef}
+          style={styles.input}
+          placeholder="Email"
+          value={email}
+          onChangeText={setEmail}
+          autoComplete="email"
+          autoCapitalize="none"
+          placeholderTextColor={ThemeColors.tertiary}
+        />
+      </View>
+      <View style={styles.inputRow}>
         <AntDesign
           name="user"
           size={24}
@@ -264,24 +279,7 @@ const Register = () => {
           )}
         </TouchableOpacity>
       </View>
-      <View style={styles.inputRow}>
-        <Fontisto
-          name="email"
-          size={24}
-          color={ThemeColors.tertiary}
-          style={styles.iconStyle}
-        />
-        <TextInput
-          ref={emailRef}
-          style={styles.input}
-          placeholder="Email"
-          value={email}
-          onChangeText={setEmail}
-          autoComplete="email"
-          autoCapitalize="none"
-          placeholderTextColor={ThemeColors.tertiary}
-        />
-      </View>
+
       <View style={styles.buttonContainer}>
         <Button
           textSize={20}

@@ -50,7 +50,7 @@ export const AuthProvider = ({ children }) => {
           const res = await fetch(BACKEND_URL + "token_login", {
             method: "POST",
             headers: {
-              "Auth-Token": token,
+              "Authorization": `Token ${token}`,
             },
           });
 

@@ -237,7 +237,8 @@ export const Workout = ({ route }) => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Auth-Token": token,
+          "Authorization": `Token ${token}`,
+
         },
         body: JSON.stringify({
           name: name,
@@ -270,7 +271,8 @@ export const Workout = ({ route }) => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Auth-Token": token,
+          "Authorization": `Token ${token}`,
+
         },
         body: JSON.stringify({
           exercise_id: exerciseId,
@@ -313,7 +315,8 @@ export const Workout = ({ route }) => {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          "Auth-Token": token,
+          "Authorization": `Token ${token}`,
+
         },
       })
         .then((response) => response.json())

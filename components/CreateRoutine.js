@@ -181,7 +181,8 @@ const CreateRoutine = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Auth-Token": token,
+          "Authorization": `Token ${token}`,
+
         },
         body: JSON.stringify({
           name: routineName,
@@ -208,7 +209,8 @@ const CreateRoutine = () => {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
-              "Auth-Token": token,
+              "Authorization": `Token ${token}`,
+
             },
           });
           const data = await res.json();
@@ -230,7 +232,8 @@ const CreateRoutine = () => {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
-              "Auth-Token": token,
+              "Authorization": `Token ${token}`,
+
             },
           });
           const data = await res.json();

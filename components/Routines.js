@@ -54,7 +54,7 @@ const Routines = () => {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
-          "Auth-Token": token,
+          Authorization: `Token ${token}`,
         },
       });
       const data = await res.json();
@@ -78,7 +78,7 @@ const Routines = () => {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
-              "Auth-Token": token,
+              Authorization: `Token ${token}`,
             },
           });
           const data = await res.json();
@@ -99,28 +99,30 @@ const Routines = () => {
   }
   const styles = StyleSheet.create({
     movementsContainer: {
-      position: "absolute",
-      left: 5,
-      top: 40,
+      // position: "absolute",
+      // left: 5,
+      // top: 40,
+      marginTop: 40,
       justifyContent: "center",
       paddingHorizontal: 10,
     },
     singleRoutine: {
       display: "flex",
       width: "75%",
-      height: 125,
+      height: "auto",
+      paddingVertical: 20,
       backgroundColor: ThemeColors.secondary,
       justifyContent: "center",
       alignItems: "space-between",
       borderRadius: 15,
-      paddingHorizontal: 15,
+      // paddingHorizontal: 15,
       marginTop: 20,
       position: "relative",
       flexDirection: "row",
     },
 
     RoutineName: {
-      padding: 10,
+      // padding: 10,
       position: "absolute",
       top: 0,
       left: 5,
@@ -193,9 +195,12 @@ const Routines = () => {
       alignItems: "center",
     },
     movementName: {
+      flex: 1,
       fontSize: 15,
       fontFamily: "DMRegular",
       color: ThemeColors.tertiary,
+      textAlign: "left",
+      flexWrap: "wrap",
     },
     buttonText: {
       color: ThemeColors.primary,
@@ -214,33 +219,50 @@ const Routines = () => {
       textAlign: "center",
       marginTop: 50,
     },
+    startButton: {
+      // position: "absolute",
+      alignSelf: "flex-end",
+      marginLeft: "auto",
+      marginRight: "auto",
+      // bottom: -10,
+    },
+    jokuContainer: {
+      justifyContent: "space-between",
+      flexDirection: "column",
+    },
   });
 
   const Routine = ({ name, routine }) => {
     return (
       <View style={styles.singleRoutine}>
-        <Text style={styles.RoutineName}>{name}</Text>
-        <TouchableOpacity
-          style={styles.deleteMovementIcon}
-          onPress={() => handleDeleteRoutine(routine.id)}
-        >
-          <MaterialIcons
-            name="delete-outline"
-            size={24}
-            color={ThemeColors.tertiary}
-          />
-        </TouchableOpacity>
-        <View style={styles.movementsContainer}>
-          <Text style={styles.movementName}>
-            {routine.movements.map((movement) => movement.name).join(", ")}
-          </Text>
+        <View style={styles.jokuContainer}>
+          <Text style={styles.RoutineName}>{name}</Text>
+          <TouchableOpacity
+            style={styles.deleteMovementIcon}
+            onPress={() => handleDeleteRoutine(routine.id)}
+          >
+            <MaterialIcons
+              name="delete-outline"
+              size={24}
+              color={ThemeColors.tertiary}
+            />
+          </TouchableOpacity>
+          <View style={styles.movementsContainer}>
+            <Text style={styles.movementName}>
+              {routine.movements.map((movement) => movement.name).join(", ")}
+            </Text>
+          </View>
+          <View style={styles.startButton}>
+            <Button
+              isHighlighted={true}
+              width={70}
+              text="Start"
+              onPress={() =>
+                navigation.navigate("Workout", { movements: routine })
+              }
+            />
+          </View>
         </View>
-        <Button
-          isHighlighted={true}
-          width={70}
-          text="Start"
-          onPress={() => navigation.navigate("Workout", { movements: routine })}
-        />
       </View>
     );
   };
@@ -250,8 +272,12 @@ const Routines = () => {
       <ScrollView style={{ flex: 1 }}>
         {trainingPlans.length === 0 ? (
           <View>
-            <Text style={styles.notFoundText}>No training plans available.</Text>
-            <Text style={styles.notFoundText}>Press Create Routine to make your first routine!</Text>
+            <Text style={styles.notFoundText}>
+              No training plans available.
+            </Text>
+            <Text style={styles.notFoundText}>
+              Press Create Routine to make your first routine!
+            </Text>
           </View>
         ) : (
           trainingPlans.map((trainingPlan) => (

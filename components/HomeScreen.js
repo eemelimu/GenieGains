@@ -104,7 +104,7 @@ const HomeScreen = () => {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
-              "Auth-Token": token,
+              Authorization: `Token ${token}`,
             },
           });
           const data = await res.json();
@@ -166,7 +166,7 @@ const HomeScreen = () => {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            "Auth-Token": token,
+            Authorization: `Token ${token}`,
           },
         })
           .then((response) => response.json())
@@ -196,7 +196,7 @@ const HomeScreen = () => {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            "Auth-Token": token,
+            Authorization: `Token ${token}`,
           },
         })
           .then((response) => response.json())
@@ -223,7 +223,7 @@ const HomeScreen = () => {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
-          "Auth-Token": token,
+          Authorization: `Token ${token}`,
         },
       });
       const data = await res.json();
@@ -281,7 +281,7 @@ const HomeScreen = () => {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          "Auth-Token": token,
+          Authorization: `Token ${token}`,
         },
       });
       const data = await res.json();

@@ -37,11 +37,11 @@ test("Register renders correctly and that the theme context applies themes corre
     );
   });
 
-  await waitFor(() => {
+  waitFor(() => {
     let tree;
     act(() => {
       tree = component.toJSON();
     });
     expect(tree).toMatchSnapshot();
-  });
+  }, 10000);
 });

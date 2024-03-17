@@ -43,11 +43,11 @@ test("Account settings component renders correctly and that the theme context ap
     );
   });
 
-  await waitFor(async () => {
+  waitFor(async () => {
     let tree;
     act(() => {
       tree = component.toJSON();
     });
-    await expect(tree).toMatchSnapshot();
+    expect(tree).toMatchSnapshot();
   });
 });

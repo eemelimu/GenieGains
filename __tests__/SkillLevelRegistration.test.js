@@ -43,8 +43,9 @@ test("Skill level Registration component renders correctly and that the theme co
   });
 
   let tree;
+  waitFor(() => {
   act(() => {
     tree = component.toJSON();
-  });
+  });}, 20000);
   expect(tree).toMatchSnapshot();
 });

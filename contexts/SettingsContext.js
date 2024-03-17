@@ -6,6 +6,7 @@ const ENABLE_NOTIFICATIONS = "ENABLE_NOTIFICATIONS";
 const DISABLE_NOTIFICATIONS = "DISABLE_NOTIFICATIONS";
 const ENABLE_TIPS = "ENABLE_TIPS";
 const DISABLE_TIPS = "DISABLE_TIPS";
+
 export const SettingsProvider = ({ children }) => {
   const [settings, setSettings] = useState({
     notifications: false,

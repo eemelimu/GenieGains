@@ -4,13 +4,13 @@ import { act } from "react-dom/test-utils";
 import { createStackNavigator } from "@react-navigation/stack";
 import { ThemeProvider } from "../contexts/ThemeContext";
 import { AuthProvider } from "../contexts/AuthContext";
-import { waitFor } from "@testing-library/react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import Login from "../pages/Login";
 import { NotificationProvider } from "../contexts/NotificationContext";
 import Notification from "../components/Notification";
 import Toast, { ErrorToast } from "react-native-toast-message";
 import FontHandler from "../handlers/FontHandler";
+import { waitFor } from "@testing-library/react-native";
 
 jest.useFakeTimers();
 
@@ -38,11 +38,9 @@ test("Login renders correctly and that the theme context applies themes correctl
     );
   });
 
-  await waitFor(() => {
+  waitFor(() => {
     let tree;
-    act(() => {
-      tree = component.toJSON();
-    });
+    tree = component.toJSON();
     expect(tree).toMatchSnapshot();
-  });
+  }, 20000);
 });

@@ -4,6 +4,7 @@ import { ThemeColors } from "../assets/theme/ThemeColors";
 
 const RESET_THEME = "RESET_THEME";
 const CHANGE_THEME_COLOR = "CHANGE_THEME_COLOR";
+
 const getData = async (key) => {
   try {
     const jsonValue = await AsyncStorage.getItem(key);

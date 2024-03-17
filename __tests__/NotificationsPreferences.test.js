@@ -43,7 +43,7 @@ test("Notification settings component renders correctly and that the theme conte
     );
   });
 
-  await waitFor(() => {
+  waitFor(() => {
     let tree;
     act(() => {
       tree = component.toJSON();

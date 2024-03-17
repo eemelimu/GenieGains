@@ -4,7 +4,6 @@ import { useContext } from "react";
 import { ThemeContext } from "../contexts/ThemeContext";
 const CustomText = ({ textSize, children, usesFont = true, bold = false }) => {
   const isInsideContext = !useContext(ThemeContext);
-  const { theme } = useContext(ThemeContext);
   const styles = [];
   const baseStyle = StyleSheet.create({
     text: {
@@ -12,8 +11,9 @@ const CustomText = ({ textSize, children, usesFont = true, bold = false }) => {
       fontWeight: bold ? "bold" : "normal",
     },
   });
-    styles.push(baseStyle);
+  styles.push(baseStyle);
   if (isInsideContext) {
+    const { theme } = useContext(ThemeContext);
     const dynamicThemeStyles = StyleSheet.create({
       color: theme.tertiary,
     });
@@ -38,10 +38,7 @@ const CustomText = ({ textSize, children, usesFont = true, bold = false }) => {
     styles.push(fontStyles);
   }
 
-    return (
-        <Text style={styles}>{children}</Text>
-    );
-
+  return <Text style={styles}>{children}</Text>;
 };
 
 export default CustomText;

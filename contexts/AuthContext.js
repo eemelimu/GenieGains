@@ -7,6 +7,11 @@ import { ThemeContext } from "./ThemeContext";
 
 const AuthContext = createContext();
 
+const LOGIN = "LOGIN";
+const LOGOUT = "LOGOUT";
+const STOPPED_LOADING = "STOPPED_LOADING";
+const START_LOADING = "START_LOADING";
+
 const initialState = {
   isAuthenticated: false,
   token: null,
@@ -15,24 +20,24 @@ const initialState = {
 
 const reducer = (state, action) => {
   switch (action.type) {
-    case "LOGIN":
+    case LOGIN:
       return {
         ...state,
         isAuthenticated: true,
         token: action.payload.token,
       };
-    case "LOGOUT":
+    case LOGOUT:
       return {
         ...state,
         isAuthenticated: false,
         token: null,
       };
-    case "STOPPED_LOADING":
+    case STOPPED_LOADING:
       return {
         ...state,
         isLoading: false,
       };
-      case "START_LOADING":
+    case START_LOADING:
       return {
         ...state,
         isLoading: true,
@@ -60,23 +65,19 @@ export const AuthProvider = ({ children }) => {
           });
 
           const ok = res.status === 200;
-          console.log("token check with token is :",token, ok);
+          console.log("token check with token is :", token, ok);
           if (ok) {
-            dispatch({ type: "LOGIN", payload: { token } });
-            //dispatch({ type: "STOPPED_LOADING" });
+            dispatch({ type: LOGIN, payload: { token } });
           } else {
             deleteData("token");
-            //dispatch({ type: "STOPPED_LOADING" });
             console.log("Invalid token");
           }
         } else {
-          //dispatch({ type: "STOPPED_LOADING" });
-          dispatch({ type: "LOGOUT" });
+          dispatch({ type: LOGOUT });
           console.log("No token in local db");
         }
       } catch (error) {
-        //dispatch({ type: "STOPPED_LOADING" });
-        dispatch({ type: "LOGOUT" });
+        dispatch({ type: LOGOUT });
         console.error("Error initializing auth:", error);
       }
     };

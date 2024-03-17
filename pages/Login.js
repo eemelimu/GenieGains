@@ -30,6 +30,8 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const passwordRef = useRef(null);
   const { fetcher } = useRequest();
+  const [emailFocus, setEmailFocus] = useState(false);
+  const [passwordFocus, setPasswordFocus] = useState(false);
 
   //remove hardware back button to prevent user from getting back to homscreen after logout
   useFocusEffect(
@@ -181,7 +183,12 @@ const Login = () => {
           source={require("../assets/GymJunkieLogo.png")}
         ></Image>
       </View>
-      <View style={styles.inputRow}>
+      <View
+        style={[
+          styles.inputRow,
+          emailFocus && { borderBottomColor: "orange" },
+        ]}
+      >
         <Fontisto
           name="email"
           size={24}
@@ -189,6 +196,8 @@ const Login = () => {
           style={styles.iconStyle}
         />
         <TextInput
+          onFocus={() => setEmailFocus(true)}
+          onBlur={() => setEmailFocus(false)}
           value={username}
           onChangeText={setUsername}
           style={styles.input}
@@ -200,7 +209,9 @@ const Login = () => {
           onSubmitEditing={() => passwordRef.current.focus()}
         />
       </View>
-      <View style={styles.inputRow}>
+      <View style={[styles.inputRow,
+        passwordFocus && { borderBottomColor: "orange" },
+      ]}>
         <AntDesign
           name="lock"
           size={24}
@@ -208,6 +219,8 @@ const Login = () => {
           style={styles.iconStyle}
         />
         <TextInput
+          onFocus={() => setPasswordFocus(true)}
+          onBlur={() => setPasswordFocus(false)}
           ref={passwordRef}
           secureTextEntry={!showPassword}
           value={password}

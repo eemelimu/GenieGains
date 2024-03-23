@@ -39,8 +39,8 @@ const Register = () => {
       object: { username: username },
       showLoading: true,
     });
-    if (!(await res)) {
-      console.log(await res);
+    if (!res) {
+      console.log(res);
       return true;
     }
     return false;
@@ -76,7 +76,6 @@ const Register = () => {
       },
     });
   };
-  
 
   const styles = StyleSheet.create({
     container: {

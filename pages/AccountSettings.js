@@ -47,11 +47,7 @@ const AccountSettings = () => {
       showLoading: true,
     });
     if (res) {
-      enableTips();
-      disableNotifications();
       dispatch({ type: "LOGOUT" });
-      resetTheme();
-      storeData("theme", ThemeColors);
     }
   };
 
@@ -105,12 +101,8 @@ const AccountSettings = () => {
   };
 
   const handleLogout = () => {
-    enableTips();
     setLogoutModalVisible(false);
-    disableNotifications();
     dispatch({ type: "LOGOUT" });
-    resetTheme();
-    storeData("theme", ThemeColors);
   };
 
   useFocusEffect(

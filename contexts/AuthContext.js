@@ -4,7 +4,7 @@ import { getData, storeData, deleteData } from "../utils/utils";
 import { useNavigation } from "@react-navigation/native";
 import { BACKEND_URL } from "../assets/config";
 import { ThemeContext } from "./ThemeContext";
-
+import { useSettings } from "./SettingsContext";
 const AuthContext = createContext();
 
 const LOGIN = "LOGIN";
@@ -51,7 +51,7 @@ export const AuthProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const navigation = useNavigation();
   const { resetTheme, theme: ThemeColors } = useContext(ThemeContext);
-
+  const { resetSettings } = useSettings();
   useEffect(() => {
     const initializeAuth = async () => {
       try {
@@ -101,6 +101,7 @@ export const AuthProvider = ({ children }) => {
           deleteData("token");
           resetTheme();
           storeData("theme", ThemeColors);
+          resetSettings();
           navigation.navigate("Login");
         }
       } catch (error) {
@@ -109,7 +110,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     handleAuthChange();
-  }, [state.isAuthenticated, state.token, state.isLoading]);
+  }, [state]);
 
   return (
     <AuthContext.Provider value={{ state, dispatch }}>

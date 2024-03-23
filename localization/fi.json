@@ -1,0 +1,11 @@
+{
+  "textDirection": "ltr",
+  "measurementSystem": "metric",
+  "good-morning": "Hyvää huomenta",
+  "login": "kirjaudu",
+  "register": "Rekisteröidy",
+  "start-workout": "Aloita uusi treeni",
+  "routines": "Rutiinit",
+  "progress": "Kehitys",
+  "no-workouts": "Ei treenejä"
+}

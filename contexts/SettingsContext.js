@@ -6,6 +6,7 @@ const ENABLE_NOTIFICATIONS = "ENABLE_NOTIFICATIONS";
 const DISABLE_NOTIFICATIONS = "DISABLE_NOTIFICATIONS";
 const ENABLE_TIPS = "ENABLE_TIPS";
 const DISABLE_TIPS = "DISABLE_TIPS";
+const RESET_SETTINGS = "RESET_SETTINGS";
 
 export const SettingsProvider = ({ children }) => {
   const [settings, setSettings] = useState({
@@ -53,6 +54,9 @@ export const SettingsProvider = ({ children }) => {
           tips: false,
         }));
         break;
+      case RESET_SETTINGS:
+        setSettings({ notifications: false, tips: true });
+        break;
       default:
         break;
     }
@@ -78,6 +82,12 @@ export const SettingsProvider = ({ children }) => {
       type: DISABLE_TIPS,
     });
 
+  const resetSettings = () => {
+    dispatch({
+      type: RESET_SETTINGS,
+    });
+  };
+
   return (
     <SettingsContext.Provider
       value={{
@@ -86,6 +96,7 @@ export const SettingsProvider = ({ children }) => {
         disableNotifications,
         enableTips,
         disableTips,
+        resetSettings,
       }}
     >
       {children}

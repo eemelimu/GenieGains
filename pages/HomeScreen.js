@@ -25,8 +25,10 @@ import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { useAuth } from "../contexts/AuthContext";
 import { useNotification } from "../contexts/NotificationContext";
 import { useSettings } from "../contexts/SettingsContext";
+import { useLocalization } from "../contexts/LocalizationContext";
 
 const HomeScreen = () => {
+  const { locale, formatDate, formatNumber, t } = useLocalization();
   const { settings } = useSettings();
   const seed =
     new Date().getDate() + new Date().getMonth() + new Date().getFullYear();
@@ -544,7 +546,7 @@ const HomeScreen = () => {
             data={searchedWorkouts}
             ListEmptyComponent={() => (
               <View style={styles.noWorkouts}>
-                <Text style={styles.regularText}>No Workouts</Text>
+                <Text style={styles.regularText}>{t("no-workouts")}</Text>
               </View>
             )}
             renderItem={({ item }) => (
@@ -566,7 +568,9 @@ const HomeScreen = () => {
             data={workouts}
             ListEmptyComponent={() => (
               <View style={styles.noWorkouts}>
-                <Text style={styles.regularText}>No Workouts</Text>
+                <Text style={styles.regularText}>
+                  {t("no-workouts")}
+                </Text>
               </View>
             )}
             renderItem={({ item }) => (
@@ -597,7 +601,7 @@ const HomeScreen = () => {
           isHighlighted={true}
           width={150}
           height={"80%"}
-          text="Start Workout"
+          text={t("start-workout")}
           onLongPress={() => console.log("long press")}
           onPress={() => navigation.navigate("Workout")}
           renderIcon={(color) => (

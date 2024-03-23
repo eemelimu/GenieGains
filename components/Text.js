@@ -2,8 +2,15 @@ import { StyleSheet } from "react-native";
 import { ThemeColors } from "../assets/theme/ThemeColors";
 import { useContext } from "react";
 import { ThemeContext } from "../contexts/ThemeContext";
-const CustomText = ({ textSize, children, usesFont = true, bold = false }) => {
+const CustomText = ({
+  textSize,
+  children,
+  usesFont = true,
+  bold = false,
+  translate = false,
+}) => {
   const isInsideContext = !useContext(ThemeContext);
+  const { theme } = useContext(ThemeContext);
   const styles = [];
   const baseStyle = StyleSheet.create({
     text: {
@@ -13,7 +20,6 @@ const CustomText = ({ textSize, children, usesFont = true, bold = false }) => {
   });
   styles.push(baseStyle);
   if (isInsideContext) {
-    const { theme } = useContext(ThemeContext);
     const dynamicThemeStyles = StyleSheet.create({
       color: theme.tertiary,
     });

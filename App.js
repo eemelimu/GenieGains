@@ -3,6 +3,7 @@ import * as Notifications from "expo-notifications";
 import { AppState, Settings } from "react-native";
 import PushNotificationHandler from "./handlers/PushNotificationHandler";
 import TipsPreferences from "./pages/TipsPreferences";
+import { LocalizationProvider } from "./contexts/LocalizationContext";
 import {
   StyleSheet,
   View,
@@ -156,33 +157,43 @@ const HomeStack = () => {
 export default function App() {
   return (
     <>
-      <StatusBar
+      {/* <StatusBar
         animated={true}
         backgroundColor={ThemeColors.primary}
         barStyle={"light-content"}
         showHideTransition={"fade"}
         hidden={false}
-      />
+      /> */}
       <SafeAreaView style={styles.container}>
+        <StatusBar
+          animated={true}
+          backgroundColor={ThemeColors.primary}
+          barStyle={"light-content"}
+          showHideTransition={"fade"}
+          hidden={false}
+        />
         <FontHandler>
           <NavigationContainer>
             <NotificationProvider>
               <ThemeProvider>
-                <AuthProvider>
-                  <SettingsProvider>
-                    <PushNotificationHandler />
-                    <Drawer.Navigator
-                      drawerContent={(props) => <DrawerContent {...props} />}
-                    >
-                      <Drawer.Screen
-                        options={{ headerShown: false }}
-                        name=" "
-                        component={HomeStack}
-                      />
-                    </Drawer.Navigator>
-                  </SettingsProvider>
-                  <Notification />
-                </AuthProvider>
+                <SettingsProvider>
+                  <AuthProvider>
+                    <LocalizationProvider>
+                      <PushNotificationHandler />
+                      <Drawer.Navigator
+                        drawerContent={(props) => <DrawerContent {...props} />}
+                      >
+                        <Drawer.Screen
+                          options={{ headerShown: false }}
+                          name=" "
+                          component={HomeStack}
+                        />
+                      </Drawer.Navigator>
+
+                      <Notification />
+                    </LocalizationProvider>
+                  </AuthProvider>
+                </SettingsProvider>
               </ThemeProvider>
             </NotificationProvider>
           </NavigationContainer>

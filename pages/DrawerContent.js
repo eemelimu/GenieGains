@@ -122,11 +122,7 @@ export const DrawerContent = () => {
       if (!response.ok) {
         setError("Something went wrong! Please try again later.");
       } else {
-        enableTips();
-        disableNotifications();
         dispatch({ type: "LOGOUT" });
-        resetTheme();
-        storeData("theme", ThemeColors);
         setSuccess("Logged out from all devices successfully");
       }
     } catch (error) {
@@ -136,17 +132,13 @@ export const DrawerContent = () => {
   };
 
   const handleLogout = () => {
-    disableNotifications();
-    enableTips();
     dispatch({
       type: "LOGOUT",
     });
-    resetTheme();
     setSuccess("Logged out successfully");
-    storeData("theme", ThemeColors);
     setLogoutModalVisible(false);
   };
-  
+
   const handleSendFeedback = async () => {
     if (feedbackText.length > 0) {
       fetcher({

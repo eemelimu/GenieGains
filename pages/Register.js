@@ -31,6 +31,10 @@ const Register = () => {
   const passwordRef = useRef(null);
   const password2Ref = useRef(null);
   const emailRef = useRef(null);
+  const [emailFocus, setEmailFocus] = useState(false);
+  const [usernameFocus, setUsernameFocus] = useState(false);
+  const [passwordFocus, setPasswordFocus] = useState(false);
+  const [password2Focus, setPassword2Focus] = useState(false);
 
   const usernameExists = async () => {
     const res = await fetcher({
@@ -163,7 +167,9 @@ const Register = () => {
           resizeMode="contain"
         />
       </View>
-      <View style={styles.inputRow}>
+      <View
+        style={[styles.inputRow, emailFocus && { borderBottomColor: "orange" }]}
+      >
         <Fontisto
           name="email"
           size={24}
@@ -171,6 +177,8 @@ const Register = () => {
           style={styles.iconStyle}
         />
         <TextInput
+          onFocus={() => setEmailFocus(true)}
+          onBlur={() => setEmailFocus(false)}
           ref={emailRef}
           style={styles.input}
           placeholder="Email"
@@ -181,7 +189,12 @@ const Register = () => {
           placeholderTextColor={ThemeColors.tertiary}
         />
       </View>
-      <View style={styles.inputRow}>
+      <View
+        style={[
+          styles.inputRow,
+          usernameFocus && { borderBottomColor: "orange" },
+        ]}
+      >
         <AntDesign
           name="user"
           size={24}
@@ -189,6 +202,8 @@ const Register = () => {
           style={styles.iconStyle}
         />
         <TextInput
+          onFocus={() => setUsernameFocus(true)}
+          onBlur={() => setUsernameFocus(false)}
           style={styles.input}
           placeholder="Username"
           value={username}
@@ -199,7 +214,12 @@ const Register = () => {
           onSubmitEditing={() => passwordRef.current.focus()}
         />
       </View>
-      <View style={styles.inputRow}>
+      <View
+        style={[
+          styles.inputRow,
+          passwordFocus && { borderBottomColor: "orange" },
+        ]}
+      >
         <AntDesign
           name="lock"
           size={24}
@@ -207,6 +227,8 @@ const Register = () => {
           style={styles.iconStyle}
         />
         <TextInput
+          onFocus={() => setPasswordFocus(true)}
+          onBlur={() => setPasswordFocus(false)}
           ref={passwordRef}
           style={styles.input}
           placeholder="Password"
@@ -229,7 +251,12 @@ const Register = () => {
           )}
         </TouchableOpacity>
       </View>
-      <View style={styles.inputRow}>
+      <View
+        style={[
+          styles.inputRow,
+          password2Focus && { borderBottomColor: "orange" },
+        ]}
+      >
         <AntDesign
           name="lock"
           size={24}
@@ -237,6 +264,8 @@ const Register = () => {
           style={styles.iconStyle}
         />
         <TextInput
+          onFocus={() => setPassword2Focus(true)}
+          onBlur={() => setPassword2Focus(false)}
           ref={password2Ref}
           style={styles.input}
           placeholder="Retype Password"

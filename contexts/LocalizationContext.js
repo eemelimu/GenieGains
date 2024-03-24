@@ -38,9 +38,9 @@ const reducer = (state, action) => {
         ...state,
         languageTag,
         textDirection:
-          translations[languageTag]?.translation.textDirection || "ltr",
+          translations[languageTag]?.translation?.textDirection || "ltr",
         measurementSystem:
-          translations[languageTag]?.translation.measurementSystem || "metric",
+          translations[languageTag]?.translation?.measurementSystem || "metric",
       };
     default:
       return state;

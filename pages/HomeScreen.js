@@ -91,7 +91,7 @@ const HomeScreen = () => {
     "Embrace Active Lifestyle Habits: Incorporate physical activity into your daily routine beyond structured workouts, such as taking the stairs instead of the elevator or walking or biking for transportation whenever possible, to promote overall health and longevity.",
   ];
 
-  const dateToString = date.toLocaleDateString(undefined, {
+  const dateToString = date.toLocaleDateString(locale, {
     weekday: "short",
     month: "short",
     day: "numeric",

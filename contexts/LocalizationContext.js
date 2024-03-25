@@ -6,6 +6,7 @@ import { storeData, getData, deleteData } from "../utils/utils";
 
 import en from "../localization/en.json";
 import fi from "../localization/fi.json";
+import i18next from "i18next";
 
 const translations = {
   en: { translation: en },
@@ -37,8 +38,7 @@ const reducer = (state, action) => {
       return {
         ...state,
         languageTag,
-        textDirection:
-          translations[languageTag]?.translation?.textDirection || "ltr",
+        textDirection: i18next.dir(languageTag) || "ltr",
         measurementSystem:
           translations[languageTag]?.translation?.measurementSystem || "metric",
       };

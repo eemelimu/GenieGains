@@ -5,6 +5,7 @@ import { ThemeContext } from "../contexts/ThemeContext";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import * as Clipboard from "expo-clipboard";
 import useRequest from "../hooks/useRequest";
+
 import {
   BackHandler,
   StyleSheet,
@@ -568,9 +569,7 @@ const HomeScreen = () => {
             data={workouts}
             ListEmptyComponent={() => (
               <View style={styles.noWorkouts}>
-                <Text style={styles.regularText}>
-                  {t("no-workouts")}
-                </Text>
+                <Text style={styles.regularText}>{t("no-workouts")}</Text>
               </View>
             )}
             renderItem={({ item }) => (

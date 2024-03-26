@@ -135,6 +135,7 @@ const styles = StyleSheet.create({
     padding: 5,
   },
   chatControl: {
+    marginTop: 10,
     alignItems: "flex-end",
   },
 });

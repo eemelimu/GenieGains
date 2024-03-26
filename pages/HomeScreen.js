@@ -5,7 +5,7 @@ import { ThemeContext } from "../contexts/ThemeContext";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import * as Clipboard from "expo-clipboard";
 import useRequest from "../hooks/useRequest";
-
+import { AiChat } from "../components/AiChat"
 import {
   BackHandler,
   StyleSheet,
@@ -593,6 +593,7 @@ const HomeScreen = () => {
           />
         )}
       </View>
+      <AiChat />
       <View style={styles.footer}>
         <Button
           isHighlighted={false}

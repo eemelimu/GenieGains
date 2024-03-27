@@ -1,4 +1,5 @@
 import React, { useEffect, useContext, useRef } from "react";
+import { useLocalization } from "../contexts/LocalizationContext";
 import {
   View,
   Text,
@@ -13,6 +14,7 @@ import { Fontisto } from "@expo/vector-icons";
 import { ThemeContext } from "../contexts/ThemeContext";
 
 const NotificationComponent = () => {
+  const { t } = useLocalization();
   const { theme: ThemeColors } = useContext(ThemeContext);
   const { notification } = useNotification();
   const { isLoading } = notification;
@@ -25,13 +27,13 @@ const NotificationComponent = () => {
     if (success) {
       Toast.show({
         type: "success",
-        text1: "Success!",
+        text1: t("success"),
         text2: success,
       });
     } else if (error) {
       Toast.show({
         type: "error",
-        text1: "Error!",
+        text1: t("error"),
         text2: error,
       });
     }

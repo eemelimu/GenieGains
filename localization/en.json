@@ -217,5 +217,7 @@
   "language": "{{language}}",
   "language-settings": "Language Settings",
   "select-language": "Select Language",
-  "about-description": "This is a fitness app that helps you track your workouts and progress."
+  "about-description": "This is a fitness app that helps you track your workouts and progress.",
+  "success": "Success!",
+  "error": "Error!"
 }

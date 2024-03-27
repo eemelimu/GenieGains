@@ -82,18 +82,28 @@ export const AiChat = () => {
 
 const styles = StyleSheet.create({
   container: {
-    width: "80%",
+    width: "100%",
+    height: "80%",
     position: "absolute",
-    bottom: 110,
-    right: 20,
+    bottom: 150,
+    zIndex: 1000,
   },
   chatbox: {
+    flex: 1,
     backgroundColor: "#f0f0f0",
     borderRadius: 10,
-    maxHeight: 200,
     overflow: "scroll",
+    paddingBottom: 50,
+  },
+  inputRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    padding: 10,
+    borderTopWidth: 1,
+    borderTopColor: "#ccc",
   },
   input: {
+    flex: 1,
     borderWidth: 1,
     borderColor: "#ccc",
     borderRadius: 5,
@@ -101,17 +111,15 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginBottom: 5,
   },
-  inputRow: {
-    justifyContent: "flex-end",
-    flexDirection: "row",
-    alignItems: "center",
-    padding: 3,
+  sendIcon: {
+    marginLeft: 10,
   },
   messageContainer: {
     padding: 10,
     overflow: "scroll",
     justifyContent: "flex-start",
     textAlign: "right",
+    minHeight: "90%",
   },
   sentMessage: {
     borderRadius: 10,
@@ -135,7 +143,9 @@ const styles = StyleSheet.create({
     padding: 5,
   },
   chatControl: {
-    marginTop: 10,
     alignItems: "flex-end",
+    position: "absolute",
+    right: 0,
+    bottom: -60,
   },
 });

@@ -90,6 +90,7 @@ const styles = StyleSheet.create({
     height: "100%",
     position: "absolute",
     zIndex: 1000,
+    // bottom: 80,
   },
   chatbox: {
     flex: 1,

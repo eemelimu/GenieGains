@@ -139,6 +139,13 @@ const GoalsPage = () => {
       const additionsCopy = additions.map((addition, index) => {
         return { ...addition, created: addition.created + index };
       });
+      //append 1 addition with value 0 to the end
+      additionsCopy.push({
+        created: selectedGoal.end,
+        number: 0,
+        note: "",
+        goal_id: id,
+      });
       setSelectedGoal({ ...res, data: additionsCopy });
     }
   };
@@ -386,7 +393,7 @@ const GoalsPage = () => {
           </Text>
 
           <View style={styles.chartContainer}>
-            {selectedGoal.data.length < 2 ? (
+            {selectedGoal.data.length < 3 ? (
               <View style={styles.chartPlaceHolder}>
                 <Text style={styles.boldText}>{t("not-enough-data")}</Text>
               </View>

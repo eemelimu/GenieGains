@@ -4,6 +4,8 @@ import { AppState, Settings } from "react-native";
 import PushNotificationHandler from "./handlers/PushNotificationHandler";
 import TipsPreferences from "./pages/TipsPreferences";
 import { LocalizationProvider } from "./contexts/LocalizationContext";
+import { useLocalization } from "./contexts/LocalizationContext";
+import LanguagePreferences from "./pages/LanguagePreferences";
 import {
   StyleSheet,
   View,
@@ -59,6 +61,7 @@ const CustomHeader = ({
   showNothing,
   route,
 }) => {
+  const { locale, t } = useLocalization();
   const [clickCounter, setClickCounter] = useState(0);
   const handleDrawer = () => {
     navigation.openDrawer();
@@ -83,9 +86,8 @@ const CustomHeader = ({
               setClickCounter(clickCounter + 1);
               Toast.show({
                 type: "error",
-                text1: "Are you sure you want to exit?",
-                text2:
-                  "There may be unsaved changes. Press back again to confirm exit.",
+                text1: t("exit-confirmation"),
+                text2: t("exit-text"),
               });
             }
           }}
@@ -100,7 +102,7 @@ const CustomHeader = ({
           source={require("./assets/GymJunkieLogo.png")}
         ></Image>
       ) : (
-        <Text style={styles.headerTitle}>{title}</Text>
+        <Text style={styles.headerTitle}>{t(title)}</Text>
       )}
     </View>
   );
@@ -114,7 +116,7 @@ const HomeStack = () => {
         header: () => (
           <CustomHeader
             navigation={navigation}
-            title={route.name}
+            title={route.name.toLowerCase().replaceAll(" ", "-")}
             showMenuButton={route.name === "Home"}
             route={route.name}
             showNothing={route.name === "Loading" || route.name === "Login"}
@@ -144,6 +146,7 @@ const HomeStack = () => {
       <Stack.Screen name="Account Settings" component={AccountSettings} />
       <Stack.Screen name="Terms of Service" component={Tos} />
       <Stack.Screen name="Appearance" component={ColorSettings} />
+      <Stack.Screen name="Language Settings" component={LanguagePreferences} />
       <Stack.Screen
         name="Notification Settings"
         component={NotificationsPreferences}

@@ -1,5 +1,6 @@
 import React, { useState, useRef } from "react";
 import useRequest from "../hooks/useRequest";
+import { useLocalization } from "../contexts/LocalizationContext";
 import {
   View,
   Text,
@@ -19,6 +20,7 @@ import { Fontisto } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 
 const Register = () => {
+  const { t } = useLocalization();
   const { setError, setSuccess, startLoading, stopLoading } = useNotification();
   const { fetcher } = useRequest();
   const navigation = useNavigation();
@@ -52,23 +54,23 @@ const Register = () => {
 
   const moveToPreferences = async () => {
     if (password !== password2) {
-      setError("Passwords do not match");
+      setError(t("password-match"));
       return;
     }
     if (username === "" || password === "" || email === "") {
-      setError("Please fill in all fields");
+      setError(t("fill-all-fields"));
       return;
     }
     if (await usernameExists()) {
-      setError("Username already exists");
+      setError(t("username-already-exists"));
       return;
     }
     if (password.length < 5) {
-      setError("Password must be at least 5 characters long");
+      setError(t("password-length"));
       return;
     }
     if (!email.includes("@")) {
-      setError("Invalid email");
+      setError(t("invalid-email"));
       return;
     }
     navigation.navigate("Skill Level", {
@@ -181,7 +183,7 @@ const Register = () => {
           onBlur={() => setEmailFocus(false)}
           ref={emailRef}
           style={styles.input}
-          placeholder="Email"
+          placeholder={t("email")}
           value={email}
           onChangeText={setEmail}
           autoComplete="email"
@@ -205,7 +207,7 @@ const Register = () => {
           onFocus={() => setUsernameFocus(true)}
           onBlur={() => setUsernameFocus(false)}
           style={styles.input}
-          placeholder="Username"
+          placeholder={t("username")}
           value={username}
           onChangeText={setUsername}
           autoComplete="username"
@@ -231,7 +233,7 @@ const Register = () => {
           onBlur={() => setPasswordFocus(false)}
           ref={passwordRef}
           style={styles.input}
-          placeholder="Password"
+          placeholder={t("password")}
           secureTextEntry={!showPassword}
           value={password}
           onChangeText={setPassword}
@@ -297,7 +299,7 @@ const Register = () => {
           textSize={20}
           height={50}
           width={"80%"}
-          text="Register"
+          text={t("register")}
           onPress={moveToPreferences}
         />
       </View>

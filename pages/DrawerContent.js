@@ -3,6 +3,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { storeData, hexToRgba } from "../utils/utils";
 import Toast, { ErrorToast } from "react-native-toast-message";
 import { useSettings } from "../contexts/SettingsContext";
+import { useLocalization } from "../contexts/LocalizationContext";
 import {
   StyleSheet,
   View,
@@ -91,6 +92,7 @@ const ThemeBtn = ({ colors, name }) => {
 };
 
 export const DrawerContent = () => {
+  const { t } = useLocalization();
   const { disableNotifications, enableTips } = useSettings();
   const { state, dispatch } = useAuth();
   const token = state.token;
@@ -109,33 +111,22 @@ export const DrawerContent = () => {
   const [feedbackWarning, setFeedbackWarning] = useState(false);
   const navigation = useNavigation();
 
-  const logoutAll = async () => {
-    setLogoutModalVisible(false);
-    try {
-      const response = await fetch(BACKEND_URL + "logout", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Token ${token}`,
-        },
-      });
-      if (!response.ok) {
-        setError("Something went wrong! Please try again later.");
-      } else {
-        dispatch({ type: "LOGOUT" });
-        setSuccess("Logged out from all devices successfully");
-      }
-    } catch (error) {
-      setError("Check your internet connection");
-      console.error("Error:", error);
+  const logoutAll = () => {
+    const res = fetcher({
+      url: BACKEND_URL + "logout",
+      reqMethod: "POST",
+      errorMessage: t("something-went-wrong"),
+    });
+    if (res) {
+      dispatch({ type: "LOGOUT" });
     }
+    setLogoutModalVisible(false);
   };
 
   const handleLogout = () => {
     dispatch({
       type: "LOGOUT",
     });
-    setSuccess("Logged out successfully");
     setLogoutModalVisible(false);
   };
 
@@ -272,7 +263,7 @@ export const DrawerContent = () => {
           color={ThemeColors.tertiary}
           style={styles.drawerItemIcon}
         />
-        <Text style={styles.regularText}>Account</Text>
+        <Text style={styles.regularText}>{t("account")}</Text>
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.drawerItem}
@@ -286,7 +277,7 @@ export const DrawerContent = () => {
           color={ThemeColors.tertiary}
           style={styles.drawerItemIcon}
         />
-        <Text style={styles.regularText}>Settings</Text>
+        <Text style={styles.regularText}>{t("settings")}</Text>
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.drawerItem}
@@ -298,7 +289,7 @@ export const DrawerContent = () => {
           color={ThemeColors.tertiary}
           style={styles.drawerItemIcon}
         />
-        <Text style={styles.regularText}>Troubleshooting</Text>
+        <Text style={styles.regularText}>{t("troubleshooting")}</Text>
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.drawerItem}
@@ -310,7 +301,7 @@ export const DrawerContent = () => {
           color={ThemeColors.tertiary}
           style={styles.drawerItemIcon}
         />
-        <Text style={styles.regularText}>About</Text>
+        <Text style={styles.regularText}>{t("about")}</Text>
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.drawerItem}
@@ -322,7 +313,7 @@ export const DrawerContent = () => {
           color={ThemeColors.tertiary}
           style={styles.drawerItemIcon}
         />
-        <Text style={styles.regularText}>Send Feedback</Text>
+        <Text style={styles.regularText}>{t("send-feedback")}</Text>
       </TouchableOpacity>
       {feedbackInputVisible && (
         <View style={styles.sendFeedBackItem}>
@@ -331,7 +322,7 @@ export const DrawerContent = () => {
               styles.sendFeedbackInput,
               feedbackWarning && { borderWidth: 1, borderColor: "red" },
             ]}
-            placeholder="What's on your mind?"
+            placeholder={t("feedback-placeholder")}
             onChangeText={setFeedbackText}
             placeholderTextColor={ThemeColors.tertiary}
           />
@@ -347,25 +338,25 @@ export const DrawerContent = () => {
       )}
       {feedbackSent && (
         <View style={styles.sendFeedBackItemSent}>
-          <Text style={styles.regularText}>Feedback Sent</Text>
+          <Text style={styles.regularText}>{t("feedback-sent")}</Text>
         </View>
       )}
       <View style={styles.row}>
         <ThemeBtn
           colors={["#212121", "#141313", "#b8bfc9", "#797979"]}
-          name="Midnight"
+          name={t("midnight")}
         />
         <ThemeBtn
           colors={["#4c669f", "#3b5998", "#ffffff", "#192f6a"]}
-          name="Deep Sea"
+          name={t("deep-sea")}
         />
         <ThemeBtn
           colors={["#f9d423", "#e65c00", "#333333", "#333333"]}
-          name="Sunset"
+          name={t("sunset")}
         />
         <ThemeBtn
           colors={["#f8f9fa", "#e9ecef", "#212529", "#495057"]}
-          name="Light"
+          name={t("light")}
         />
         {/* <ThemeBtn
           colors={["#fffacd", "#ffffe0", "#e6d150", "#e6b800"]}
@@ -396,7 +387,7 @@ export const DrawerContent = () => {
             style={styles.drawerItemIcon}
           />
           <Text style={{ fontWeight: "bold", color: ThemeColors.tertiary }}>
-            Logout
+            {t("logout")}
           </Text>
         </TouchableOpacity>
       </View>
@@ -408,24 +399,22 @@ export const DrawerContent = () => {
       >
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            <Text style={styles.boldText}>
-              Are you sure you want to logout?
-            </Text>
+            <Text style={styles.boldText}>{t("logout-confirmation")}</Text>
             <Button
               width={"80%"}
-              text={"Yes log me out from all devices"}
+              text={t("yes-from-all-devices")}
               onPress={logoutAll}
               textColor={ThemeColors.tertiary}
             />
             <Button
               width={"80%"}
-              text={"Logout just from this device"}
+              text={t("just-this-device")}
               onPress={handleLogout}
             />
             <Button
               isHighlighted={true}
               width={"80%"}
-              text={"Cancel"}
+              text={t("cancel")}
               onPress={() => setLogoutModalVisible(false)}
             />
           </View>

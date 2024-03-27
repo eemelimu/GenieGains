@@ -1,9 +1,11 @@
 import React, { useContext, useState, useCallback, useEffect } from "react";
-import { View, Text, Button, StyleSheet, Pressable } from "react-native";
+import { View, Text, StyleSheet, Pressable } from "react-native";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
+import { useLocalization } from "../contexts/LocalizationContext";
 //import { ThemeColors } from "../assets/ThemeColors";
 import { MaterialIcons } from "@expo/vector-icons";
 import { ScrollView } from "react-native-gesture-handler";
+import { Entypo } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 import { ThemeContext } from "../contexts/ThemeContext";
 import { FontAwesome } from "@expo/vector-icons";
@@ -11,6 +13,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { BACKEND_URL } from "../assets/config";
 import { useAuth } from "../contexts/AuthContext";
 import useRequest from "../hooks/useRequest";
+import Button from "../components/Button";
 
 const SettingsButton = ({ color, text, children, navigationPage }) => {
   const navigation = useNavigation();
@@ -74,6 +77,7 @@ const SettingsButton = ({ color, text, children, navigationPage }) => {
 };
 
 const SettingsScreen = () => {
+  const { t, setLanguage } = useLocalization();
   const [username, setUsername] = useState("");
   const navigation = useNavigation();
   const { state } = useAuth();
@@ -157,7 +161,7 @@ const SettingsScreen = () => {
         <SettingsButton
           navigationPage={"Appearance"}
           color={ThemeColors.tertiary}
-          text="Appearance"
+          text={t("appearance")}
         >
           <FontAwesome
             name="paint-brush"
@@ -169,7 +173,7 @@ const SettingsScreen = () => {
         <SettingsButton
           navigationPage={"Notification Settings"}
           color={ThemeColors.tertiary}
-          text="Notifications"
+          text={t("notification-settings")}
         >
           <Ionicons
             name="notifications"
@@ -181,7 +185,7 @@ const SettingsScreen = () => {
         <SettingsButton
           navigationPage={"Tip Settings"}
           color={ThemeColors.tertiary}
-          text="Tip Settings"
+          text={t("tip-settings")}
         >
           <MaterialIcons
             name="lightbulb"
@@ -193,7 +197,7 @@ const SettingsScreen = () => {
         <SettingsButton
           navigationPage={"Preferences Settings"}
           color={ThemeColors.tertiary}
-          text="Preferences"
+          text={t("preferences")}
         >
           <FontAwesome
             name="wrench"
@@ -205,13 +209,25 @@ const SettingsScreen = () => {
         <SettingsButton
           navigationPage={"Terms of Service"}
           color={ThemeColors.tertiary}
-          text="Terms of Service"
+          text={t("terms-of-service")}
         >
           <FontAwesome
             name="legal"
             size={24}
             color={ThemeColors.tertiary}
             style={{ paddingRight: 15 }}
+          />
+        </SettingsButton>
+        <SettingsButton
+          navigationPage={"Language Settings"}
+          color={ThemeColors.tertiary}
+          text={t("language-settings")}
+        >
+          <Entypo
+            style={{ paddingRight: 15 }}
+            name="globe"
+            size={24}
+            color={ThemeColors.tertiary}
           />
         </SettingsButton>
         {/* <SettingsButton

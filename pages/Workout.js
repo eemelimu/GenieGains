@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
+import { useLocalization } from "../contexts/LocalizationContext";
 import {
   StyleSheet,
   View,
@@ -19,6 +20,7 @@ import { ThemeContext } from "../contexts/ThemeContext";
 import { LogBox } from "react-native";
 
 export const Workout = ({ route }) => {
+  const { t, locale } = useLocalization();
   LogBox.ignoreAllLogs();
   const { theme: ThemeColors } = useContext(ThemeContext);
   //styles dont move
@@ -186,10 +188,12 @@ export const Workout = ({ route }) => {
   });
 
   const [name, setName] = useState(
-    `Workout ${new Date().toLocaleDateString(undefined, {
-      month: "numeric",
-      day: "numeric",
-    })}`
+    t("workout-example-name", {
+      date: new Date().toLocaleDateString(locale.languageTag, {
+        month: "numeric",
+        day: "numeric",
+      }),
+    })
   );
   const [notes, setNotes] = useState("");
   const [movements, setMovements] = useState([]);
@@ -338,7 +342,7 @@ export const Workout = ({ route }) => {
             style={styles.input}
             value={name}
             onChangeText={(text) => setName(text)}
-            placeholder="Workout name"
+            placeholder={t("workout-name")}
             placeholderTextColor={ThemeColors.tertiary}
           />
         </View>
@@ -348,7 +352,7 @@ export const Workout = ({ route }) => {
             style={styles.input}
             value={notes}
             onChangeText={(text) => setNotes(text)}
-            placeholder="Notes"
+            placeholder={t("notes")}
             placeholderTextColor={ThemeColors.tertiary}
           />
         </View>
@@ -362,7 +366,7 @@ export const Workout = ({ route }) => {
             onSelect={(index, value) => {
               handleAddMovement(value);
             }}
-            defaultValue="Select Movement"
+            defaultValue={t("select-movements")}
             textStyle={styles.dropdownText}
             dropdownStyle={styles.dropdown}
             dropdownTextStyle={{
@@ -390,7 +394,7 @@ export const Workout = ({ route }) => {
               />
             ))
           ) : (
-            <Text style={styles.regularText}>No exercises added</Text>
+            <Text style={styles.regularText}>{t("no-exercises")}</Text>
           )}
         </View>
       </ScrollView>
@@ -402,7 +406,7 @@ export const Workout = ({ route }) => {
           }}
           onPress={handleFinishWorkout}
         >
-          <Text style={styles.regularText}>Finish Workout</Text>
+          <Text style={styles.regularText}>{t("finish-workout")}</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -574,7 +578,7 @@ const SingleMovement = ({
           style={styles.addSetButton}
           color={ThemeColors.secondary}
         >
-          <Text style={styles.addSetButtonText}>Add Set</Text>
+          <Text style={styles.addSetButtonText}>{t("add-set")}</Text>
         </Pressable>
       </View>
     </View>
@@ -668,22 +672,22 @@ const SingleSet = ({
     <View>
       <View style={styles.singleMovementRow}>
         <Text style={styles.singleMovementLabel}>{setNumber}.</Text>
-        <Text style={styles.singleMovementLabel}>Weight</Text>
+        <Text style={styles.singleMovementLabel}>{t("weight")}</Text>
         <TextInput
           style={styles.singleMovementInput}
           value={weight}
           onChangeText={(text) => setWeight(text)}
-          placeholder="Weight"
+          placeholder={t("weight")}
           keyboardType="numeric"
           placeholderTextColor={ThemeColors.tertiary}
           onChange={handleSetOnChange}
         />
-        <Text style={styles.singleMovementLabel}>Reps</Text>
+        <Text style={styles.singleMovementLabel}>{t("reps")}</Text>
         <TextInput
           style={styles.singleMovementInput}
           value={reps}
           onChangeText={(text) => setReps(text)}
-          placeholder="Reps"
+          placeholder={t("reps")}
           keyboardType="numeric"
           placeholderTextColor={ThemeColors.tertiary}
           onChange={handleSetOnChange}

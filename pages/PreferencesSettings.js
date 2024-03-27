@@ -1,16 +1,21 @@
 import React, { useState, useContext, useCallback } from "react";
 import { View, Text, TouchableOpacity, Modal, StyleSheet } from "react-native";
+import Toast, { ErrorToast } from "react-native-toast-message";
 import { useFocusEffect } from "@react-navigation/native";
 //import { ThemeColors } from "../assets/ThemeColors";
 import { ThemeContext } from "../contexts/ThemeContext";
 import { useAuth } from "../contexts/AuthContext";
 import { BACKEND_URL } from "../assets/config";
 import { useNotification } from "../contexts/NotificationContext";
+import { useLocalization } from "../contexts/LocalizationContext";
+import useRequest from "../hooks/useRequest";
 
 const Preferences = () => {
+  const { t } = useLocalization();
   const { dispatch, state } = useAuth();
   const { setError, setSuccess, startLoading, stopLoading } = useNotification();
   const token = state.token;
+  const { fetcher } = useRequest(token);
   const [isUnitModalVisible, setIsUnitModalVisible] = useState(false);
   const [isExperienceModalVisible, setIsExperienceModalVisible] =
     useState(false);
@@ -20,27 +25,16 @@ const Preferences = () => {
   const { theme: ThemeColors } = useContext(ThemeContext);
 
   const getUserData = async () => {
-    startLoading();
-    try {
-      const response = await fetch(BACKEND_URL + "user", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Token ${token}`,
-        },
-      });
-      if (!response.ok) {
-        console.log(token);
-        throw new Error("HTTP status " + response.status);
-      }
-      const data = await response.json();
-      setSelectedUnit(data.unit);
-      setSelectedExperience(data.experience);
-    } catch (error) {
-      setError("Check your internet connection");
-      console.error("Error:", error);
+    const res = await fetcher({
+      url: BACKEND_URL + "user",
+      reqMethod: "GET",
+      errorMessage: t("something-went-wrong"),
+      showLoading: true,
+    });
+    if (res) {
+      setSelectedUnit(res.unit);
+      setSelectedExperience(res.experience);
     }
-    stopLoading();
   };
   useFocusEffect(
     useCallback(() => {
@@ -64,48 +58,26 @@ const Preferences = () => {
   };
 
   const handleConfirmUnit = async () => {
-    try {
-      const response = await fetch(BACKEND_URL + "user", {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Token ${token}`,
-        },
-        body: JSON.stringify({ unit: selectedUnit.toLowerCase() }),
-      });
-      if (!response.ok) {
-        setError("Something went wrong");
-      } else {
-        console.log("Selected unit:", selectedUnit);
-        setIsUnitModalVisible(false);
-        setSuccess("Unit updated successfully");
-      }
-    } catch (error) {
-      setError("Check your internet connection");
-      console.error("Error:", error);
+    const res = await fetcher({
+      url: BACKEND_URL + "user",
+      reqMethod: "PATCH",
+      object: { unit: selectedUnit.toLowerCase() },
+      errorMessage: t("something-went-wrong"),
+    });
+    if (res) {
+      setIsUnitModalVisible(false);
     }
   };
 
   const handleConfirmExperience = async () => {
-    try {
-      const response = await fetch(BACKEND_URL + "user", {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Token ${token}`,
-        },
-        body: JSON.stringify({ experience: selectedExperience.toLowerCase() }),
-      });
-      if (!response.ok) {
-        setError("Something went wrong");
-      } else {
-        console.log("Selected experience:", selectedExperience);
-        setSuccess("Experience updated successfully");
-        setIsExperienceModalVisible(false);
-      }
-    } catch (error) {
-      setError("Check your internet connection");
-      console.error("Error:", error);
+    const res = await fetcher({
+      url: BACKEND_URL + "user",
+      reqMethod: "PATCH",
+      object: { experience: selectedExperience.toLowerCase() },
+      errorMessage: t("something-went-wrong"),
+    });
+    if (res) {
+      setIsExperienceModalVisible(false);
     }
   };
   const styles = StyleSheet.create({
@@ -180,7 +152,9 @@ const Preferences = () => {
     <View style={styles.container}>
       <TouchableOpacity style={styles.button} onPress={handleOpenUnitModal}>
         <Text style={styles.buttonText}>
-          Select Unit: {selectedUnit || "Not selected"}
+          {t("selected-unit", {
+            unit: selectedUnit ? t(selectedUnit) : t("nothing-selected"),
+          })}
         </Text>
       </TouchableOpacity>
 
@@ -189,7 +163,11 @@ const Preferences = () => {
         onPress={handleOpenExperienceModal}
       >
         <Text style={styles.buttonText}>
-          Select Experience: {selectedExperience || "Not selected"}
+          {t("selected-experience", {
+            level: selectedExperience
+              ? t(selectedExperience)
+              : t("nothing-selected"),
+          })}
         </Text>
       </TouchableOpacity>
 
@@ -208,7 +186,7 @@ const Preferences = () => {
               ]}
               onPress={() => setSelectedUnit("metric")}
             >
-              <Text style={styles.modalButtonText}>Metric</Text>
+              <Text style={styles.modalButtonText}>{t("metric")}</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={[
@@ -217,7 +195,7 @@ const Preferences = () => {
               ]}
               onPress={() => setSelectedUnit("imperial")}
             >
-              <Text style={styles.modalButtonText}>Imperial</Text>
+              <Text style={styles.modalButtonText}>{t("imperial")}</Text>
             </TouchableOpacity>
 
             <View style={styles.modalButtonContainer}>
@@ -225,17 +203,18 @@ const Preferences = () => {
                 style={[styles.modalButton, styles.confirmButton]}
                 onPress={handleConfirmUnit}
               >
-                <Text style={styles.modalButtonText}>Confirm</Text>
+                <Text style={styles.modalButtonText}>{t("confirm")}</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={[styles.modalButton, styles.cancelButton]}
                 onPress={handleCloseUnitModal}
               >
-                <Text style={styles.modalButtonText}>Cancel</Text>
+                <Text style={styles.modalButtonText}>{t("cancel")}</Text>
               </TouchableOpacity>
             </View>
           </View>
         </View>
+        <Toast />
       </Modal>
 
       <Modal
@@ -253,7 +232,7 @@ const Preferences = () => {
               ]}
               onPress={() => setSelectedExperience("beginner")}
             >
-              <Text style={styles.modalButtonText}>Beginner</Text>
+              <Text style={styles.modalButtonText}>{t("beginner")}</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={[
@@ -262,7 +241,7 @@ const Preferences = () => {
               ]}
               onPress={() => setSelectedExperience("intermediate")}
             >
-              <Text style={styles.modalButtonText}>Intermediate</Text>
+              <Text style={styles.modalButtonText}>{t("intermediate")}</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={[
@@ -271,7 +250,7 @@ const Preferences = () => {
               ]}
               onPress={() => setSelectedExperience("expert")}
             >
-              <Text style={styles.modalButtonText}>Expert</Text>
+              <Text style={styles.modalButtonText}>{t("expert")}</Text>
             </TouchableOpacity>
 
             <View style={styles.modalButtonContainer}>
@@ -279,17 +258,18 @@ const Preferences = () => {
                 style={[styles.modalButton, styles.confirmButton]}
                 onPress={handleConfirmExperience}
               >
-                <Text style={styles.modalButtonText}>Confirm</Text>
+                <Text style={styles.modalButtonText}>{t("confirm")}</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={[styles.modalButton, styles.cancelButton]}
                 onPress={handleCloseExperienceModal}
               >
-                <Text style={styles.modalButtonText}>Cancel</Text>
+                <Text style={styles.modalButtonText}>{t("cancel")}</Text>
               </TouchableOpacity>
             </View>
           </View>
         </View>
+        <Toast />
       </Modal>
     </View>
   );

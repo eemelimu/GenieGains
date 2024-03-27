@@ -1,36 +1,43 @@
 import React, { useState, useContext } from "react";
-import { View, Text, TouchableOpacity, Modal, StyleSheet } from "react-native";
+import { Entypo } from "@expo/vector-icons";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Modal,
+  StyleSheet,
+  FlatList,
+} from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { ThemeContext } from "../contexts/ThemeContext";
 import { useSettings } from "../contexts/SettingsContext";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useLocalization } from "../contexts/LocalizationContext";
+import { supportedLanguages } from "../contexts/LocalizationContext";
+import { storeData } from "../utils/utils";
 
-const TipsPreferences = () => {
-  const { t } = useLocalization();
+const LanguagePreferences = () => {
+  const { t, setLanguage, locale } = useLocalization();
   const { settings, enableTips, disableTips } = useSettings();
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [tipsEnabled, setTipsEnabled] = useState(settings.tips);
+  const [selectedLanguage, setSelectedLanguage] = useState(null);
   const {
     theme: ThemeColors,
     resetTheme,
     changeThemeColor,
   } = useContext(ThemeContext);
 
+  const languages = supportedLanguages;
+
   const handleToggleModal = () => {
     setIsModalVisible(!isModalVisible);
   };
 
-  const handleDisableTips = () => {
-    disableTips();
-    setTipsEnabled(false);
+  const handleLanguageSelect = (language) => {
+    setSelectedLanguage(language);
+    setLanguage(language.value);
     setIsModalVisible(false);
-  };
-
-  const handleEnableTips = () => {
-    enableTips();
-    setTipsEnabled(true);
-    setIsModalVisible(false);
+    storeData("locale", language.value);
   };
 
   const styles = StyleSheet.create({
@@ -94,23 +101,13 @@ const TipsPreferences = () => {
     <View style={styles.container}>
       <TouchableOpacity style={styles.button} onPress={handleToggleModal}>
         <Text style={styles.buttonText}>
-          {t("tips-status", {
-            status: tipsEnabled ? t("enabled") : t("disabled"),
+          {t("language", {
+            language: selectedLanguage
+              ? selectedLanguage.label
+              : t("select-language"),
           })}
         </Text>
-        {tipsEnabled ? (
-          <MaterialCommunityIcons
-            name="lightbulb-on"
-            size={24}
-            color={ThemeColors.tertiary}
-          />
-        ) : (
-          <MaterialCommunityIcons
-            name="lightbulb-off"
-            size={24}
-            color={ThemeColors.tertiary}
-          />
-        )}
+        <Entypo name="globe" size={24} color={ThemeColors.tertiary} />
       </TouchableOpacity>
 
       <Modal
@@ -121,35 +118,31 @@ const TipsPreferences = () => {
       >
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            <TouchableOpacity
-              style={[styles.modalButton, tipsEnabled && styles.selectedButton]}
-              onPress={() => {
-                handleEnableTips();
-              }}
-            >
-              <Text style={styles.modalButtonText}>{t("enable-tips")}</Text>
-              <MaterialCommunityIcons
-                name="lightbulb-on"
-                size={24}
-                color={ThemeColors.tertiary}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[
-                styles.modalButton,
-                !tipsEnabled && styles.selectedButton,
-              ]}
-              onPress={() => {
-                handleDisableTips();
-              }}
-            >
-              <Text style={styles.modalButtonText}>{t("disable-tips")}</Text>
-              <MaterialCommunityIcons
-                name="lightbulb-off"
-                size={24}
-                color={ThemeColors.tertiary}
-              />
-            </TouchableOpacity>
+            <FlatList
+              data={languages}
+              keyExtractor={(item) => item.value}
+              renderItem={({ item }) => (
+                <TouchableOpacity
+                  style={[
+                    styles.modalButton,
+                    selectedLanguage &&
+                      selectedLanguage.value === item.value &&
+                      styles.selectedButton,
+                  ]}
+                  onPress={() => handleLanguageSelect(item)}
+                >
+                  <Text style={styles.modalButtonText}>{item.label}</Text>
+                  {selectedLanguage &&
+                    selectedLanguage.value === item.value && (
+                      <Ionicons
+                        name="checkmark"
+                        size={24}
+                        color={ThemeColors.tertiary}
+                      />
+                    )}
+                </TouchableOpacity>
+              )}
+            />
 
             <TouchableOpacity
               style={[styles.modalButton, styles.cancelButton]}
@@ -164,4 +157,4 @@ const TipsPreferences = () => {
   );
 };
 
-export default TipsPreferences;
+export default LanguagePreferences;

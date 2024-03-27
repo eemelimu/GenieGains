@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, useContext } from "react";
+import { useLocalization } from "../contexts/LocalizationContext";
 import {
   StyleSheet,
   View,
@@ -32,6 +33,7 @@ const CreateRoutine = () => {
   if (!fontsLoaded) {
     return null;
   }
+  const { t } = useLocalization();
   const [trainingPlans, setTrainingPlans] = useState([]);
   const navigation = useNavigation();
   const { state } = useAuth();
@@ -167,13 +169,12 @@ const CreateRoutine = () => {
 
   const saveRoutine = async () => {
     if (!routineName) {
-      console.log("Routine name is required");
-      setError("Routine name is required");
+      setError(t("routine-name-empty"));
       return;
     }
     if (selectedRoutineMovements.length === 0) {
       console.log("Routine movements are required");
-      setError("Routine movements are required");
+      setError(t("routine-movements-empty"));
       return;
     }
     const res = await fetcher({
@@ -184,8 +185,8 @@ const CreateRoutine = () => {
         movements: selectedRoutineMovements.map((movement) => movement.id),
         notes: routineNotes,
       },
-      successMessage: "Routine created",
-      errorMessage: "Error creating routine",
+      successMessage: t("routine-success"),
+      errorMessage: t("something-went-wrong"),
       showLoading: true,
     });
     if (res) {
@@ -266,13 +267,13 @@ const CreateRoutine = () => {
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <TextInput
-          placeholder="Routine name"
+          placeholder={t("routine-name-placeholder")}
           style={styles.nameInput}
           onChangeText={(text) => setRoutineName(text)}
           placeholderTextColor={ThemeColors.tertiary}
         />
         <TextInput
-          placeholder="Routine Notes"
+          placeholder={t("routine-notes-placeholder")}
           style={styles.nameInput}
           onChangeText={(text) => setRoutineNotes(text)}
           placeholderTextColor={ThemeColors.tertiary}
@@ -291,7 +292,7 @@ const CreateRoutine = () => {
           onSelectItem={handleAddMovement}
           setValue={setValue}
           setItems={setItems}
-          placeholder="Select movement"
+          placeholder={t("select-movement")}
           containerStyle={{ width: "80%" }}
         />
         <ScrollView style={{ flex: 1 }}>
@@ -314,7 +315,7 @@ const CreateRoutine = () => {
             color: ThemeColors.tertiary,
           }}
         >
-          Save
+          {t("save")}
         </Text>
       </TouchableOpacity>
     </SafeAreaView>

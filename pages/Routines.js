@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, useContext } from "react";
+import { useLocalization } from "../contexts/LocalizationContext";
 import {
   StyleSheet,
   View,
@@ -20,6 +21,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import useRequest from "../hooks/useRequest";
 
 const Routines = () => {
+  const { t } = useLocalization();
   const { setError, setSuccess, startLoading, stopLoading } = useNotification();
   const { theme: ThemeColors } = useContext(ThemeContext);
   const [trainingPlans, setTrainingPlans] = useState([]);
@@ -51,8 +53,7 @@ const Routines = () => {
     const res = await fetcher({
       url: BACKEND_URL + "trainingplan/" + routineId,
       reqMethod: "DELETE",
-      errorMessage: "Something went wrong",
-      successMessage: "Routine deleted successfully",
+      errorMessage: t("something-went-wrong"),
       showLoading: true,
     });
     if (res) {
@@ -66,7 +67,7 @@ const Routines = () => {
         const res = await fetcher({
           url: BACKEND_URL + "trainingplan",
           reqMethod: "GET",
-          errorMessage: "Something went wrong",
+          errorMessage: t("something-went-wrong"),
           showLoading: true,
         });
         if (res) {
@@ -236,7 +237,7 @@ const Routines = () => {
             <Button
               isHighlighted={true}
               width={70}
-              text="Start"
+              text={t("start")}
               onPress={() =>
                 navigation.navigate("Workout", { movements: routine })
               }
@@ -252,12 +253,8 @@ const Routines = () => {
       <ScrollView style={{ flex: 1 }}>
         {trainingPlans.length === 0 ? (
           <View>
-            <Text style={styles.notFoundText}>
-              No training plans available.
-            </Text>
-            <Text style={styles.notFoundText}>
-              Press Create Routine to make your first routine!
-            </Text>
+            <Text style={styles.notFoundText}>{t("no-training-plans")}</Text>
+            <Text style={styles.notFoundText}>{t("create-routine-hint")}</Text>
           </View>
         ) : (
           trainingPlans.map((trainingPlan) => (
@@ -281,7 +278,7 @@ const Routines = () => {
         <Button
           width={170}
           isHighlighted={true}
-          text="Create Movement"
+          text={t("create-movement")}
           onPress={moveToCreateMovement}
           renderIcon={(color) => (
             <AntDesign name="plus" size={24} color={color} />
@@ -290,7 +287,7 @@ const Routines = () => {
 
         <Button
           width={170}
-          text="Create Routine"
+          text={t("create-routine")}
           onPress={moveToCreateRoutine}
           isHighlighted={true}
           renderIcon={(color) => (

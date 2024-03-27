@@ -29,6 +29,7 @@ import {
   Rect,
 } from "@shopify/react-native-skia";
 import DMSansBold from "../assets/fonts/DMSans-Bold.ttf";
+import { useLocalization } from "../contexts/LocalizationContext";
 import useRequest from "../hooks/useRequest";
 import { epochToDate, lightOrDark, hexToRgba } from "../utils/utils";
 import DropDownPicker from "react-native-dropdown-picker";
@@ -38,6 +39,7 @@ import { BACKEND_URL } from "../assets/config";
 import { useNotification } from "../contexts/NotificationContext";
 import { useFocusEffect } from "@react-navigation/native";
 import { FontAwesome } from "@expo/vector-icons";
+import format from "@testing-library/react-native/build/helpers/format";
 
 const CHART_HEIGHT = Dimensions.get("window").height / 2.6 - 20;
 const CHART_WIDTH = Dimensions.get("window").width - 40;
@@ -87,7 +89,9 @@ const calculateCombinedValueBetweenDates = (
 };
 
 const GoalsPage = () => {
-  const [unit, setUnit] = useState("metric");
+  const { locale, t, formatDate, formatNumber } = useLocalization();
+  //const [unit, setUnit] = useState("metric");
+  const unit = locale.measurementSystem;
   const { setError, setSuccess, startLoading, stopLoading } = useNotification();
   const { theme: ThemeColors } = useContext(ThemeContext);
   const [openAdditionPicker, setOpenAdditionPicker] = useState(false);
@@ -122,24 +126,11 @@ const GoalsPage = () => {
   const [initialXPosition, setInitialXPosition] = useState(null);
   const [SecondinitialXPosition, setSecondInitialXPosition] = useState(null);
 
-  const getUserData = async () => {
-    const res = await fetcher({
-      url: BACKEND_URL + "user",
-      reqMethod: "GET",
-      errorMessage: "Failed to fetch user data",
-      showLoading: true,
-    });
-    if (res) {
-      console.log(res);
-      setUnit(res.unit);
-    }
-  };
-
   const getGoalsData = async (id) => {
     const res = await fetcher({
       url: BACKEND_URL + `goal/${id}`,
       reqMethod: "GET",
-      errorMessage: "Something went wrong",
+      errorMessage: t("something-went-wrong"),
       showLoading: true,
     });
     if (res) {
@@ -156,7 +147,7 @@ const GoalsPage = () => {
     const res = await fetcher({
       url: BACKEND_URL + "goal",
       reqMethod: "GET",
-      errorMessage: "Something went wrong",
+      errorMessage: t("something-went-wrong"),
       showLoading: true,
     });
     if (res) {
@@ -167,7 +158,6 @@ const GoalsPage = () => {
 
   useEffect(() => {
     getGoalsDataList();
-    getUserData();
   }, []);
 
   useEffect(() => {
@@ -205,22 +195,19 @@ const GoalsPage = () => {
 
   const handleCreateGoal = async () => {
     if (goalName === "" || units === "" || targetAmount === "") {
-      setError("Please fill in all fields");
+      setError(t("fill-all-fields"));
       return;
     }
     const res = await fetcher({
       url: BACKEND_URL + "goal",
       reqMethod: "POST",
-      successMessage: "Goal created successfully",
-      errorMessage: "Failed to create goal",
+      errorMessage: t("failed-to-create-goal"),
       object: {
         name: goalName,
         unit: units,
         number: targetAmount,
         end: date,
       },
-      errorMessage: "Failed to create goal",
-      successMessage: "Goal created successfully",
       showLoading: true,
     });
     if (res) {
@@ -229,20 +216,17 @@ const GoalsPage = () => {
       setUnits("");
       setTargetAmount("");
       getGoalsDataList();
-      setTimeout(() => {
-        setIsModalVisible(false);
-      }
-      , 1000);
+      setIsModalVisible(false);
     }
   };
 
   const addAdditionalData = async () => {
     if (additionGoalsList.length == 0) {
-      setError("Please select a goal to add the addition into");
+      setError(t("select-goal"));
       return;
     }
     if (additionTargetAmount == "") {
-      setError("Enter amount for your progress");
+      setError(t("enter-amount-progress"));
       return;
     }
     const noteWithoutNewLines = additionNote.replace("/\r?\n|\r/g", " ");
@@ -255,29 +239,26 @@ const GoalsPage = () => {
           number: additionTargetAmount,
           note: noteWithoutNewLines,
         },
-        errorMessage: "Failed to add progress",
-        successMessage: "Progress added successfully",
+        errorMessage: t("failed-to-add-progress"),
         showLoading: true,
       });
     }
-    if(res){
-    setAdditionTargetAmount("");
-    setAdditionNote("");
-    setadditionGoalsList([]);
-    getGoalsDataList();
-    setTimeout(() => {
+    if (res) {
+      setAdditionTargetAmount("");
+      setAdditionNote("");
+      setadditionGoalsList([]);
+      getGoalsDataList();
       setIsAdditionModalVisible(false);
     }
-    , 1000);
-  }
   };
 
   const formatXLabel = (epochDate) => {
-    return epochToDate(epochDate);
+    //return epochToDate(epochDate);
+    return formatDate(epochDate);
   };
 
   const formatYLabel = (number) => {
-    return `   ${number} ${selectedGoal.unit}`;
+    return `   ${formatNumber(number)} ${selectedGoal.unit}`;
   };
   const styles = StyleSheet.create({
     container: {
@@ -396,17 +377,18 @@ const GoalsPage = () => {
       {selectedGoal ? (
         <View>
           <Text style={styles.goalHeader}>
-            {`${selectedGoal.name} Goal of ${selectedGoal.number} ${
-              selectedGoal.unit
-            } by ${epochToDate(selectedGoal?.end)}`}
+            {t("goal-header", {
+              goal_name: selectedGoal.name,
+              goal_amount: formatNumber(selectedGoal.number),
+              goal_unit: selectedGoal.unit,
+              goal_date: formatDate(selectedGoal?.end),
+            })}
           </Text>
 
           <View style={styles.chartContainer}>
             {selectedGoal.data.length < 2 ? (
               <View style={styles.chartPlaceHolder}>
-                <Text style={styles.boldText}>
-                  Not enough data to plot for selected goal
-                </Text>
+                <Text style={styles.boldText}>{t("not-enough-data")}</Text>
               </View>
             ) : (
               <CartesianChart
@@ -494,47 +476,66 @@ const GoalsPage = () => {
             SecondinitialXPosition !== null &&
             secondIsActive ? (
               <>
-                <Text
-                  style={styles.informationText}
-                >{`You have selected dates between ${epochToDate(
-                  state.x?.value?.value
-                )}-${epochToDate(secondState.x?.value?.value)}`}</Text>
-                <Text
-                  style={styles.informationText}
-                >{`You have achieved ${calculateCombinedValueBetweenDates(
-                  state.x?.value?.value,
-                  secondState.x?.value?.value,
-                  selectedGoal
-                )} ${selectedGoal.unit} between these dates`}</Text>
+                <Text style={styles.informationText}>
+                  {t("you-have-selected-dates", {
+                    start_date: formatDate(state.x?.value?.value),
+                    end_date: formatDate(secondState.x?.value?.value),
+                  })}
+                </Text>
+                <Text style={styles.informationText}>
+                  {t("you-have-achieved", {
+                    number: formatNumber(
+                      calculateCombinedValueBetweenDates(
+                        state.x?.value?.value,
+                        secondState.x?.value?.value,
+                        selectedGoal
+                      )
+                    ),
+                    unit: selectedGoal.unit,
+                  })}
+                </Text>
               </>
             ) : null}
             {state.y?.number?.value?.value === 0 ? (
-              <Text style={styles.informationText}>No data selected</Text>
+              <Text style={styles.informationText}>
+                {t("no-data-selected")}
+              </Text>
             ) : (
               <>
                 {!secondIsActive && selectedGoal.data.length > 0 && (
                   <>
-                    <Text
-                      style={styles.informationText}
-                    >{`Selected value is: ${state.y?.number?.value?.value} ${selectedGoal.unit}`}</Text>
                     <Text style={styles.informationText}>
-                      {"On Date: " + epochToDate(state.x?.value?.value)}
+                      {t("you-have-selected-value", {
+                        value: state.y?.number?.value?.value,
+                        unit: selectedGoal.unit,
+                        date: formatDate(state.x?.value?.value),
+                      })}
                     </Text>
-                    <Text style={styles.informationText}>{`Note: ${
-                      getDataByDateAndValue(
-                        state.x?.value?.value,
-                        state.y?.number?.value?.value,
-                        selectedGoal
-                      )?.note
-                    }`}</Text>
-                    <Text
-                      style={styles.informationText}
-                    >{`${calculateRemainingData(selectedGoal)[0].toFixed(
-                      2
-                    )} is your daily ${selectedGoal.unit.toLowerCase()} amount recommendation`}</Text>
-                    <Text style={styles.informationText}>{`You have ${
-                      calculateRemainingData(selectedGoal)[1]
-                    } ${selectedGoal.unit.toLowerCase()} left to reach your goal`}</Text>
+                    <Text style={styles.informationText}>
+                      {t("note-information", {
+                        note: getDataByDateAndValue(
+                          state.x?.value?.value,
+                          state.y?.number?.value?.value,
+                          selectedGoal
+                        )?.note,
+                      })}
+                    </Text>
+                    <Text style={styles.informationText}>
+                      {t("daily-recommendation-amount", {
+                        number: formatNumber(
+                          calculateRemainingData(selectedGoal)[0].toFixed(2)
+                        ),
+                        unit: selectedGoal.unit.toLowerCase(),
+                      })}
+                    </Text>
+                    <Text style={styles.informationText}>
+                      {t("goal-left", {
+                        number: formatNumber(
+                          calculateRemainingData(selectedGoal)[1]
+                        ),
+                        unit: selectedGoal.unit.toLowerCase(),
+                      })}
+                    </Text>
                   </>
                 )}
               </>
@@ -542,7 +543,7 @@ const GoalsPage = () => {
           </View>
         </View>
       ) : (
-        <Text style={styles.informationText}>You have no goal selected</Text>
+        <Text style={styles.informationText}>{t("no-goal-selected")}</Text>
       )}
       <DropDownPicker
         open={open}
@@ -551,13 +552,13 @@ const GoalsPage = () => {
         setOpen={setOpen}
         setValue={setValue}
         setItems={setItems}
-        placeholder={"Choose a goal to view progress for"}
+        placeholder={t("choose-goal")}
         theme={lightOrDark(ThemeColors.primary).toUpperCase() || "DEFAULT"}
       />
       <Button
         height={50}
         width={"100%"}
-        text={"Create New Goal"}
+        text={t("new-goal")}
         onPress={() => setIsModalVisible(true)}
       />
       <Modal
@@ -570,33 +571,35 @@ const GoalsPage = () => {
       >
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Create New Goal</Text>
-            <Text style={styles.informationText}>Goal's name:</Text>
+            <Text style={styles.modalTitle}>{t("new-goal")}</Text>
+            <Text style={styles.informationText}>{t("goal-name")}</Text>
             <TextInput
               maxLength={100}
               style={styles.input}
-              placeholder="Goal Name"
+              placeholder={t("goal-name-placeholder")}
               value={goalName}
               onChangeText={(text) => setGoalName(text)}
               placeholderTextColor={ThemeColors.tertiary}
             />
-            <Text style={styles.informationText}>Goal's unit:</Text>
+            <Text style={styles.informationText}>{t("goal-unit")}</Text>
             <TextInput
               placeholderTextColor={ThemeColors.tertiary}
               style={styles.input}
               placeholder={
                 unit === "metric"
-                  ? "Units (e.g., steps, cm, kg)"
-                  : "Units (e.g., steps, inches, lbs)"
+                  ? t("metric-unit-examples")
+                  : t("imperial-unit-examples")
               }
               value={units}
               maxLength={10}
               onChangeText={(text) => setUnits(text)}
             />
-            <Text style={styles.informationText}>Goal's target:</Text>
+            <Text style={styles.informationText}>
+              {t("goal-target-amount")}
+            </Text>
             <TextInput
               style={styles.input}
-              placeholder="Target Amount"
+              placeholder={t("goal-target-amount-placeholder")}
               value={targetAmount}
               onChangeText={(text) => setTargetAmount(text)}
               keyboardType="numeric"
@@ -611,11 +614,12 @@ const GoalsPage = () => {
             </Pressable> */}
             <Button
               width={"100%"}
-              text={"Select Date: " + epochToDate(date)}
+              text={t("select-date", { date: formatDate(date) })}
               onPress={() => setOpenDatePicker(true)}
             />
             {openDatePicker && (
               <DateTimePicker
+                locale={locale.languageTag}
                 value={new Date()}
                 onChange={(event, selectedDate) => {
                   console.log("event", event);
@@ -633,13 +637,13 @@ const GoalsPage = () => {
             )}
             <Button
               width={"100%"}
-              text={"Create Goal"}
+              text={t("new-goal")}
               onPress={handleCreateGoal}
             />
             <Button
               width={"100%"}
               isHighlighted={true}
-              text={"Cancel"}
+              text={t("cancel")}
               onPress={() => {
                 setIsModalVisible(false);
                 setDate(new Date());
@@ -655,7 +659,7 @@ const GoalsPage = () => {
       <Button
         width={"100%"}
         height={50}
-        text={"Add progress"}
+        text={t("add-progress")}
         onPress={() => {
           setIsAdditionModalVisible(true);
         }}
@@ -670,13 +674,11 @@ const GoalsPage = () => {
       >
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>
-              Add Your Progress To Your Goal
-            </Text>
-            <Text style={styles.informationText}>Note:</Text>
+            <Text style={styles.modalTitle}>{t("add-progress-to-goal")}</Text>
+            <Text style={styles.informationText}>{t("note")}</Text>
             <TextInput
               style={styles.input}
-              placeholder="Add a note to your progress for this day"
+              placeholder={t("add-note-placeholder")}
               multiline
               numberOfLines={4}
               maxLength={250}
@@ -686,10 +688,10 @@ const GoalsPage = () => {
               }}
               placeholderTextColor={ThemeColors.tertiary}
             ></TextInput>
-            <Text style={styles.informationText}>Amount:</Text>
+            <Text style={styles.informationText}>{t("amount")}</Text>
             <TextInput
               style={styles.input}
-              placeholder="How much progress did you make (e.g., 5, 10)"
+              placeholder={t("amount-placeholder")}
               value={additionTargetAmount}
               onChangeText={(val) => setAdditionTargetAmount(val)}
               keyboardType="numeric"
@@ -706,16 +708,20 @@ const GoalsPage = () => {
               setOpen={setOpenAdditionPicker}
               setValue={setadditionGoalsList}
               setItems={setAdditionItems}
-              placeholder={"Choose goal or goals to add progress to"}
+              placeholder={t("goal-choice-placeholder")}
               theme={
                 lightOrDark(ThemeColors.primary).toUpperCase() || "DEFAULT"
               }
             />
-            <Button width={"100%"} text={"Add"} onPress={addAdditionalData} />
+            <Button
+              width={"100%"}
+              text={t("add")}
+              onPress={addAdditionalData}
+            />
             <Button
               width={"100%"}
               isHighlighted={true}
-              text={"Cancel"}
+              text={t("cancel")}
               onPress={() => {
                 setIsAdditionModalVisible(false);
                 setAdditionTargetAmount("");

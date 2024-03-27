@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Modal, Pressable, StyleSheet, Text, View } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useLocalization } from "../contexts/LocalizationContext";
 import Button from "../components/Button";
 import tinycolor from "tinycolor2";
 import Animated, {
@@ -20,6 +21,7 @@ import { ThemeContext } from "../contexts/ThemeContext";
 import { useNotification } from "../contexts/NotificationContext";
 
 export default function ColorSettings({}) {
+  const { t } = useLocalization();
   const { setError, setSuccess, startLoading, stopLoading } = useNotification();
   const [showModal, setShowModal] = useState(false);
   const {
@@ -205,35 +207,34 @@ export default function ColorSettings({}) {
           style={[styles.button, { backgroundColor: colors.primary }]}
           onPress={() => openColorPicker("primary")}
         >
-          <Text style={styles.buttonText}>Change Primary Color</Text>
+          <Text style={styles.buttonText}>{t("change-primary-color")}</Text>
         </Pressable>
         <Pressable
           style={[styles.button, { backgroundColor: colors.secondary }]}
           onPress={() => openColorPicker("secondary")}
         >
-          <Text style={styles.buttonText}>Change Secondary Color</Text>
+          <Text style={styles.buttonText}>{t("change-secondary-color")}</Text>
         </Pressable>
         <Pressable
           style={[styles.button, { backgroundColor: colors.tertiary }]}
           onPress={() => openColorPicker("tertiary")}
         >
-          <Text style={styles.buttonText}>Change Tertiary Color</Text>
+          <Text style={styles.buttonText}>{t("change-tertiary-color")}</Text>
         </Pressable>
         <Pressable
           style={[styles.button, { backgroundColor: colors.quaternary }]}
           onPress={() => openColorPicker("quaternary")}
         >
-          <Text style={styles.buttonText}>Change Quaternary Color</Text>
+          <Text style={styles.buttonText}>{t("change-quaternary-color")}</Text>
         </Pressable>
         <Button
           isHighlighted={true}
-          text="Reset to default"
+          text={t("reset-to-default")}
           width={"80%"}
           onPress={async () => {
             resetTheme();
-            //setColors(ThemeColors);
             await storeData("theme", ThemeColors);
-            setSuccess("Theme reset to default");
+            setSuccess(t("theme-reset"));
           }}
         />
       </View>
@@ -294,7 +295,7 @@ export default function ColorSettings({}) {
               }}
             >
               <Text style={{ color: ThemeColors.tertiary, fontWeight: "bold" }}>
-                Select
+                {t("select")}
               </Text>
             </Pressable>
             <Pressable
@@ -302,7 +303,7 @@ export default function ColorSettings({}) {
               onPress={() => setShowModal(false)}
             >
               <Text style={{ color: ThemeColors.tertiary, fontWeight: "bold" }}>
-                Cancel
+                {t("cancel")}
               </Text>
             </Pressable>
           </View>

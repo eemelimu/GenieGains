@@ -8,8 +8,10 @@ import CheckBox from "expo-checkbox";
 import { ThemeColors } from "../assets/theme/ThemeColors";
 import { BACKEND_URL } from "../assets/config";
 import { useAuth } from "../contexts/AuthContext";
+import { useLocalization } from "../contexts/LocalizationContext";
 
 const Preferences = ({ route }) => {
+  const { t } = useLocalization();
   const { fetcher } = useRequest();
   const { dispatch } = useAuth();
   const navigation = useNavigation();
@@ -29,7 +31,7 @@ const Preferences = ({ route }) => {
         unit: SelectedUnit?.toLowerCase(),
         experience: route?.params?.data?.selectedSkill?.toLowerCase(),
       },
-      errorMessage: "Something went wrong! Please try again later.",
+      errorMessage: t("something-went-wrong"),
       showLoading: true,
     });
     if (res) {
@@ -38,9 +40,7 @@ const Preferences = ({ route }) => {
   };
   return (
     <View style={styles.container}>
-      <Text style={styles.preferenceText}>
-        Select which measurement unit you would like to use
-      </Text>
+      <Text style={styles.preferenceText}>{t("measurement-unit-hint")}</Text>
       <View style={styles.checkboxContainer}>
         <TouchableOpacity
           style={styles.checkboxItem}
@@ -53,9 +53,9 @@ const Preferences = ({ route }) => {
             color={SelectedUnit === "Metric" ? "orange" : ThemeColors.tertiary}
           />
           <View>
-            <Text style={styles.skills}>Metric</Text>
+            <Text style={styles.skills}>{t("metric")}</Text>
             <Text style={[styles.skills, { fontSize: 15, paddingTop: 10 }]}>
-              Eg. Kilograms, Meters, etc.
+              {t("metric-example")}
             </Text>
           </View>
         </TouchableOpacity>
@@ -72,9 +72,9 @@ const Preferences = ({ route }) => {
             }
           />
           <View>
-            <Text style={styles.skills}>Imperial</Text>
+            <Text style={styles.skills}>{t("imperial")}</Text>
             <Text style={[styles.skills, { fontSize: 15, paddingTop: 10 }]}>
-              Eg. Pounds, Feet, etc.
+              {t("imperial-example")}
             </Text>
           </View>
         </TouchableOpacity>
@@ -84,7 +84,7 @@ const Preferences = ({ route }) => {
           textSize={20}
           width={120}
           height={50}
-          text="Back"
+          text={t("back")}
           onPress={() => {
             navigation.goBack();
           }}
@@ -94,7 +94,7 @@ const Preferences = ({ route }) => {
             textSize={20}
             width={120}
             height={50}
-            text="Register"
+            text={t("register")}
             onPress={() => {
               registerUser();
             }}

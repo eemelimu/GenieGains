@@ -5,6 +5,7 @@ import { useSettings } from "../contexts/SettingsContext";
 import Toast, { ErrorToast } from "react-native-toast-message";
 import { hexToRgba, storeData } from "../utils/utils";
 import useRequest from "../hooks/useRequest";
+import { useLocalization } from "../contexts/LocalizationContext";
 import {
   View,
   Text,
@@ -20,6 +21,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import { useNotification } from "../contexts/NotificationContext";
 
 const AccountSettings = () => {
+  const { t } = useLocalization();
   const { disableNotifications, enableTips } = useSettings();
   const { setError, setSuccess, startLoading, stopLoading } = useNotification();
   const { dispatch, state } = useAuth();
@@ -43,7 +45,7 @@ const AccountSettings = () => {
     const res = await fetcher({
       url: BACKEND_URL + "logout",
       reqMethod: "POST",
-      errorMessage: "Something went wrong",
+      errorMessage: t("something-went-wrong"),
       showLoading: true,
     });
     if (res) {
@@ -55,7 +57,7 @@ const AccountSettings = () => {
     const res = await fetcher({
       url: BACKEND_URL + "user",
       reqMethod: "GET",
-      errorMessage: "Something went wrong",
+      errorMessage: t("something-went-wrong"),
       showLoading: true,
     });
     if (res) {
@@ -69,8 +71,8 @@ const AccountSettings = () => {
       url: BACKEND_URL + "user",
       reqMethod: "PATCH",
       object: { email: email },
-      errorMessage: "Invalid email or email already taken",
-      successMessage: "Email changed successfully",
+      errorMessage: t("invalid-email"),
+      successMessage: t("email-success"),
       showLoading: true,
     });
     if (res) {
@@ -81,15 +83,15 @@ const AccountSettings = () => {
 
   const handlePasswordChange = async () => {
     if (password !== confirmPassword) {
-      setError("Passwords do not match");
+      setError(t("password-match"));
       return;
     }
     const res = await fetcher({
       url: BACKEND_URL + "user",
       reqMethod: "PATCH",
       object: { password: password },
-      errorMessage: "Invalid password",
-      successMessage: "Password changed successfully",
+      errorMessage: t("invalid-password"),
+      successMessage: t("password-success"),
       showLoading: true,
     });
     if (res) {
@@ -191,7 +193,7 @@ const AccountSettings = () => {
         onPress={() => setEmailModalVisible(true)}
       >
         <MaterialIcons name="email" size={24} color={ThemeColors.tertiary} />
-        <Text style={styles.buttonText}>Change Email</Text>
+        <Text style={styles.buttonText}>{t("change-email")}</Text>
       </Pressable>
       {/* <Button
       width={"80%"}
@@ -207,14 +209,14 @@ const AccountSettings = () => {
         onPress={() => setPasswordModalVisible(true)}
       >
         <MaterialIcons name="lock" size={24} color={ThemeColors.tertiary} />
-        <Text style={styles.buttonText}>Change Password</Text>
+        <Text style={styles.buttonText}>{t("change-password")}</Text>
       </Pressable>
       <Pressable
         style={styles.button}
         onPress={() => setLogoutModalVisible(true)}
       >
         <MaterialIcons name="logout" size={24} color={ThemeColors.tertiary} />
-        <Text style={styles.buttonText}>Logout</Text>
+        <Text style={styles.buttonText}>{t("logout")}</Text>
       </Pressable>
 
       <Modal
@@ -238,7 +240,7 @@ const AccountSettings = () => {
             />
             <Button
               width={"80%"}
-              text={"Save"}
+              text={t("save")}
               onPress={handleEmailChange}
               color={ThemeColors.primary}
               textColor={ThemeColors.tertiary}
@@ -246,7 +248,7 @@ const AccountSettings = () => {
             <Button
               isHighlighted={true}
               width={"80%"}
-              text={"Cancel"}
+              text={t("cancel")}
               onPress={() => {
                 getUserData();
                 setEmailModalVisible(false);
@@ -269,7 +271,7 @@ const AccountSettings = () => {
               style={styles.input}
               color={ThemeColors.tertiary}
               placeholderTextColor={ThemeColors.tertiary}
-              placeholder="New Password"
+              placeholder={t("new-password")}
               secureTextEntry
               value={password}
               onChangeText={setPassword}
@@ -278,7 +280,7 @@ const AccountSettings = () => {
               placeholderTextColor={ThemeColors.tertiary}
               color={ThemeColors.tertiary}
               style={styles.input}
-              placeholder="Confirm Password"
+              placeholder={t("confirm-password")}
               secureTextEntry
               value={confirmPassword}
               onChangeText={setConfirmPassword}
@@ -288,7 +290,7 @@ const AccountSettings = () => {
             </Pressable> */}
             <Button
               width={"80%"}
-              text={"Save"}
+              text={t("save")}
               onPress={handlePasswordChange}
               color={ThemeColors.primary}
               textColor={ThemeColors.tertiary}
@@ -296,7 +298,7 @@ const AccountSettings = () => {
             <Button
               isHighlighted={true}
               width={"80%"}
-              text={"Cancel"}
+              text={t("cancel")}
               onPress={() => {
                 setPasswordModalVisible(false);
                 setPassword("");
@@ -315,24 +317,22 @@ const AccountSettings = () => {
       >
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            <Text style={styles.boldText}>
-              Are you sure you want to logout?
-            </Text>
+            <Text style={styles.boldText}>{t("logout-confirmation")}</Text>
             <Button
               width={"80%"}
-              text={"Yes log me out from all devices"}
+              text={t("yes-from-all-devices")}
               onPress={logoutAll}
               textColor={ThemeColors.tertiary}
             />
             <Button
               width={"80%"}
-              text={"Logout just from this device"}
+              text={t("just-this-device")}
               onPress={handleLogout}
             />
             <Button
               isHighlighted={true}
               width={"80%"}
-              text={"Cancel"}
+              text={t("cancel")}
               onPress={() => setLogoutModalVisible(false)}
             />
           </View>

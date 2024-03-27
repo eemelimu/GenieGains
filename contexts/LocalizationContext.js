@@ -6,12 +6,20 @@ import { storeData, getData, deleteData } from "../utils/utils";
 
 import en from "../localization/en.json";
 import fi from "../localization/fi.json";
+import ja from "../localization/ja.json";
 import i18next from "i18next";
 
 const translations = {
   en: { translation: en },
   fi: { translation: fi },
+  ja: { translation: ja },
 };
+
+export const supportedLanguages = [
+  { label: "English", value: "en" },
+  { label: "Suomi", value: "fi" },
+  { label: "日本語", value: "ja" },
+]
 
 i18n.use(initReactI18next).init({
   compatibilityJSON: "v3",
@@ -35,12 +43,24 @@ const reducer = (state, action) => {
   switch (action.type) {
     case "SET_LOCALE":
       const { languageTag } = action.payload;
+      let measurements =
+        translations[languageTag]?.translation?.measurementSystem;
+      if (measurements == null) {
+        let language = languageTag.split("-")[1];
+        measurements = translations[language]?.translation?.measurementSystem;
+        if (measurements == null) {
+          language = languageTag.split("-")[0];
+          measurements = translations[language]?.translation?.measurementSystem;
+          if (measurements == null) {
+            measurements = "metric";
+          }
+        }
+      }
       return {
         ...state,
         languageTag,
         textDirection: i18next.dir(languageTag) || "ltr",
-        measurementSystem:
-          translations[languageTag]?.translation?.measurementSystem || "metric",
+        measurementSystem: measurements || "metric",
       };
     default:
       return state;

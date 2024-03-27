@@ -1,7 +1,9 @@
 import { View, Text, StyleSheet } from "react-native";
 import { useContext } from "react";
 import { ThemeContext } from "../contexts/ThemeContext";
+import { useLocalization } from "../contexts/LocalizationContext";
 const About = () => {
+  const { t } = useLocalization();
   const { theme: ThemeColors } = useContext(ThemeContext);
   const styles = StyleSheet.create({
     container: {
@@ -26,9 +28,7 @@ const About = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.boldText}>Gymjunkie</Text>
-      <Text style={styles.text}>
-        This is a fitness app that helps you track your workouts and progress.
-      </Text>
+      <Text style={styles.text}>{t("about-description")}</Text>
       <Text style={styles.text}>Version 0.1.0</Text>
     </View>
   );

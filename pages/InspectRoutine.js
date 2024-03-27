@@ -6,8 +6,10 @@ import { BACKEND_URL } from "../assets/config";
 import { useAuth } from "../contexts/AuthContext";
 import { ThemeContext } from "../contexts/ThemeContext";
 import useRequest from "../hooks/useRequest";
+import { useLocalization } from "../contexts/LocalizationContext";
 
 const InspectRoutine = ({ route }) => {
+  const { t } = useLocalization();
   const { theme: ThemeColors } = useContext(ThemeContext);
   const { params } = route;
   const { routineName } = params;
@@ -109,7 +111,8 @@ const InspectRoutine = ({ route }) => {
       <View style={styles.singleMovement}>
         <Text style={styles.movementName}>
           {index + 1}
-          {". "}Movement: {name}
+          {". "}
+          {t("movement", { movement_name: name })}
         </Text>
         {/* <Text style={styles.movementNumbers}> {set} x {reps} {weight} kg</Text> */}
       </View>
@@ -119,7 +122,9 @@ const InspectRoutine = ({ route }) => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.headerText}>Routine: {routineName}</Text>
+        <Text style={styles.headerText}>
+          {t("routine", { routine_name: routineName })}
+        </Text>
       </View>
       {/*             <TextInput 
             style={styles.notes} 

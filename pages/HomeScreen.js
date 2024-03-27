@@ -91,8 +91,7 @@ const HomeScreen = () => {
     "expert-tip10",
     "expert-tip11",
   ];
-
-  const dateToString = date.toLocaleDateString(locale, {
+  const dateToString = date.toLocaleDateString(locale.languageTag, {
     weekday: "short",
     month: "short",
     day: "numeric",
@@ -264,11 +263,11 @@ const HomeScreen = () => {
   useEffect(() => {
     const currentTime = new Date().getHours();
     if (currentTime < 12) {
-      setGreeting("Good morning");
+      setGreeting("good-morning");
     } else if (currentTime < 18) {
-      setGreeting("Good afternoon");
+      setGreeting("good-afternoon");
     } else {
-      setGreeting("Good evening");
+      setGreeting("good-evening");
     }
   }, []);
 

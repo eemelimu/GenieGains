@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, Image } from "react-native";
+import { useLocalization } from "../contexts/LocalizationContext";
 import Button from "../components/Button";
 import { useNavigation } from "@react-navigation/native";
 import { StyleSheet } from "react-native";
@@ -7,6 +8,7 @@ import CheckBox from "expo-checkbox";
 import { ThemeColors } from "../assets/theme/ThemeColors";
 
 const Preferences = ({ route }) => {
+  const { t } = useLocalization();
   const navigation = useNavigation();
   const [selectedSkill, setSelectedSkill] = useState(null);
   console.log("data from register?", route.params);
@@ -20,9 +22,7 @@ const Preferences = ({ route }) => {
   };
   return (
     <View style={styles.container}>
-      <Text style={styles.preferenceText}>
-        Select your skill level to get started
-      </Text>
+      <Text style={styles.preferenceText}>{t("select-skill-level-hint")}</Text>
       <View style={styles.checkboxContainer}>
         <TouchableOpacity
           style={styles.checkboxItem}
@@ -37,9 +37,9 @@ const Preferences = ({ route }) => {
             }
           />
           <View>
-            <Text style={styles.skills}>Beginner</Text>
+            <Text style={styles.skills}>{t("beginner")}</Text>
             <Text style={[styles.skills, { fontSize: 15, paddingTop: 10 }]}>
-              You are new to the gym with less than a year of experience.
+              {t("beginner-hint")}
             </Text>
           </View>
         </TouchableOpacity>
@@ -56,9 +56,9 @@ const Preferences = ({ route }) => {
             }
           />
           <View>
-            <Text style={styles.skills}>Intermediate</Text>
+            <Text style={styles.skills}>{t("intermediate")}</Text>
             <Text style={[styles.skills, { fontSize: 15, paddingTop: 10 }]}>
-              You have been lifing consistently for a few years.
+              {t("intermediate-hint")}
             </Text>
           </View>
         </TouchableOpacity>
@@ -74,10 +74,9 @@ const Preferences = ({ route }) => {
             color={selectedSkill === "Expert" ? "orange" : ThemeColors.tertiary}
           />
           <View>
-            <Text style={styles.skills}>Expert</Text>
+            <Text style={styles.skills}>{t("expert")}</Text>
             <Text style={[styles.skills, { fontSize: 15, paddingTop: 10 }]}>
-              You have been lifing consistently for a many years, you know your
-              stuff and probably compete.
+              {t("expert-hint")}
             </Text>
           </View>
         </TouchableOpacity>
@@ -87,7 +86,7 @@ const Preferences = ({ route }) => {
           textSize={22}
           width={250}
           height={50}
-          text={"Next"}
+          text={t("next")}
           onPress={moveToPreferences2}
         />
       </View>

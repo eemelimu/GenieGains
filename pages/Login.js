@@ -8,6 +8,7 @@ import {
   Modal,
   Pressable,
 } from "react-native";
+import { useLocalization } from "../contexts/LocalizationContext";
 import Button from "../components/Button";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { StyleSheet, BackHandler } from "react-native";
@@ -22,6 +23,7 @@ import { Fontisto } from "@expo/vector-icons";
 import useRequest from "../hooks/useRequest";
 
 const Login = () => {
+  const { t } = useLocalization();
   const { setError, setSuccess, startLoading, stopLoading } = useNotification();
   const { dispatch } = useAuth();
   const navigation = useNavigation();
@@ -58,7 +60,7 @@ const Login = () => {
         password,
       },
       showLoading: true,
-      errorMessage: "Wrong email or password",
+      errorMessage: t("wrong-email-or-password"),
     });
     if (res) {
       dispatch({
@@ -184,10 +186,7 @@ const Login = () => {
         ></Image>
       </View>
       <View
-        style={[
-          styles.inputRow,
-          emailFocus && { borderBottomColor: "orange" },
-        ]}
+        style={[styles.inputRow, emailFocus && { borderBottomColor: "orange" }]}
       >
         <Fontisto
           name="email"
@@ -201,7 +200,7 @@ const Login = () => {
           value={username}
           onChangeText={setUsername}
           style={styles.input}
-          placeholder="Email"
+          placeholder={t("email")}
           placeholderTextColor={ThemeColors.tertiary}
           autoComplete="username"
           autoCapitalize="none"
@@ -209,9 +208,12 @@ const Login = () => {
           onSubmitEditing={() => passwordRef.current.focus()}
         />
       </View>
-      <View style={[styles.inputRow,
-        passwordFocus && { borderBottomColor: "orange" },
-      ]}>
+      <View
+        style={[
+          styles.inputRow,
+          passwordFocus && { borderBottomColor: "orange" },
+        ]}
+      >
         <AntDesign
           name="lock"
           size={24}
@@ -226,7 +228,7 @@ const Login = () => {
           value={password}
           onChangeText={setPassword}
           style={styles.input}
-          placeholder="Password"
+          placeholder={t("password")}
           placeholderTextColor={`${ThemeColors.tertiary}`}
           autoComplete="current-password"
           autoCapitalize="none"
@@ -247,7 +249,7 @@ const Login = () => {
           textSize={20}
           height={50}
           width={"80%"}
-          text="Login"
+          text={t("login")}
           onPress={handleLogin}
         />
         <Button
@@ -255,7 +257,7 @@ const Login = () => {
           textSize={20}
           height={50}
           width={"80%"}
-          text="Register"
+          text={t("register")}
           onPress={() => navigation.navigate("Register")}
         />
       </View>

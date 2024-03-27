@@ -1,4 +1,5 @@
 import React, { useState, useContext } from "react";
+import { useLocalization } from "../contexts/LocalizationContext";
 import {
   View,
   Text,
@@ -10,6 +11,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { ThemeContext } from "../contexts/ThemeContext";
 
 export const Troubleshooting = () => {
+  const { t } = useLocalization();
   const { theme: ThemeColors } = useContext(ThemeContext);
   const [expandedSections, setExpandedSections] = useState({});
 
@@ -59,7 +61,7 @@ export const Troubleshooting = () => {
     <ScrollView style={styles.container}>
       <TouchableOpacity onPress={() => toggleSection(1)}>
         <View style={styles.titleContainer}>
-          <Text style={styles.title}>1. How to create workout?</Text>
+          <Text style={styles.title}>{t("how-to-create-workout")}</Text>
           <MaterialIcons
             name={expandedSections[1] ? "arrow-drop-down" : "arrow-right"}
             size={24}
@@ -68,17 +70,13 @@ export const Troubleshooting = () => {
         </View>
       </TouchableOpacity>
       {expandedSections[1] && (
-        <Text style={styles.description}>
-          To create a workout, you need to go to the homescreen and click on the
-          "Start Workout" button. Then you can select either to create a new
-          workout or select a workout from the list of workouts.
-        </Text>
+        <Text style={styles.description}>{t("workout-creation-hint")}</Text>
       )}
       <View style={styles.line} />
 
       <TouchableOpacity onPress={() => toggleSection(2)}>
         <View style={styles.titleContainer}>
-          <Text style={styles.title}>2. How to delete a workout?</Text>
+          <Text style={styles.title}>{t("how-to-delete-workout")}</Text>
           <MaterialIcons
             name={expandedSections[2] ? "arrow-drop-down" : "arrow-right"}
             size={24}
@@ -87,19 +85,14 @@ export const Troubleshooting = () => {
         </View>
       </TouchableOpacity>
       {expandedSections[2] && (
-        <Text style={styles.description}>
-          To delete a workout, you need to go to the homescreen and click on the
-          workout you want to delete. Then you can delete the workout by
-          clicking the three dots on the top right corner and then click on the
-          "Delete" button.
-        </Text>
+        <Text style={styles.description}>{t("delete-workout-hint")}</Text>
       )}
       <View style={styles.line} />
 
       <TouchableOpacity onPress={() => toggleSection(3)}>
         <View style={styles.titleContainer}>
           <Text style={styles.title}>
-            3. How to create new workout templates?
+            {t("how-to-create-workout-template")}
           </Text>
           <MaterialIcons
             name={expandedSections[3] ? "arrow-drop-down" : "arrow-right"}
@@ -110,18 +103,14 @@ export const Troubleshooting = () => {
       </TouchableOpacity>
       {expandedSections[3] && (
         <Text style={styles.description}>
-          To create a new workout template, you need to go to the homescreen and
-          tap on the "Routines" from the bottom navigation. Then you can create
-          a new workout template by clicking on the "Create Routine" button.
-          From there, you can add new movements to the workout template, and
-          then save the workout template by clicking on the "Save" button.
+          {t("how-to-create-routine-hint")}
         </Text>
       )}
       <View style={styles.line} />
 
       <TouchableOpacity onPress={() => toggleSection(4)}>
         <View style={styles.titleContainer}>
-          <Text style={styles.title}>4. How to add new movements?</Text>
+          <Text style={styles.title}>{t("how-to-add-movement")}</Text>
           <MaterialIcons
             name={expandedSections[4] ? "arrow-drop-down" : "arrow-right"}
             size={24}
@@ -130,13 +119,7 @@ export const Troubleshooting = () => {
         </View>
       </TouchableOpacity>
       {expandedSections[4] && (
-        <Text style={styles.description}>
-          To add new movements, you need to go to the homescreen and tap on the
-          "Routines" from the bottom navigation. Then you can create a new
-          workout template by clicking on the "Create Movement" button. From
-          there, you can specify the name and the muscle group of the movement,
-          and then save the movement by clicking on the "Save" button.
-        </Text>
+        <Text style={styles.description}>{t("how-to-add-movement-hint")}</Text>
       )}
       <View style={styles.line} />
     </ScrollView>

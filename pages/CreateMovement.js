@@ -2,6 +2,8 @@ import React, { useState, useContext } from "react";
 import { View, Text, TextInput, StyleSheet, Pressable } from "react-native";
 import DropDownPicker from "react-native-dropdown-picker";
 import { epochToDate, lightOrDark } from "../utils/utils";
+import { useLocalization } from "../contexts/LocalizationContext";
+import useRequest from "../hooks/useRequest";
 
 import { ThemeContext } from "../contexts/ThemeContext";
 import { useNotification } from "../contexts/NotificationContext";
@@ -9,20 +11,21 @@ import { BACKEND_URL } from "../assets/config";
 import { useAuth } from "../contexts/AuthContext";
 import Button from "../components/Button";
 
-const muscleCategories = [
-  { label: "Triceps", value: "triceps" },
-  { label: "Biceps", value: "biceps" },
-  { label: "Shoulders", value: "shoulders" },
-  { label: "Chest", value: "chest" },
-  { label: "Back", value: "back" },
-  { label: "Legs", value: "legs" },
-  { label: "Core", value: "core" },
-  { label: "Other", value: "other" },
-];
-
 const CreateMovement = () => {
+  const { t } = useLocalization();
+  const muscleCategories = [
+    { label: t("triceps"), value: "triceps" },
+    { label: t("biceps"), value: "biceps" },
+    { label: t("shoulders"), value: "shoulders" },
+    { label: t("chest"), value: "chest" },
+    { label: t("back"), value: "back" },
+    { label: t("legs"), value: "legs" },
+    { label: t("core"), value: "core" },
+    { label: t("other"), value: "other" },
+  ];
   const { state: authState } = useAuth();
   const token = authState.token;
+  const { fetcher } = useRequest(token);
   const { theme: ThemeColors } = useContext(ThemeContext);
   const { setError, setSuccess, startLoading, stopLoading } = useNotification();
   const [movementName, setMovementName] = useState("");
@@ -33,39 +36,20 @@ const CreateMovement = () => {
 
   const handleCreateMovement = async () => {
     if (!movementName) {
-      setError("Movement name cannot be empty");
+      setError(t("movement-name-empty"));
       return;
     }
-    startLoading();
-    console.log(
-      "Creating movement:",
-      movementName,
-      "Muscle category:",
-      muscleCategory
-    );
-    try {
-      const res = await fetch(BACKEND_URL + "movement", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Token ${token}`,
-        },
-        body: JSON.stringify({
-          name: movementName,
-          category: muscleCategory,
-        }),
-      });
-      if (res.ok) {
-        setSuccess("Movement created");
-        console.log("Movement created");
-      } else {
-        setError("Something went wrong");
-        console.log("Error creating movement");
-      }
-    } catch (error) {
-      setError("Check your internet connection");
-      console.log("Fetch error: ", error);
-    }
+    const res = await fetcher({
+      url: BACKEND_URL + "movement",
+      reqMethod: "POST",
+      object: {
+        name: movementName,
+        category: muscleCategory,
+      },
+      errorMessage: t("something-went-wrong"),
+      successMessage: t("movement-success"),
+      showLoading: true,
+    });
     setMovementName("");
     setMuscleCategory(muscleCategories[muscleCategories.length - 1].value);
   };
@@ -125,15 +109,15 @@ const CreateMovement = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>Name:</Text>
+      <Text style={styles.label}>{t("movement-name")}</Text>
       <TextInput
         style={styles.input}
         value={movementName}
         onChangeText={(text) => setMovementName(text)}
-        placeholder="Enter movement name"
+        placeholder={t("movement-name-placeholder")}
         placeholderTextColor={ThemeColors.tertiary}
       />
-      <Text style={styles.label}>Muscle Category:</Text>
+      <Text style={styles.label}>{t("muscle-category")}</Text>
       <DropDownPicker
         containerProps={{
           style: styles.dropdownContainer,
@@ -159,7 +143,7 @@ const CreateMovement = () => {
         height={50}
         textSize={16}
         isHighlighted={true}
-        text="Create Movement"
+        text={t("create-movement")}
         onPress={handleCreateMovement}
       />
     </View>

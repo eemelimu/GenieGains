@@ -3,8 +3,10 @@ import { View, Text, TouchableOpacity, Modal, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { ThemeContext } from "../contexts/ThemeContext";
 import { useSettings } from "../contexts/SettingsContext";
+import { useLocalization } from "../contexts/LocalizationContext";
 
 const NotificationsPreferences = () => {
+  const { t } = useLocalization();
   const { settings, enableNotifications, disableNotifications } = useSettings();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [notificationsEnabled, setNotificationsEnabled] = useState(
@@ -93,7 +95,9 @@ const NotificationsPreferences = () => {
     <View style={styles.container}>
       <TouchableOpacity style={styles.button} onPress={handleToggleModal}>
         <Text style={styles.buttonText}>
-          Slacker Notifications: {notificationsEnabled ? "Enabled" : "Disabled"}
+          {t("notification-status", {
+            status: notificationsEnabled ? t("enabled") : t("disabled"),
+          })}
         </Text>
         {notificationsEnabled ? (
           <Ionicons
@@ -128,7 +132,7 @@ const NotificationsPreferences = () => {
               }}
             >
               <Text style={styles.modalButtonText}>
-                Enable Slacker Notifications
+                {t("enable-notifications")}
               </Text>
               <Ionicons
                 name="notifications-circle"
@@ -146,7 +150,7 @@ const NotificationsPreferences = () => {
               }}
             >
               <Text style={styles.modalButtonText}>
-                Disable Slacker Notifications
+                {t("disable-notifications")}
               </Text>
               <Ionicons
                 name="notifications-off-circle"
@@ -159,7 +163,7 @@ const NotificationsPreferences = () => {
               style={[styles.modalButton, styles.cancelButton]}
               onPress={handleToggleModal}
             >
-              <Text style={styles.modalButtonText}>Cancel</Text>
+              <Text style={styles.modalButtonText}>{t("cancel")}</Text>
             </TouchableOpacity>
           </View>
         </View>

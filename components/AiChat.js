@@ -1,9 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, Pressable, StyleSheet, TextInput } from "react-native";
+import {
+  View,
+  Text,
+  Pressable,
+  StyleSheet,
+  TextInput,
+  Modal,
+} from "react-native";
+import { useAuth } from "../contexts/AuthContext";
+import useRequest from "../hooks/useRequest";
 import { Fontisto } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
-import { AntDesign } from "@expo/vector-icons";
-import { SimpleLineIcons } from '@expo/vector-icons';
+import { SimpleLineIcons } from "@expo/vector-icons";
+import { BACKEND_URL } from "../assets/config";
 
 export const AiChat = () => {
   const [openChat, setOpenChat] = useState(true);
@@ -12,57 +21,77 @@ export const AiChat = () => {
     { type: "sent", content: "Hello! :))" },
     { type: "received", content: "hello, t. chatgpt!" },
   ]);
-
-  const sendMessage = () => {
+  const { state } = useAuth();
+  const token = state.token;
+  const { fetcher } = useRequest(token);
+  const sendMessage = async () => {
     if (newMessage.trim() !== "") {
       const updatedConversation = [
         ...conversation,
         { type: "sent", content: newMessage.trim() },
       ];
       setConversation(updatedConversation);
+     await getResponse();
       setNewMessage("");
     }
   };
 
+  const getResponse = async () => {
+    const res = await fetcher({
+      url: BACKEND_URL + "question",
+      reqMethod: "POST",
+      object: { question: newMessage },
+    });
+    if (res) {
+      res.answer && setConversation([...conversation, { type: "received", content: res.answer }]);
+      console.log(res.answer);
+    }}
+
   return (
     <View style={styles.container}>
       {openChat && (
-        <View style={styles.chatbox}>
-          <View style={styles.messageContainer}>
-            {conversation.map((message, index) => (
-              <Text
-                key={index}
-                style={
-                  message.type === "sent"
-                    ? styles.sentMessage
-                    : styles.receivedMessages
-                }
-              >
-                {message.content}
-              </Text>
-            ))}
-          </View>
-          <View style={styles.inputRow}>
-            <TextInput
-              onSubmitEditing={sendMessage}
-              style={styles.input}
-              value={newMessage}
-              onChangeText={(text) => setNewMessage(text)}
-              placeholder="Type your question..."
-              placeholderTextColor={"#ccc"}
-              width="85%"
-              keyboardType="default"
-            />
-            <Pressable onPress={sendMessage} style={styles.sendIcon}>
-              <Feather
-                name="send"
-                size={24}
-                color="black"
-                style={{ paddingHorizontal: 5 }}
+        <Modal
+          visible={openChat}
+          onRequestClose={() => setOpenChat(!openChat)}
+          animationType="slide"
+        >
+          <View style={styles.chatbox}>
+            <View style={styles.messageContainer}>
+              {conversation.map((message, index) => (
+                <Text
+                  key={index}
+                  style={
+                    message.type === "sent"
+                      ? styles.sentMessage
+                      : styles.receivedMessages
+                  }
+                >
+                  {message.content}
+                </Text>
+              ))}
+            </View>
+            <View style={styles.inputRow}>
+              <TextInput
+                onSubmitEditing={sendMessage}
+                style={styles.input}
+                value={newMessage}
+                onChangeText={(text) => setNewMessage(text)}
+                placeholder="Type your question..."
+                placeholderTextColor={"#ccc"}
+                width="85%"
+                keyboardType="default"
               />
-            </Pressable>
+              <Pressable onPress={sendMessage} style={styles.sendIcon}>
+                <Feather
+                  name="send"
+                  size={24}
+                  color="black"
+                  style={{ paddingHorizontal: 5 }}
+                />
+              </Pressable>
+            </View>
           </View>
-        </View>
+        </Modal>
       )}
       {!openChat && (
         <Pressable
@@ -89,8 +118,6 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
     position: "absolute",
-    zIndex: 1000,
-    // bottom: 80,
   },
   chatbox: {
     flex: 1,
@@ -146,6 +173,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     right: 0,
     bottom: 100,
+    zIndex: 0,
   },
   closeChat: {
     alignItems: "flex-end",

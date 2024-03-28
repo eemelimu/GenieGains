@@ -11,19 +11,23 @@ import { useAuth } from "../contexts/AuthContext";
 import useRequest from "../hooks/useRequest";
 import { Fontisto } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
-import { SimpleLineIcons } from "@expo/vector-icons";
 import { BACKEND_URL } from "../assets/config";
+import { useLocalization } from "../contexts/LocalizationContext";
+
+// TODO
+// Localisaatio ekaan viestiin
 
 export const AiChat = (username) => {
   const name = username.username;
   const [openChat, setOpenChat] = useState(false);
   const [newMessage, setNewMessage] = useState("");
-  const [conversation, setConversation] = useState([
+  const [conversation, setConversation] = useState([ 
     { type: "received", content: `Hello, ${name}! Im here to help you!` },
   ]);
   const { state } = useAuth();
   const token = state.token;
   const { fetcher } = useRequest(token);
+  const { t } = useLocalization();
 
   const sendMessage = () => {
     if (newMessage.trim() !== "") {
@@ -33,7 +37,7 @@ export const AiChat = (username) => {
       ];
       setConversation(updatedConversation);
       setNewMessage("");
-      getResponse(updatedConversation, newMessage)
+      getResponse(updatedConversation, newMessage);
     }
   };
 
@@ -61,6 +65,7 @@ export const AiChat = (username) => {
           visible={openChat}
           onRequestClose={() => setOpenChat(!openChat)}
           animationType="slide"
+
         >
           <View style={styles.chatbox}>
             <View style={styles.messageContainer}>
@@ -83,9 +88,8 @@ export const AiChat = (username) => {
                 style={styles.input}
                 value={newMessage}
                 onChangeText={(text) => setNewMessage(text)}
-                placeholder="Type your question..."
+                placeholder={t("feedback-placeholder")}
                 placeholderTextColor={"#ccc"}
-                width="85%"
                 keyboardType="default"
               />
               <Pressable onPress={sendMessage} style={styles.sendIcon}>
@@ -93,7 +97,7 @@ export const AiChat = (username) => {
                   name="send"
                   size={24}
                   color="black"
-                  style={{ paddingHorizontal: 5 }}
+                  style={{ paddingHorizontal: 5, opacity: newMessage === "" ? 0.2 : 1}}
                 />
               </Pressable>
             </View>
@@ -106,14 +110,6 @@ export const AiChat = (username) => {
           onPress={() => setOpenChat(!openChat)}
         >
           <Fontisto name="hipchat" size={50} color="orange" />
-        </Pressable>
-      )}
-      {openChat && (
-        <Pressable
-          style={styles.closeChat}
-          onPress={() => setOpenChat(!openChat)}
-        >
-          <SimpleLineIcons name="arrow-down" size={40} color="black" />
         </Pressable>
       )}
     </View>
@@ -136,11 +132,12 @@ const styles = StyleSheet.create({
   inputRow: {
     flexDirection: "row",
     alignItems: "center",
-    padding: 10,
+    paddingHorizontal: 25,
+    paddingVertical: 10,
     borderTopWidth: 1,
     borderTopColor: "#ccc",
     position: "absolute",
-    bottom: 0,
+    bottom: 10,
   },
   input: {
     flex: 1,
@@ -161,17 +158,17 @@ const styles = StyleSheet.create({
     textAlign: "right",
   },
   sentMessage: {
-    // borderRadius: 10,
-    marginBottom: 5,
+    fontSize: 16,
+    padding: 10,
     textAlign: "right",
   },
   receivedMessages: {
-    // borderRadius: 10,
-    marginBottom: 5,
+    fontSize: 16,
+    padding: 10,
     textAlign: "left",
     width: "100%",
-    padding: 5,
     backgroundColor: "#d9d9d9",
+    borderRadius: 5,
   },
   closeChat: {
     position: "absolute",

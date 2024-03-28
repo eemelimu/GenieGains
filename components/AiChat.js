@@ -14,38 +14,45 @@ import { Feather } from "@expo/vector-icons";
 import { SimpleLineIcons } from "@expo/vector-icons";
 import { BACKEND_URL } from "../assets/config";
 
-export const AiChat = () => {
-  const [openChat, setOpenChat] = useState(true);
+export const AiChat = (username) => {
+  const name = username.username;
+  const [openChat, setOpenChat] = useState(false);
   const [newMessage, setNewMessage] = useState("");
   const [conversation, setConversation] = useState([
-    { type: "sent", content: "Hello! :))" },
-    { type: "received", content: "hello, t. chatgpt!" },
+    { type: "received", content: `Hello, ${name}! Im here to help you!` },
   ]);
   const { state } = useAuth();
   const token = state.token;
   const { fetcher } = useRequest(token);
-  const sendMessage = async () => {
+
+  const sendMessage = () => {
     if (newMessage.trim() !== "") {
       const updatedConversation = [
         ...conversation,
         { type: "sent", content: newMessage.trim() },
       ];
       setConversation(updatedConversation);
-     await getResponse();
       setNewMessage("");
+      getResponse(updatedConversation, newMessage)
     }
   };
 
-  const getResponse = async () => {
+  const getResponse = async (prevConversation, message) => {
+    console.log("message", message);
+    console.log("prevConversation", prevConversation);
     const res = await fetcher({
       url: BACKEND_URL + "question",
       reqMethod: "POST",
-      object: { question: newMessage },
+      object: { question: message },
     });
     if (res) {
-      res.answer && setConversation([...conversation, { type: "received", content: res.answer }]);
-      console.log(res.answer);
-    }}
+      res.answer &&
+        setConversation([
+          ...prevConversation,
+          { type: "received", content: res.answer },
+        ]);
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -148,20 +155,23 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   messageContainer: {
-    padding: 10,
+    paddingVertical: 10,
     overflow: "scroll",
     justifyContent: "flex-start",
     textAlign: "right",
   },
   sentMessage: {
-    borderRadius: 10,
+    // borderRadius: 10,
     marginBottom: 5,
     textAlign: "right",
   },
   receivedMessages: {
-    borderRadius: 10,
+    // borderRadius: 10,
     marginBottom: 5,
     textAlign: "left",
+    width: "100%",
+    padding: 5,
+    backgroundColor: "#d9d9d9",
   },
   closeChat: {
     position: "absolute",

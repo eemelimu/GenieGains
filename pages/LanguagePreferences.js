@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Entypo } from "@expo/vector-icons";
 import {
   View,
@@ -18,7 +18,6 @@ import { storeData } from "../utils/utils";
 
 const LanguagePreferences = () => {
   const { t, setLanguage, locale } = useLocalization();
-  const { settings, enableTips, disableTips } = useSettings();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState(null);
   const {
@@ -39,7 +38,11 @@ const LanguagePreferences = () => {
     setIsModalVisible(false);
     storeData("locale", language.value);
   };
-
+  useEffect(() => {
+    setSelectedLanguage(
+      supportedLanguages.find((l) => l.value == locale.languageTag) || {}
+    );
+  }, [locale]);
   const styles = StyleSheet.create({
     container: {
       flex: 1,

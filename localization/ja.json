@@ -219,5 +219,6 @@
   "select-language": "言語を選択",
   "about-description": "これは、ワークアウトと進捗を追跡するのに役立つフィットネスアプリです。",
   "success": "成功！",
-  "error": "エラー！"
+  "error": "エラー！",
+  "name": "名前"
 }

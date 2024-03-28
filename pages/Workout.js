@@ -337,7 +337,7 @@ export const Workout = ({ route }) => {
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <View style={styles.inputContainer}>
-          <Text style={styles.label}>Name</Text>
+          <Text style={styles.label}>{t("name")}</Text>
           <TextInput
             style={styles.input}
             value={name}
@@ -347,7 +347,7 @@ export const Workout = ({ route }) => {
           />
         </View>
         <View style={styles.inputContainer}>
-          <Text style={styles.label}>Notes</Text>
+          <Text style={styles.label}>{t("notes")}</Text>
           <TextInput
             style={styles.input}
             value={notes}

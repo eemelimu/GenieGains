@@ -1,11 +1,14 @@
-import React, { useEffect, useState, useContext } from "react";
+import { useEffect, useState, useContext, useRef } from "react";
 import {
   View,
   Text,
   Pressable,
   StyleSheet,
+  Vibration,
   TextInput,
   Modal,
+  PanResponder,
+  Animated,
 } from "react-native";
 import { useAuth } from "../contexts/AuthContext";
 import useRequest from "../hooks/useRequest";
@@ -23,6 +26,7 @@ export const AiChat = (username) => {
   const name = username.username;
   const [openChat, setOpenChat] = useState(false);
   const [newMessage, setNewMessage] = useState("");
+  const [isChatMovable, setIsChatMovable] = useState(false);
   const [conversation, setConversation] = useState([
     {
       type: "received",
@@ -34,6 +38,7 @@ export const AiChat = (username) => {
   const token = state.token;
   const { fetcher } = useRequest(token);
   const { t } = useLocalization();
+  const chatIconPan = useRef(new Animated.ValueXY()).current; 
 
   const sendMessage = () => {
     if (newMessage.trim() !== "") {
@@ -46,6 +51,21 @@ export const AiChat = (username) => {
       getResponse(updatedConversation, newMessage);
     }
   };
+
+  const chatIconPanResponder = useRef(
+    PanResponder.create({
+      onStartShouldSetPanResponder: () => true,
+      onPanResponderMove: Animated.event(
+        [null, { dx: chatIconPan.x, dy: chatIconPan.y }],
+        { useNativeDriver: false }
+      ),
+      onPanResponderRelease: () => setIsChatMovable(false),
+    })
+  ).current;
+  
+  useEffect(() => {
+    console.log("isChatMovable: ", isChatMovable);
+  }, [isChatMovable]);
 
   const getResponse = async (prevConversation, message) => {
     console.log("message", message);
@@ -64,6 +84,12 @@ export const AiChat = (username) => {
     }
   };
 
+  const moveChatIcon = () => {
+    console.log("moveChatIcon");
+    Vibration.vibrate(100);
+    setIsChatMovable(true);
+  };
+  
   return (
     <View style={styles.container}>
       {openChat && (
@@ -116,12 +142,26 @@ export const AiChat = (username) => {
         </Modal>
       )}
       {!openChat && (
-        <Pressable
-          style={styles.openChat}
-          onPress={() => setOpenChat(!openChat)}
+        <Animated.View
+          style={[
+            styles.container,
+            {
+              transform: [
+                { translateX: chatIconPan.x },
+                { translateY: chatIconPan.y },
+              ],
+            },
+          ]}
+          {...(isChatMovable ? chatIconPanResponder.panHandlers : null)}
         >
-          <Fontisto name="hipchat" size={50} color="orange" />
-        </Pressable>
+          <Pressable
+            style={styles.openChat}
+            onPress={() => setOpenChat(!openChat)}
+            onLongPress={moveChatIcon}
+          >
+            <Fontisto name="hipchat" size={45} color="orange" />
+          </Pressable>
+        </Animated.View>
       )}
     </View>
   );

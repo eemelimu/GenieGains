@@ -3,6 +3,7 @@ import { View, Text, Pressable, StyleSheet, TextInput } from "react-native";
 import { Fontisto } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
+import { SimpleLineIcons } from '@expo/vector-icons';
 
 export const AiChat = () => {
   const [openChat, setOpenChat] = useState(true);
@@ -41,7 +42,6 @@ export const AiChat = () => {
               </Text>
             ))}
           </View>
-          <View style={styles.line} />
           <View style={styles.inputRow}>
             <TextInput
               onSubmitEditing={sendMessage}
@@ -64,36 +64,52 @@ export const AiChat = () => {
           </View>
         </View>
       )}
-      <View style={styles.chatControl}>
-        {!openChat && (
-          <Pressable onPress={() => setOpenChat(!openChat)}>
-            <Fontisto name="hipchat" size={50} color="orange" />
-          </Pressable>
-        )}
-        {openChat && (
-          <Pressable onPress={() => setOpenChat(!openChat)}>
-            <AntDesign name="closesquareo" size={50} color="orange" />
-          </Pressable>
-        )}
-      </View>
+      {!openChat && (
+        <Pressable
+          style={styles.openChat}
+          onPress={() => setOpenChat(!openChat)}
+        >
+          <Fontisto name="hipchat" size={50} color="orange" />
+        </Pressable>
+      )}
+      {openChat && (
+        <Pressable
+          style={styles.closeChat}
+          onPress={() => setOpenChat(!openChat)}
+        >
+          <SimpleLineIcons name="arrow-down" size={40} color="black" />
+        </Pressable>
+      )}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    width: "80%",
+    width: "100%",
+    height: "100%",
     position: "absolute",
-    bottom: 110,
-    right: 20,
+    zIndex: 1000,
+    // bottom: 80,
   },
   chatbox: {
+    flex: 1,
     backgroundColor: "#f0f0f0",
     borderRadius: 10,
-    maxHeight: 200,
     overflow: "scroll",
+    paddingBottom: 50,
+  },
+  inputRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    padding: 10,
+    borderTopWidth: 1,
+    borderTopColor: "#ccc",
+    position: "absolute",
+    bottom: 0,
   },
   input: {
+    flex: 1,
     borderWidth: 1,
     borderColor: "#ccc",
     borderRadius: 5,
@@ -101,11 +117,8 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginBottom: 5,
   },
-  inputRow: {
-    justifyContent: "flex-end",
-    flexDirection: "row",
-    alignItems: "center",
-    padding: 3,
+  sendIcon: {
+    marginLeft: 10,
   },
   messageContainer: {
     padding: 10,
@@ -123,19 +136,21 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     textAlign: "left",
   },
-  line: {
-    left: 0,
-    borderBottomWidth: 1,
-    borderBottomColor: "white",
-    width: "100%",
-  },
   closeChat: {
     position: "absolute",
     bottom: 0,
     padding: 5,
   },
-  chatControl: {
-    marginTop: 10,
+  openChat: {
     alignItems: "flex-end",
+    position: "absolute",
+    right: 0,
+    bottom: 100,
+  },
+  closeChat: {
+    alignItems: "flex-end",
+    position: "absolute",
+    right: "45%",
+    top: 0,
   },
 });

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import {
   View,
   Text,
@@ -12,7 +12,9 @@ import useRequest from "../hooks/useRequest";
 import { Fontisto } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 import { BACKEND_URL } from "../assets/config";
+import { ThemeContext } from "../contexts/ThemeContext";
 import { useLocalization } from "../contexts/LocalizationContext";
+import { ThemeColors } from "../assets/theme/ThemeColors";
 
 // TODO
 // Localisaatio ekaan viestiin
@@ -21,10 +23,14 @@ export const AiChat = (username) => {
   const name = username.username;
   const [openChat, setOpenChat] = useState(false);
   const [newMessage, setNewMessage] = useState("");
-  const [conversation, setConversation] = useState([ 
-    { type: "received", content: `Hello, ${name}! Im here to help you!` },
+  const [conversation, setConversation] = useState([
+    {
+      type: "received",
+      content: `Hello, ${name}! I'm your AI personal trainer! Feel free to ask me anything workout related! :)`,
+    },
   ]);
   const { state } = useAuth();
+  const { theme: ThemeColors } = useContext(ThemeContext);
   const token = state.token;
   const { fetcher } = useRequest(token);
   const { t } = useLocalization();
@@ -62,21 +68,22 @@ export const AiChat = (username) => {
     <View style={styles.container}>
       {openChat && (
         <Modal
+          transparent={true}
           visible={openChat}
           onRequestClose={() => setOpenChat(!openChat)}
           animationType="slide"
-
         >
           <View style={styles.chatbox}>
             <View style={styles.messageContainer}>
               {conversation.map((message, index) => (
                 <Text
                   key={index}
-                  style={
+                  style={[
+                    styles.messageBubble,
                     message.type === "sent"
                       ? styles.sentMessage
-                      : styles.receivedMessages
-                  }
+                      : styles.receivedMessages,
+                  ]}
                 >
                   {message.content}
                 </Text>
@@ -89,15 +96,19 @@ export const AiChat = (username) => {
                 value={newMessage}
                 onChangeText={(text) => setNewMessage(text)}
                 placeholder={t("feedback-placeholder")}
-                placeholderTextColor={"#ccc"}
+                color={ThemeColors.tertiary}
+                placeholderTextColor={ThemeColors.tertiary}
                 keyboardType="default"
               />
               <Pressable onPress={sendMessage} style={styles.sendIcon}>
                 <Feather
                   name="send"
                   size={24}
-                  color="black"
-                  style={{ paddingHorizontal: 5, opacity: newMessage === "" ? 0.2 : 1}}
+                  color={ThemeColors.tertiary}
+                  style={{
+                    paddingHorizontal: 5,
+                    opacity: newMessage === "" ? 0.2 : 1,
+                  }}
                 />
               </Pressable>
             </View>
@@ -124,10 +135,18 @@ const styles = StyleSheet.create({
   },
   chatbox: {
     flex: 1,
-    backgroundColor: "#f0f0f0",
+    backgroundColor: ThemeColors.primary,
     borderRadius: 10,
     overflow: "scroll",
-    paddingBottom: 50,
+    width: "98%",
+    alignSelf: "center",
+  },
+  messageBubble: {
+    maxWidth: "70%",
+    marginBottom: 10,
+    alignSelf: "flex-end",
+    borderRadius: 10,
+    padding: 10,
   },
   inputRow: {
     flexDirection: "row",
@@ -142,7 +161,7 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     borderWidth: 1,
-    borderColor: "#ccc",
+    borderColor: ThemeColors.tertiary,
     borderRadius: 5,
     paddingHorizontal: 10,
     marginTop: 10,
@@ -161,14 +180,18 @@ const styles = StyleSheet.create({
     fontSize: 16,
     padding: 10,
     textAlign: "right",
+    backgroundColor: "#DCF8C6",
+    marginRight: 10,
   },
   receivedMessages: {
     fontSize: 16,
     padding: 10,
     textAlign: "left",
     width: "100%",
-    backgroundColor: "#d9d9d9",
+    backgroundColor: ThemeColors.tertiary,
+    marginLeft: 10,
     borderRadius: 5,
+    alignSelf: "flex-start",
   },
   closeChat: {
     position: "absolute",
@@ -187,5 +210,11 @@ const styles = StyleSheet.create({
     position: "absolute",
     right: "45%",
     top: 0,
+  },
+  modal: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "red",
   },
 });

@@ -26,10 +26,6 @@ import { useAuth } from "../contexts/AuthContext";
 import { ThemeContext } from "../contexts/ThemeContext";
 import useRequest from "../hooks/useRequest";
 
-// TODO
-// - FEEDBACK: Animoi inputin avaaminen ja sulkeminen
-// - FEEDBACK: Lähetä palautetta toiminnallisuus
-
 const ThemeBtn = ({ colors, name }) => {
   const { theme: ThemeColors, changeThemeColor } = useContext(ThemeContext);
 

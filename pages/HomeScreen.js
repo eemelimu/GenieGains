@@ -601,7 +601,7 @@ const HomeScreen = () => {
           />
         )}
       </View>
-      <AiChat />
+      <AiChat username={name} />
       <View style={styles.footer}>
         <Button
           isHighlighted={false}

@@ -1,17 +1,44 @@
-import React, { useEffect, useState } from "react";
-import { View, Text, Pressable, StyleSheet, TextInput } from "react-native";
+import { useEffect, useState, useContext, useRef } from "react";
+import {
+  View,
+  Text,
+  Pressable,
+  StyleSheet,
+  Vibration,
+  TextInput,
+  Modal,
+  PanResponder,
+  Animated,
+} from "react-native";
+import { useAuth } from "../contexts/AuthContext";
+import useRequest from "../hooks/useRequest";
 import { Fontisto } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
-import { AntDesign } from "@expo/vector-icons";
-import { SimpleLineIcons } from '@expo/vector-icons';
+import { BACKEND_URL } from "../assets/config";
+import { ThemeContext } from "../contexts/ThemeContext";
+import { useLocalization } from "../contexts/LocalizationContext";
+import { ThemeColors } from "../assets/theme/ThemeColors";
 
-export const AiChat = () => {
-  const [openChat, setOpenChat] = useState(true);
+// TODO
+// Localisaatio ekaan viestiin
+
+export const AiChat = (username) => {
+  const name = username.username;
+  const [openChat, setOpenChat] = useState(false);
   const [newMessage, setNewMessage] = useState("");
+  const [isChatMovable, setIsChatMovable] = useState(false);
   const [conversation, setConversation] = useState([
-    { type: "sent", content: "Hello! :))" },
-    { type: "received", content: "hello, t. chatgpt!" },
+    {
+      type: "received",
+      content: `Hello, ${name}! I'm your AI personal trainer! Feel free to ask me anything workout related! :)`,
+    },
   ]);
+  const { state } = useAuth();
+  const { theme: ThemeColors } = useContext(ThemeContext);
+  const token = state.token;
+  const { fetcher } = useRequest(token);
+  const { t } = useLocalization();
+  const chatIconPan = useRef(new Animated.ValueXY()).current; 
 
   const sendMessage = () => {
     if (newMessage.trim() !== "") {
@@ -21,64 +48,120 @@ export const AiChat = () => {
       ];
       setConversation(updatedConversation);
       setNewMessage("");
+      getResponse(updatedConversation, newMessage);
     }
   };
 
+  const chatIconPanResponder = useRef(
+    PanResponder.create({
+      onStartShouldSetPanResponder: () => true,
+      onPanResponderMove: Animated.event(
+        [null, { dx: chatIconPan.x, dy: chatIconPan.y }],
+        { useNativeDriver: false }
+      ),
+      onPanResponderRelease: () => setIsChatMovable(false),
+    })
+  ).current;
+  
+  useEffect(() => {
+    console.log("isChatMovable: ", isChatMovable);
+  }, [isChatMovable]);
+
+  const getResponse = async (prevConversation, message) => {
+    console.log("message", message);
+    console.log("prevConversation", prevConversation);
+    const res = await fetcher({
+      url: BACKEND_URL + "question",
+      reqMethod: "POST",
+      object: { question: message },
+    });
+    if (res) {
+      res.answer &&
+        setConversation([
+          ...prevConversation,
+          { type: "received", content: res.answer },
+        ]);
+    }
+  };
+
+  const moveChatIcon = () => {
+    console.log("moveChatIcon");
+    Vibration.vibrate(100);
+    setIsChatMovable(true);
+  };
+  
   return (
     <View style={styles.container}>
       {openChat && (
-        <View style={styles.chatbox}>
-          <View style={styles.messageContainer}>
-            {conversation.map((message, index) => (
-              <Text
-                key={index}
-                style={
-                  message.type === "sent"
-                    ? styles.sentMessage
-                    : styles.receivedMessages
-                }
-              >
-                {message.content}
-              </Text>
-            ))}
-          </View>
-          <View style={styles.inputRow}>
-            <TextInput
-              onSubmitEditing={sendMessage}
-              style={styles.input}
-              value={newMessage}
-              onChangeText={(text) => setNewMessage(text)}
-              placeholder="Type your question..."
-              placeholderTextColor={"#ccc"}
-              width="85%"
-              keyboardType="default"
-            />
-            <Pressable onPress={sendMessage} style={styles.sendIcon}>
-              <Feather
-                name="send"
-                size={24}
-                color="black"
-                style={{ paddingHorizontal: 5 }}
+        <Modal
+          transparent={true}
+          visible={openChat}
+          onRequestClose={() => setOpenChat(!openChat)}
+          animationType="slide"
+        >
+          <View style={styles.chatbox}>
+            <View style={styles.messageContainer}>
+              {conversation.map((message, index) => (
+                <Text
+                  key={index}
+                  style={[
+                    styles.messageBubble,
+                    message.type === "sent"
+                      ? styles.sentMessage
+                      : styles.receivedMessages,
+                  ]}
+                >
+                  {message.content}
+                </Text>
+              ))}
+            </View>
+            <View style={styles.inputRow}>
+              <TextInput
+                onSubmitEditing={sendMessage}
+                style={styles.input}
+                value={newMessage}
+                onChangeText={(text) => setNewMessage(text)}
+                placeholder={t("feedback-placeholder")}
+                color={ThemeColors.tertiary}
+                placeholderTextColor={ThemeColors.tertiary}
+                keyboardType="default"
               />
-            </Pressable>
+              <Pressable onPress={sendMessage} style={styles.sendIcon}>
+                <Feather
+                  name="send"
+                  size={24}
+                  color={ThemeColors.tertiary}
+                  style={{
+                    paddingHorizontal: 5,
+                    opacity: newMessage === "" ? 0.2 : 1,
+                  }}
+                />
+              </Pressable>
+            </View>
           </View>
-        </View>
+        </Modal>
       )}
       {!openChat && (
-        <Pressable
-          style={styles.openChat}
-          onPress={() => setOpenChat(!openChat)}
+        <Animated.View
+          style={[
+            styles.container,
+            {
+              transform: [
+                { translateX: chatIconPan.x },
+                { translateY: chatIconPan.y },
+              ],
+            },
+          ]}
+          {...(isChatMovable ? chatIconPanResponder.panHandlers : null)}
         >
-          <Fontisto name="hipchat" size={50} color="orange" />
-        </Pressable>
-      )}
-      {openChat && (
-        <Pressable
-          style={styles.closeChat}
-          onPress={() => setOpenChat(!openChat)}
-        >
-          <SimpleLineIcons name="arrow-down" size={40} color="black" />
-        </Pressable>
+          <Pressable
+            style={styles.openChat}
+            onPress={() => setOpenChat(!openChat)}
+            onLongPress={moveChatIcon}
+          >
+            <Fontisto name="hipchat" size={45} color="orange" />
+          </Pressable>
+        </Animated.View>
       )}
     </View>
   );
@@ -89,29 +172,36 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
     position: "absolute",
-    zIndex: 1000,
-    // bottom: 80,
   },
   chatbox: {
     flex: 1,
-    backgroundColor: "#f0f0f0",
+    backgroundColor: ThemeColors.primary,
     borderRadius: 10,
     overflow: "scroll",
-    paddingBottom: 50,
+    width: "98%",
+    alignSelf: "center",
+  },
+  messageBubble: {
+    maxWidth: "70%",
+    marginBottom: 10,
+    alignSelf: "flex-end",
+    borderRadius: 10,
+    padding: 10,
   },
   inputRow: {
     flexDirection: "row",
     alignItems: "center",
-    padding: 10,
+    paddingHorizontal: 25,
+    paddingVertical: 10,
     borderTopWidth: 1,
     borderTopColor: "#ccc",
     position: "absolute",
-    bottom: 0,
+    bottom: 10,
   },
   input: {
     flex: 1,
     borderWidth: 1,
-    borderColor: "#ccc",
+    borderColor: ThemeColors.tertiary,
     borderRadius: 5,
     paddingHorizontal: 10,
     marginTop: 10,
@@ -121,20 +211,27 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   messageContainer: {
-    padding: 10,
+    paddingVertical: 10,
     overflow: "scroll",
     justifyContent: "flex-start",
     textAlign: "right",
   },
   sentMessage: {
-    borderRadius: 10,
-    marginBottom: 5,
+    fontSize: 16,
+    padding: 10,
     textAlign: "right",
+    backgroundColor: "#DCF8C6",
+    marginRight: 10,
   },
   receivedMessages: {
-    borderRadius: 10,
-    marginBottom: 5,
+    fontSize: 16,
+    padding: 10,
     textAlign: "left",
+    width: "100%",
+    backgroundColor: ThemeColors.tertiary,
+    marginLeft: 10,
+    borderRadius: 5,
+    alignSelf: "flex-start",
   },
   closeChat: {
     position: "absolute",
@@ -146,11 +243,18 @@ const styles = StyleSheet.create({
     position: "absolute",
     right: 0,
     bottom: 100,
+    zIndex: 0,
   },
   closeChat: {
     alignItems: "flex-end",
     position: "absolute",
     right: "45%",
     top: 0,
+  },
+  modal: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "red",
   },
 });

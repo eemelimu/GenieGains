@@ -420,6 +420,7 @@ const SingleMovement = ({
   setWorkoutData,
 }) => {
   //styles dont move
+  const {t}=useLocalization();
   const { theme: ThemeColors } = useContext(ThemeContext);
   const styles = StyleSheet.create({
     // Single Movement Styles
@@ -593,6 +594,7 @@ const SingleSet = ({
   handleRemoveSet,
   handleSetOnChange,
 }) => {
+  const {t}=useLocalization();
   const { theme: ThemeColors } = useContext(ThemeContext);
   const { weight, reps } = set;
 

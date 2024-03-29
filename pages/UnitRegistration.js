@@ -82,9 +82,9 @@ const Preferences = ({ route }) => {
       <View style={styles.nextButton}>
         <Button
           textSize={20}
-          width={120}
+          width={150}
           height={50}
-          text={t("back")}
+          text={t("go-back")}
           onPress={() => {
             navigation.goBack();
           }}
@@ -92,7 +92,7 @@ const Preferences = ({ route }) => {
         <View style={{ paddingLeft: 10 }}>
           <Button
             textSize={20}
-            width={120}
+            width={150}
             height={50}
             text={t("register")}
             onPress={() => {

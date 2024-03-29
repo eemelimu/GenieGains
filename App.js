@@ -99,7 +99,7 @@ const CustomHeader = ({
         <Image
           style={styles.logo}
           resizeMode={"contain"}
-          source={require("./assets/GymJunkieLogo.png")}
+          source={require("./assets/GenieGainsTransparent.png")}
         ></Image>
       ) : (
         <Text style={styles.headerTitle}>{t(title)}</Text>
@@ -242,7 +242,7 @@ const styles = StyleSheet.create({
     top: 0,
     marginLeft: "auto",
     marginRight: "auto",
-    width: 150,
-    height: 40,
+    width: 240,
+    height: 50,
   },
 });

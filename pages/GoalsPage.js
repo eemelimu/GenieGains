@@ -41,7 +41,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import { FontAwesome } from "@expo/vector-icons";
 import format from "@testing-library/react-native/build/helpers/format";
 
-const CHART_HEIGHT = Dimensions.get("window").height / 2.6 - 20;
+const CHART_HEIGHT = Dimensions.get("window").height / 3 - 20;
 const CHART_WIDTH = Dimensions.get("window").width - 40;
 
 const calculateRemainingData = (target) => {
@@ -134,7 +134,8 @@ const GoalsPage = () => {
     });
     if (res) {
       setUnit(res.unit);
-  };};
+    }
+  };
 
   const getGoalsData = async (id) => {
     const res = await fetcher({
@@ -151,7 +152,7 @@ const GoalsPage = () => {
       });
       //append 1 addition with value 0 to the end
       additionsCopy.push({
-        created: selectedGoal.end,
+        created: res.end,
         number: 0,
         note: "",
         goal_id: id,
@@ -289,7 +290,7 @@ const GoalsPage = () => {
     dataContainer: {
       padding: 10,
       backgroundColor: ThemeColors.secondary,
-      alignItems: "center",
+      alignItems: "left",
       justifyContent: "center",
       minHeight: 110,
       borderRadius: 10,
@@ -322,9 +323,13 @@ const GoalsPage = () => {
       backgroundColor: ThemeColors.secondary,
     },
     informationText: {
-      fontSize: 18,
+      backgroundColor: ThemeColors.primary,
+      borderRadius: 10,
+      padding: 10,
+      fontSize: 16,
+      textAlign: "left",
+      margin: 5,
       color: ThemeColors.tertiary,
-      marginBottom: 10,
     },
     modalContainer: {
       flex: 1,
@@ -387,6 +392,10 @@ const GoalsPage = () => {
       borderRadius: 10,
       alignItems: "center",
       alignSelf: "center",
+    },
+    scrollContainer: {
+      flex: 1,
+      backgroundColor: ThemeColors.primary,
     },
   });
 
@@ -501,7 +510,7 @@ const GoalsPage = () => {
                   })}
                 </Text>
                 <Text style={styles.informationText}>
-                  {t("you-have-achieved", {
+                  {t("you-have-achieved-between", {
                     number: formatNumber(
                       calculateCombinedValueBetweenDates(
                         state.x?.value?.value,

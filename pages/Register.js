@@ -1,6 +1,7 @@
 import React, { useState, useRef } from "react";
 import useRequest from "../hooks/useRequest";
 import { useLocalization } from "../contexts/LocalizationContext";
+import { LinearGradient } from "expo-linear-gradient";
 import {
   View,
   Text,
@@ -144,13 +145,20 @@ const Register = () => {
       opacity: 0.5,
     },
     inputRow: {
-      position: "aboslute",
+      position: "relative",
       flexDirection: "row",
       paddingTop: 50,
       marginBottom: 25,
       borderBottomWidth: 1,
       borderBottomColor: ThemeColors.tertiary,
       color: ThemeColors.tertiary,
+    },
+    gradientOverlay: {
+      position: "absolute",
+      left: 0,
+      right: 0,
+      bottom: -2,
+      height: 2,
     },
     buttonContainer: {
       paddingVertical: 50,
@@ -165,13 +173,11 @@ const Register = () => {
       <View style={styles.logoContainer}>
         <Image
           style={styles.Logo}
-          source={require("../assets/GymJunkieLogo.png")}
+          source={require("../assets/GenieGainsTransparent.png")}
           resizeMode="contain"
         />
       </View>
-      <View
-        style={[styles.inputRow, emailFocus && { borderBottomColor: "orange" }]}
-      >
+      <View style={[styles.inputRow]}>
         <Fontisto
           name="email"
           size={24}
@@ -190,11 +196,18 @@ const Register = () => {
           autoCapitalize="none"
           placeholderTextColor={ThemeColors.tertiary}
         />
+        {emailFocus && (
+          <LinearGradient
+            colors={["#0038e3", "#00d0ab"]}
+            start={{ x: 0, y: 0.5 }}
+            end={{ x: 1, y: 0.5 }} 
+            style={styles.gradientOverlay}
+          />
+        )}
       </View>
       <View
         style={[
-          styles.inputRow,
-          usernameFocus && { borderBottomColor: "orange" },
+          styles.inputRow
         ]}
       >
         <AntDesign
@@ -215,11 +228,16 @@ const Register = () => {
           placeholderTextColor={ThemeColors.tertiary}
           onSubmitEditing={() => passwordRef.current.focus()}
         />
+        {usernameFocus&&<LinearGradient
+          colors={["#0038e3", "#00d0ab"]}
+          start={{ x: 0, y: 0.5 }}
+          end={{ x: 1, y: 0.5 }} 
+          style={styles.gradientOverlay}
+        />}
       </View>
       <View
         style={[
-          styles.inputRow,
-          passwordFocus && { borderBottomColor: "orange" },
+          styles.inputRow
         ]}
       >
         <AntDesign
@@ -252,11 +270,16 @@ const Register = () => {
             <Feather name="eye" size={24} color={ThemeColors.tertiary} />
           )}
         </TouchableOpacity>
+        {passwordFocus&&<LinearGradient
+          colors={["#0038e3", "#00d0ab"]}
+          start={{ x: 0, y: 0.5 }}
+          end={{ x: 1, y: 0.5 }} 
+          style={styles.gradientOverlay}
+        />}
       </View>
       <View
         style={[
-          styles.inputRow,
-          password2Focus && { borderBottomColor: "orange" },
+          styles.inputRow
         ]}
       >
         <AntDesign
@@ -270,7 +293,7 @@ const Register = () => {
           onBlur={() => setPassword2Focus(false)}
           ref={password2Ref}
           style={styles.input}
-          placeholder="Retype Password"
+          placeholder={t("retype-password")}
           secureTextEntry={!showPassword2}
           value={password2}
           onChangeText={setPassword2}
@@ -292,6 +315,12 @@ const Register = () => {
             <Feather name="eye" size={24} color={ThemeColors.tertiary} />
           )}
         </TouchableOpacity>
+        {password2Focus&&<LinearGradient
+          colors={["#0038e3", "#00d0ab"]}
+          start={{ x: 0, y: 0.5 }}
+          end={{ x: 1, y: 0.5 }} 
+          style={styles.gradientOverlay}
+        />}
       </View>
 
       <View style={styles.buttonContainer}>

@@ -178,7 +178,6 @@ const HomeScreen = () => {
         const res = await fetcher({
           url: BACKEND_URL + "user",
           reqMethod: "GET",
-          errorMessage: "Error fetching user information",
           showLoading: true,
         });
         if (res) {
@@ -195,8 +194,7 @@ const HomeScreen = () => {
     const res = await fetcher({
       url: BACKEND_URL + "exercise/" + id,
       reqMethod: "DELETE",
-      errorMessage: "Something went wrong",
-      successMessage: "Workout deleted succesfully",
+      errorMessage: t("something-went-wrong"),
       showLoading: true,
     });
     if (res) {

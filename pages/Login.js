@@ -1,4 +1,5 @@
 import React, { useState, useCallback, useRef } from "react";
+import { LinearGradient } from "expo-linear-gradient";
 import {
   View,
   Text,
@@ -150,11 +151,19 @@ const Login = () => {
       fontSize: 20,
     },
     inputRow: {
+      position: "relative",
       flexDirection: "row",
       paddingTop: 50,
       marginBottom: 25,
       borderBottomWidth: 1,
       borderBottomColor: ThemeColors.tertiary,
+    },
+    gradientOverlay: {
+      position: "absolute",
+      left: 0,
+      right: 0,
+      bottom: -2,
+      height: 2,
     },
     buttonContainer: {
       marginTop: 50,
@@ -182,7 +191,7 @@ const Login = () => {
         <Image
           resizeMode={"contain"}
           style={styles.Logo}
-          source={require("../assets/GymJunkieLogo.png")}
+          source={require("../assets/GenieGainsTransparent.png")}
         ></Image>
       </View>
       <View
@@ -207,6 +216,14 @@ const Login = () => {
           returnKeyType="next"
           onSubmitEditing={() => passwordRef.current.focus()}
         />
+        {emailFocus && (
+          <LinearGradient
+          colors={["#0038e3", "#00d0ab"]}
+          start={{ x: 0, y: 0.5 }}
+          end={{ x: 1, y: 0.5 }} 
+          style={styles.gradientOverlay}
+        />
+        )}
       </View>
       <View
         style={[
@@ -243,6 +260,13 @@ const Login = () => {
             <Feather name="eye" size={24} color={ThemeColors.tertiary} />
           )}
         </TouchableOpacity>
+        {passwordFocus && (
+          <LinearGradient
+          colors={["#0038e3", "#00d0ab"]}
+          start={{ x: 0, y: 0.5 }}
+          end={{ x: 1, y: 0.5 }} 
+          style={styles.gradientOverlay}
+        />)}
       </View>
       <View style={styles.buttonContainer}>
         <Button

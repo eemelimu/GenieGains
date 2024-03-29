@@ -27,7 +27,7 @@ const About = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.boldText}>Gymjunkie</Text>
+      <Text style={styles.boldText}>GenieGains</Text>
       <Text style={styles.text}>{t("about-description")}</Text>
       <Text style={styles.text}>Version 0.1.0</Text>
     </View>

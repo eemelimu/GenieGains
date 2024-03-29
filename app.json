@@ -1,19 +1,17 @@
 {
   "expo": {
-    "name": "GymJunkie",
-    "slug": "GymJunkie",
+    "name": "GenieGains",
+    "slug": "GenieGains",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/GymJunkieLogo.png",
+    "icon": "./assets/GenieGainLogo.png",
     "userInterfaceStyle": "dark",
     "splash": {
-      "image": "./assets/GymJunkieLogo.png",
+      "image": "./assets/GenieGainsTransparent.png",
       "resizeMode": "contain",
       "backgroundColor": "#000000"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "infoPlist": {
@@ -22,20 +20,15 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/GymJunkieLogo.png",
+        "foregroundImage": "./assets/GenieGainLogo.png",
         "backgroundColor": "#000000"
       },
-      "package": "com.gymjunkie.GymJunkie",
-      "permissions": [
-        "android.permission.CAMERA"
-      ]
+      "package": "com.genieGains.GenieGains",
+      "permissions": ["android.permission.CAMERA"]
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/GenieGainLogo.png"
     },
-    "plugins": [
-      "react-native-vision-camera",
-      "expo-localization"
-    ]
+    "plugins": ["react-native-vision-camera", "expo-localization"]
   }
 }

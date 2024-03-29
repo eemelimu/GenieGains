@@ -1,5 +1,6 @@
 import React, { useEffect, useContext, useRef } from "react";
 import { useLocalization } from "../contexts/LocalizationContext";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import {
   View,
   Text,
@@ -92,8 +93,8 @@ const NotificationComponent = () => {
       {isLoading && (
         <View style={styles.loadingContainer}>
           <Animated.View style={[styles.rotatingIcon]}>
-            <Fontisto
-              name="injection-syringe"
+            <MaterialCommunityIcons
+              name="oil-lamp"
               size={24}
               color={ThemeColors.tertiary}
             />

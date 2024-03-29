@@ -38,7 +38,7 @@ export const AiChat = (username) => {
   const token = state.token;
   const { fetcher } = useRequest(token);
   const { t } = useLocalization();
-  const chatIconPan = useRef(new Animated.ValueXY()).current; 
+  const chatIconPan = useRef(new Animated.ValueXY()).current;
 
   const sendMessage = () => {
     if (newMessage.trim() !== "") {
@@ -59,17 +59,14 @@ export const AiChat = (username) => {
         [null, { dx: chatIconPan.x, dy: chatIconPan.y }],
         { useNativeDriver: false }
       ),
-      onPanResponderRelease: () => setIsChatMovable(false),
+      onPanResponderRelease: () => {
+        chatIconPan.extractOffset();
+        setIsChatMovable(false);
+      },
     })
   ).current;
-  
-  useEffect(() => {
-    console.log("isChatMovable: ", isChatMovable);
-  }, [isChatMovable]);
 
   const getResponse = async (prevConversation, message) => {
-    console.log("message", message);
-    console.log("prevConversation", prevConversation);
     const res = await fetcher({
       url: BACKEND_URL + "question",
       reqMethod: "POST",
@@ -84,12 +81,16 @@ export const AiChat = (username) => {
     }
   };
 
+  useEffect(() => {
+    console.log(isChatMovable);
+  }, [isChatMovable]);
+  
   const moveChatIcon = () => {
-    console.log("moveChatIcon");
     Vibration.vibrate(100);
     setIsChatMovable(true);
+    console.log(isChatMovable);
   };
-  
+
   return (
     <View style={styles.container}>
       {openChat && (
@@ -152,14 +153,19 @@ export const AiChat = (username) => {
               ],
             },
           ]}
-          {...(isChatMovable ? chatIconPanResponder.panHandlers : null)}
         >
           <Pressable
             style={styles.openChat}
             onPress={() => setOpenChat(!openChat)}
             onLongPress={moveChatIcon}
+            
           >
-            <Fontisto name="hipchat" size={45} color="orange" />
+            <Fontisto
+              name="hipchat"
+              size={45}
+              color="orange"
+              {...(isChatMovable ? chatIconPanResponder.panHandlers : null)}
+            />
           </Pressable>
         </Animated.View>
       )}
@@ -241,9 +247,8 @@ const styles = StyleSheet.create({
   openChat: {
     alignItems: "flex-end",
     position: "absolute",
-    right: 0,
-    bottom: 100,
-    zIndex: 0,
+    right: 40,
+    bottom: 120,
   },
   closeChat: {
     alignItems: "flex-end",

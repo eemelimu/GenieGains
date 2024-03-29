@@ -4,7 +4,7 @@
 <br />
 <div align="center">
   <a>
-    <img src="./assets/GJunkie_02.png" alt="GymJunkieLogo" width="450" height="100">
+    <img src="./assets/GenieGainsOutline.png" alt="GymJunkieLogo" width="auto" height="auto">
   </a>
   <h4 align="center">
     Mobile application for tracking your workouts.
@@ -19,11 +19,11 @@
 </div>
 </div>
 
-## What is Gym Junkie?
+## What is Genie Gains?
 
-Gym Junkie is a mobile application for tracking your workouts easily and effortlessy. It is designed to be simple and easy to use for every skill level, whether you are a beginner and new to gym or experiences lifter. You can create your own routines and save them for later use. You can also track your progress and see how you have improved over time.
+Genie Gains is a mobile application for tracking your workouts easily and effortlessy. It is designed to be simple and easy to use for every skill level, whether you are a beginner and new to gym or experiences lifter. You can create your own routines and save them for later use. You can also track your progress and see how you have improved over time.
 
-The application is built using [React Native](https://reactnative.dev/) and [Expo](https://expo.dev/). The [backend](https://github.com/salopietari/gymjunkie-rest-api/tree/main) is built using [Django](https://www.djangoproject.com/).
+The application is built using [React Native](https://reactnative.dev/) and [Expo](https://expo.dev/). The [backend](https://github.com/salopietari/geniegains-rest-api/tree/main) is built using [Django](https://www.djangoproject.com/).
 
 ## How to Use
 
@@ -44,7 +44,7 @@ npm install npm@latest -g
 
 1. Clone the repository
    ```sh
-   git clone https://github.com/eemelimu/GymJunkie.git
+   git clone https://github.com/eemelimu/GenieGains.git
    ```
    _Instructions for cloning a repository can be found [here](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository)._
    <br>

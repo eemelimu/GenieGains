@@ -84,7 +84,7 @@ export const AiChat = (username) => {
   useEffect(() => {
     console.log(isChatMovable);
   }, [isChatMovable]);
-  
+
   const moveChatIcon = () => {
     Vibration.vibrate(100);
     setIsChatMovable(true);
@@ -158,7 +158,6 @@ export const AiChat = (username) => {
             style={styles.openChat}
             onPress={() => setOpenChat(!openChat)}
             onLongPress={moveChatIcon}
-            
           >
             <Fontisto
               name="hipchat"
@@ -175,9 +174,11 @@ export const AiChat = (username) => {
 
 const styles = StyleSheet.create({
   container: {
-    width: "100%",
-    height: "100%",
+    width: "auto",
+    height: "auto",
     position: "absolute",
+    right: 40,
+    bottom: 120,
   },
   chatbox: {
     flex: 1,
@@ -246,9 +247,7 @@ const styles = StyleSheet.create({
   },
   openChat: {
     alignItems: "flex-end",
-    position: "absolute",
-    right: 40,
-    bottom: 120,
+    position: "relative",
   },
   closeChat: {
     alignItems: "flex-end",

@@ -15,9 +15,10 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useLocalization } from "../contexts/LocalizationContext";
 import { supportedLanguages } from "../contexts/LocalizationContext";
 import { storeData } from "../utils/utils";
+import Button from "../components/Button";
 
 const LanguagePreferences = () => {
-  const { t, setLanguage, locale } = useLocalization();
+  const { t, setLanguage, locale, reset } = useLocalization();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState(null);
   const {
@@ -40,7 +41,10 @@ const LanguagePreferences = () => {
   };
   useEffect(() => {
     setSelectedLanguage(
-      supportedLanguages.find((l) => l.value == locale.languageTag) || {}
+      supportedLanguages.find((l) => l.value == locale.languageTag) ||
+        supportedLanguages.find(
+          (l) => l.value == locale.languageTag.split("-")[0] || "en"
+        )
     );
   }, [locale]);
   const styles = StyleSheet.create({
@@ -112,7 +116,11 @@ const LanguagePreferences = () => {
         </Text>
         <Entypo name="globe" size={24} color={ThemeColors.tertiary} />
       </TouchableOpacity>
-
+      <Button
+        text="Reset to system default"
+        isHighlighted={true}
+        onPress={reset}
+      />
       <Modal
         visible={isModalVisible}
         transparent={true}

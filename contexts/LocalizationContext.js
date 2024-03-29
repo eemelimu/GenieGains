@@ -19,7 +19,7 @@ export const supportedLanguages = [
   { label: "English", value: "en" },
   { label: "Suomi", value: "fi" },
   { label: "日本語", value: "ja" },
-]
+];
 
 i18n.use(initReactI18next).init({
   compatibilityJSON: "v3",
@@ -106,6 +106,15 @@ export const LocalizationProvider = ({ children }) => {
   const getMeasurementSystem = () => {
     return state.measurementSystem;
   };
+  const reset = async () => {
+    await deleteData("locale");
+    dispatch({
+      type: "SET_LOCALE",
+      payload: {
+        languageTag: Localization.getLocales()[0].languageTag || "en",
+      },
+    });
+  };
 
   return (
     <LocalizationContext.Provider
@@ -117,6 +126,7 @@ export const LocalizationProvider = ({ children }) => {
         formatNumber,
         getTextDirection,
         getMeasurementSystem,
+        reset,
       }}
     >
       {children}

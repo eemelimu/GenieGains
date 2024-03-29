@@ -5,7 +5,7 @@ import { ThemeContext } from "../contexts/ThemeContext";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import * as Clipboard from "expo-clipboard";
 import useRequest from "../hooks/useRequest";
-import { AiChat } from "../components/AiChat"
+import { AiChat } from "../components/AiChat";
 import {
   BackHandler,
   StyleSheet,
@@ -217,12 +217,21 @@ const HomeScreen = () => {
   };
 
   const handleShareWorkout = async (id) => {
-    console.log(workoutMovements);
-    const clickedWorkout = workoutMovements.find(
+    const res = await fetcher({
+      url: BACKEND_URL + "exercisemovementconnection/" + id,
+      reqMethod: "GET",
+    });
+    if (!res) {
+      return;
+    }
+    console.log(res)
+    const movements = res.exercisemovementconnection_list;
+    console.log(movements);
+    const clickedWorkout = movements.find(
       (workout) => workout.exercise_id == id
     );
 
-    const weightUnit = locale.measurementSystem; //unit === "metric" ? "kg" : "lbs";
+    const weightUnit = unit === "metric" ? "kg" : "lbs";
     //const note=clickedWorkout.notes.length==0?"":`\nNote:${clickedWorkout.notes}`;
     const clickedWorkoutMovements = clickedWorkout.movements;
     const workoutInfo = `${clickedWorkout?.name}(${formatDate(

@@ -90,8 +90,8 @@ const calculateCombinedValueBetweenDates = (
 
 const GoalsPage = () => {
   const { locale, t, formatDate, formatNumber } = useLocalization();
-  //const [unit, setUnit] = useState("metric");
-  const unit = locale.measurementSystem;
+  const [unit, setUnit] = useState("metric");
+  //const unit = locale.measurementSystem;
   const { setError, setSuccess, startLoading, stopLoading } = useNotification();
   const { theme: ThemeColors } = useContext(ThemeContext);
   const [openAdditionPicker, setOpenAdditionPicker] = useState(false);
@@ -125,6 +125,16 @@ const GoalsPage = () => {
   });
   const [initialXPosition, setInitialXPosition] = useState(null);
   const [SecondinitialXPosition, setSecondInitialXPosition] = useState(null);
+
+  const getUserData = async () => {
+    const res = await fetcher({
+      url: BACKEND_URL + "user",
+      reqMethod: "GET",
+      errorMessage: t("something-went-wrong"),
+    });
+    if (res) {
+      setUnit(res.unit);
+  };};
 
   const getGoalsData = async (id) => {
     const res = await fetcher({
@@ -164,6 +174,7 @@ const GoalsPage = () => {
   };
 
   useEffect(() => {
+    getUserData();
     getGoalsDataList();
   }, []);
 

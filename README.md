@@ -19,11 +19,11 @@
 </div>
 </div>
 
-## What is Gym Junkie?
+## What is Genie Gains?
 
-Gym Junkie is a mobile application for tracking your workouts easily and effortlessy. It is designed to be simple and easy to use for every skill level, whether you are a beginner and new to gym or experiences lifter. You can create your own routines and save them for later use. You can also track your progress and see how you have improved over time.
+Genie Gains is a mobile application for tracking your workouts easily and effortlessy. It is designed to be simple and easy to use for every skill level, whether you are a beginner and new to gym or experiences lifter. You can create your own routines and save them for later use. You can also track your progress and see how you have improved over time.
 
-The application is built using [React Native](https://reactnative.dev/) and [Expo](https://expo.dev/). The [backend](https://github.com/salopietari/gymjunkie-rest-api/tree/main) is built using [Django](https://www.djangoproject.com/).
+The application is built using [React Native](https://reactnative.dev/) and [Expo](https://expo.dev/). The [backend](https://github.com/salopietari/geniegains-rest-api/tree/main) is built using [Django](https://www.djangoproject.com/).
 
 ## How to Use
 

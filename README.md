@@ -44,7 +44,7 @@ npm install npm@latest -g
 
 1. Clone the repository
    ```sh
-   git clone https://github.com/eemelimu/GymJunkie.git
+   git clone https://github.com/eemelimu/GenieGains.git
    ```
    _Instructions for cloning a repository can be found [here](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository)._
    <br>

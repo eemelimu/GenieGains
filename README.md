@@ -4,7 +4,7 @@
 <br />
 <div align="center">
   <a>
-    <img src="./assets/GJunkie_02.png" alt="GymJunkieLogo" width="450" height="100">
+    <img src="./assets/GenieGainsOutline.png" alt="GymJunkieLogo" width="auto" height="auto">
   </a>
   <h4 align="center">
     Mobile application for tracking your workouts.

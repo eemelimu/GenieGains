@@ -6,6 +6,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import * as Clipboard from "expo-clipboard";
 import useRequest from "../hooks/useRequest";
 import { AiChat } from "../components/AiChat";
+import AnimatedCirclesContainer from "../components/AnimatedCircles";
 import {
   BackHandler,
   StyleSheet,
@@ -215,6 +216,7 @@ const HomeScreen = () => {
   };
 
   const handleShareWorkout = async (id) => {
+    console.log(id);
     const res = await fetcher({
       url: BACKEND_URL + "exercisemovementconnection/" + id,
       reqMethod: "GET",
@@ -222,8 +224,8 @@ const HomeScreen = () => {
     if (!res) {
       return;
     }
-    console.log(res)
-    const movements = res.exercisemovementconnection_list;
+    console.log(res);
+    const movements = res.emcs_list;
     console.log(movements);
     const clickedWorkout = movements.find(
       (workout) => workout.exercise_id == id
@@ -498,7 +500,7 @@ const HomeScreen = () => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <AnimatedCirclesContainer>
       <View style={styles.header}>
         <View style={styles.column}>
           <Text style={styles.date}>{dateToString.toUpperCase()}</Text>
@@ -634,7 +636,7 @@ const HomeScreen = () => {
           )}
         />
       </View>
-    </SafeAreaView>
+    </AnimatedCirclesContainer>
   );
 };
 

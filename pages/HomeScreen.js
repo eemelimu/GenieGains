@@ -6,7 +6,6 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import * as Clipboard from "expo-clipboard";
 import useRequest from "../hooks/useRequest";
 import { AiChat } from "../components/AiChat";
-import AnimatedCirclesContainer from "../components/AnimatedCircles";
 import {
   BackHandler,
   StyleSheet,
@@ -500,7 +499,7 @@ const HomeScreen = () => {
   };
 
   return (
-    <AnimatedCirclesContainer>
+    <View style={styles.container}>
       <View style={styles.header}>
         <View style={styles.column}>
           <Text style={styles.date}>{dateToString.toUpperCase()}</Text>
@@ -636,7 +635,7 @@ const HomeScreen = () => {
           )}
         />
       </View>
-    </AnimatedCirclesContainer>
+    </View>
   );
 };
 

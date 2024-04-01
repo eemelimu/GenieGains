@@ -68,7 +68,7 @@ export const AiChat = (username) => {
 
   const getResponse = async (prevConversation, message) => {
     const res = await fetcher({
-      url: BACKEND_URL + "question",
+      url: BACKEND_URL + "conversation",
       reqMethod: "POST",
       object: { question: message },
     });
@@ -81,14 +81,10 @@ export const AiChat = (username) => {
     }
   };
 
-  useEffect(() => {
-    console.log(isChatMovable);
-  }, [isChatMovable]);
-
   const moveChatIcon = () => {
     Vibration.vibrate(100);
     setIsChatMovable(true);
-    console.log(isChatMovable);
+
   };
 
   return (
@@ -151,17 +147,18 @@ export const AiChat = (username) => {
                 { translateX: chatIconPan.x },
                 { translateY: chatIconPan.y },
               ],
+              opacity: isChatMovable ? 0.5 : 1,
             },
           ]}
         >
           <Pressable
-            style={styles.openChat}
+            style={[styles.openChat]}
             onPress={() => setOpenChat(!openChat)}
             onLongPress={moveChatIcon}
           >
             <Fontisto
               name="hipchat"
-              size={45}
+              size={isChatMovable ? 60 : 50}
               color="orange"
               {...(isChatMovable ? chatIconPanResponder.panHandlers : null)}
             />
@@ -182,7 +179,7 @@ const styles = StyleSheet.create({
   },
   chatbox: {
     flex: 1,
-    backgroundColor: ThemeColors.primary,
+    backgroundColor: ThemeColors.secondary,
     borderRadius: 10,
     overflow: "scroll",
     width: "98%",

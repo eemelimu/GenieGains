@@ -68,7 +68,7 @@ export const AiChat = (username) => {
 
   const getResponse = async (prevConversation, message) => {
     const res = await fetcher({
-      url: BACKEND_URL + "question",
+      url: BACKEND_URL + "conversation",
       reqMethod: "POST",
       object: { question: message },
     });

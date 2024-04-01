@@ -226,17 +226,24 @@ const HomeScreen = () => {
     console.log(res);
     const movements = res.emcs_list;
     console.log(movements);
-    const clickedWorkout = movements.find(
-      (workout) => workout.exercise_id == id
-    );
-
+    const res2 = await fetcher({
+      url: BACKEND_URL + "exercise/" + id,
+      reqMethod: "GET",
+    });
+    if (!res2) {
+      return;
+    }
+    console.log(res2);
+    const clickedWorkout = res2;
     const weightUnit = unit === "metric" ? "kg" : "lbs";
-    //const note=clickedWorkout.notes.length==0?"":`\nNote:${clickedWorkout.notes}`;
-    const clickedWorkoutMovements = clickedWorkout.movements;
-    const workoutInfo = `${clickedWorkout?.name}(${formatDate(
+    const note =
+      clickedWorkout.note.length == 0
+        ? ""
+        : `\n${t("note")}${clickedWorkout.note}`;
+    const workoutInfo = `${clickedWorkout?.name} (${formatDate(
       clickedWorkout.updated
     )})\n\n`;
-    const copiedWorkout = clickedWorkoutMovements.map(
+    const copiedWorkout = movements.map(
       (movement) =>
         "\n" +
         movement.name +
@@ -244,10 +251,12 @@ const HomeScreen = () => {
         movement.weight +
         " " +
         weightUnit +
-        " x" +
+        "x" +
         movement.reps
     );
-    await Clipboard.setStringAsync(workoutInfo + copiedWorkout.join("\n"));
+    await Clipboard.setStringAsync(
+      workoutInfo + note + copiedWorkout.join("\n")
+    );
     setSuccess(t("workout-clipboard-copied-success"));
   };
 
@@ -467,10 +476,11 @@ const HomeScreen = () => {
       );
 
       const getNotesById = await getworkoutInformation(id);
-      navigation.navigate("ViewWorkout", {
-        workout: clickedWorkout,
-        notes: getNotesById["note"],
-      });
+      // navigation.navigate("ViewWorkout", {
+      //   workout: clickedWorkout,
+      //   notes: getNotesById["note"],
+      // });
+      navigation.navigate("Workout",{from:"home",id:id})
     };
 
     return (

@@ -18,9 +18,16 @@ import { Ionicons } from "@expo/vector-icons";
 import { BACKEND_URL } from "../assets/config";
 import { ThemeContext } from "../contexts/ThemeContext";
 import { LogBox } from "react-native";
+import useRequest from "../hooks/useRequest";
 
 export const Workout = ({ route }) => {
+  const [sets, setSets] = useState(
+    route?.params?.from === "home" ? [] : [{ weight: "", reps: "" }]
+  );
   const { t, locale } = useLocalization();
+  const { state } = useAuth();
+  const token = state.token;
+  const { fetcher } = useRequest(token);
   LogBox.ignoreAllLogs();
   const { theme: ThemeColors } = useContext(ThemeContext);
   //styles dont move
@@ -198,19 +205,55 @@ export const Workout = ({ route }) => {
   const [notes, setNotes] = useState("");
   const [movements, setMovements] = useState([]);
   const [addedMovements, setAddedMovements] = useState([]);
-  const { state } = useAuth();
-  const token = state.token;
   const [dropdownKey, setDropdownKey] = useState(0);
   const [workoutData, setWorkoutData] = useState([]);
   const navigation = useNavigation();
   const [inProgress, setInProgress] = useState(false);
 
   useEffect(() => {
-    if (route.params) {
-      setName(route.params.movements.training_plan_name);
-      setAddedMovements(route.params.movements.movements);
-      setWorkoutData(route.params.movements.movements);
-    }
+    const asyncRouteHandler = async () => {
+      if (route.params) {
+        if (route.params?.from === "routines") {
+          setName(route.params.movements.training_plan_name);
+          setAddedMovements(route.params.movements.movements);
+          setWorkoutData(route.params.movements.movements);
+        } else if (route.params?.from === "home") {
+          const id = route.params.id;
+          const res = await fetcher({
+            url: BACKEND_URL + `exercise/${id}`,
+            reqMethod: "GET",
+            errorMessage: t("something-went-wrong"),
+            showLoading: true,
+          });
+
+          if (!res) return;
+          setName(res.name);
+          setNotes(res.note);
+
+          const movements = await fetcher({
+            url: BACKEND_URL + `exercisemovementconnection/${id}`,
+            reqMethod: "GET",
+            errorMessage: t("something-went-wrong"),
+            showLoading: true,
+          });
+          if (!movements) return;
+          setAddedMovements(movements.emcs_list);
+          setWorkoutData(movements.emcs_list);
+          console.log(movements.emcs_list);
+          movements.emcs_list.map((movement, index) => {
+            if (index == 0) {
+              setSets([{ weight: movement.weight, reps: movement.reps }]);
+            }
+            setSets([
+              ...sets,
+              { weight: movement.weight, reps: movement.reps.toString() },
+            ]);
+          });
+          console.log(sets);
+        }
+      }
+    };
+    asyncRouteHandler();
   }, [route.params]);
 
   const handleAddMovement = (value) => {
@@ -263,6 +306,7 @@ export const Workout = ({ route }) => {
         workout.sets.every((set) => set.weight !== "" && set.reps !== "")
       );
     });
+    console.log(allWorkoutsHaveSets);
     workoutData.length > 0 && allWorkoutsHaveSets
       ? setInProgress(true)
       : setInProgress(false);
@@ -390,6 +434,8 @@ export const Workout = ({ route }) => {
                 movement={movement}
                 handleRemoveMovement={handleRemoveMovement}
                 workoutData={workoutData}
+                setSets={setSets}
+                sets={sets}
                 setWorkoutData={setWorkoutData}
               />
             ))
@@ -399,15 +445,17 @@ export const Workout = ({ route }) => {
         </View>
       </ScrollView>
       <View style={styles.footer}>
-        <TouchableOpacity
-          style={{
-            ...styles.finishWorkout,
-            visibility: inProgress ? "visible" : "hidden",
-          }}
-          onPress={handleFinishWorkout}
-        >
-          <Text style={styles.regularText}>{t("finish-workout")}</Text>
-        </TouchableOpacity>
+        {inProgress && route?.params?.from !== "home" ? (
+          <TouchableOpacity
+            style={{
+              ...styles.finishWorkout,
+              visibility: inProgress ? "visible" : "hidden",
+            }}
+            onPress={handleFinishWorkout}
+          >
+            <Text style={styles.regularText}>{t("finish-workout")}</Text>
+          </TouchableOpacity>
+        ) : null}
       </View>
     </SafeAreaView>
   );
@@ -418,9 +466,11 @@ const SingleMovement = ({
   handleRemoveMovement,
   workoutData,
   setWorkoutData,
+  setSets,
+  sets,
 }) => {
   //styles dont move
-  const {t}=useLocalization();
+  const { t } = useLocalization();
   const { theme: ThemeColors } = useContext(ThemeContext);
   const styles = StyleSheet.create({
     // Single Movement Styles
@@ -501,8 +551,6 @@ const SingleMovement = ({
   });
 
   //end of styles dont move
-
-  const [sets, setSets] = useState([{ weight: "", reps: "" }]);
 
   const handleAddSet = () => {
     setSets([...sets, { weight: "", reps: "" }]);
@@ -594,7 +642,7 @@ const SingleSet = ({
   handleRemoveSet,
   handleSetOnChange,
 }) => {
-  const {t}=useLocalization();
+  const { t } = useLocalization();
   const { theme: ThemeColors } = useContext(ThemeContext);
   const { weight, reps } = set;
 

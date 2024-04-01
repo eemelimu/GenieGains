@@ -183,7 +183,7 @@ const CreateRoutine = () => {
       object: {
         name: routineName,
         movements: selectedRoutineMovements.map((movement) => movement.id),
-        notes: routineNotes,
+        //note: routineNotes,
       },
       successMessage: t("routine-success"),
       errorMessage: t("something-went-wrong"),

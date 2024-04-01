@@ -239,7 +239,10 @@ const Routines = () => {
               width={70}
               text={t("start")}
               onPress={() =>
-                navigation.navigate("Workout", { movements: routine })
+                navigation.navigate("Workout", {
+                  movements: routine,
+                  from: "routines",
+                })
               }
             />
           </View>

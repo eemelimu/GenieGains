@@ -18,9 +18,54 @@ import * as Localization from "expo-localization";
 jest.useFakeTimers();
 
 test("Homescreen localization works in Finnish", async () => {
-  jest.spyOn(Localization, "getLocales").mockReturnValue([
-    { languageTag: "fi-FI" },
-  ]);
+  jest
+    .spyOn(Localization, "getLocales")
+    .mockReturnValue([{ languageTag: "fi-FI" }]);
+
+  const Stack = createStackNavigator();
+  let component;
+  await act(async () => {
+    component = renderer.create(
+      <NavigationContainer>
+        <NotificationProvider>
+          <SettingsProvider>
+            <ThemeProvider>
+              <AuthProvider>
+                <LocalizationProvider>
+                  <Stack.Navigator>
+                    <Stack.Screen name="Home" component={HomeScreen} />
+                  </Stack.Navigator>
+                  <Notification />
+                </LocalizationProvider>
+              </AuthProvider>
+            </ThemeProvider>
+            <Toast />
+          </SettingsProvider>
+        </NotificationProvider>
+      </NavigationContainer>
+    );
+  });
+  const startWorkoutButton = component.root.findByProps({
+    testID: "start-workout",
+  });
+  const startButtonText = startWorkoutButton.props.text;
+  expect(startButtonText).toEqual("Aloita treeni");
+
+  const progressButton = component.root.findByProps({ testID: "progress" });
+  const progressButtonText = progressButton.props.text;
+  expect(progressButtonText).toEqual("Edistyminen");
+
+  const routinesButton = component.root.findByProps({ testID: "routines" });
+  const routinesButtonText = routinesButton.props.text;
+  expect(routinesButtonText).toEqual("Rutiinit");
+
+  jest.restoreAllMocks();
+});
+
+test("Homescreen localization works in English", async () => {
+  jest
+    .spyOn(Localization, "getLocales")
+    .mockReturnValue([{ languageTag: "en-EN" }]);
 
   const Stack = createStackNavigator();
   let component;
@@ -46,17 +91,19 @@ test("Homescreen localization works in Finnish", async () => {
     );
   });
 
-  const startWorkoutButton = component.root.findByProps({ testID: "start-workout" });
+  const startWorkoutButton = component.root.findByProps({
+    testID: "start-workout",
+  });
   const startButtonText = startWorkoutButton.props.text;
-  expect(startButtonText).toEqual("Aloita treeni");
+  expect(startButtonText).toEqual("Start Workout");
 
   const progressButton = component.root.findByProps({ testID: "progress" });
   const progressButtonText = progressButton.props.text;
-  expect(progressButtonText).toEqual("Edistyminen");
+  expect(progressButtonText).toEqual("Progress");
 
   const routinesButton = component.root.findByProps({ testID: "routines" });
   const routinesButtonText = routinesButton.props.text;
-  expect(routinesButtonText).toEqual("Rutiinit");
+  expect(routinesButtonText).toEqual("Routines");
 
   jest.restoreAllMocks();
 });

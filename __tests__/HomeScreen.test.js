@@ -20,30 +20,36 @@ jest.useFakeTimers();
 test("Home screen component renders correctly and that the theme context applies themes correctly", async () => {
   jest
     .spyOn(Localization, "getLocales")
-    .mockReturnValue([{languageTag:"en-US"}, {languageTag:"fi-FI"}, {languageTag:"ja-JA"}]);
+    .mockReturnValue([
+      { languageTag: "fi-FI" },
+      { languageTag: "en-EN" },
+      { languageTag: "ja-JA" },
+    ]);
 
   const Stack = createStackNavigator();
   let component;
-  component = renderer.create(
-    <NavigationContainer>
-      <NotificationProvider>
-        <SettingsProvider>
-          <ThemeProvider>
-            <AuthProvider>
-              <LocalizationProvider>
-                <Stack.Navigator>
-                  <Stack.Screen name="Home" component={HomeScreen} />
-                  <Stack.Screen name="Login" component={Login} />
-                </Stack.Navigator>
-                <Notification />
-              </LocalizationProvider>
-            </AuthProvider>
-          </ThemeProvider>
-          <Toast />
-        </SettingsProvider>
-      </NotificationProvider>
-    </NavigationContainer>
-  );
+  await act(async () => {
+    component = renderer.create(
+      <NavigationContainer>
+        <NotificationProvider>
+          <SettingsProvider>
+            <ThemeProvider>
+              <AuthProvider>
+                <LocalizationProvider>
+                  <Stack.Navigator>
+                    <Stack.Screen name="Home" component={HomeScreen} />
+                    <Stack.Screen name="Login" component={Login} />
+                  </Stack.Navigator>
+                  <Notification />
+                </LocalizationProvider>
+              </AuthProvider>
+            </ThemeProvider>
+            <Toast />
+          </SettingsProvider>
+        </NotificationProvider>
+      </NavigationContainer>
+    );
+  });
 
   let tree;
   await act(async () => {

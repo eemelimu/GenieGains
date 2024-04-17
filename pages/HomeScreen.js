@@ -480,7 +480,7 @@ const HomeScreen = () => {
       //   workout: clickedWorkout,
       //   notes: getNotesById["note"],
       // });
-      navigation.navigate("Workout",{from:"home",id:id})
+      navigation.navigate("Workout", { from: "home", id: id });
     };
 
     return (
@@ -513,7 +513,7 @@ const HomeScreen = () => {
       <View style={styles.header}>
         <View style={styles.column}>
           <Text style={styles.date}>{dateToString.toUpperCase()}</Text>
-          <Text style={styles.greetings}>
+          <Text style={styles.greetings} testID="welcome-message">
             {t("welcome-message", { greeting: t(greeting), name: name })}
           </Text>
           {settings.tips ? (
@@ -613,6 +613,7 @@ const HomeScreen = () => {
       <AiChat username={name} />
       <View style={styles.footer}>
         <Button
+          testID="routines"
           isHighlighted={false}
           width={120}
           height={"80%"}
@@ -623,6 +624,7 @@ const HomeScreen = () => {
           onPress={handleLog}
         />
         <Button
+          testID="start-workout"
           isHighlighted={true}
           width={150}
           height={"80%"}
@@ -634,6 +636,7 @@ const HomeScreen = () => {
           )}
         />
         <Button
+          testID="progress"
           isHighlighted={false}
           width={120}
           height={"80%"}

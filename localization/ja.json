@@ -129,7 +129,7 @@
   "enter-amount-progress": "進捗状況の量を入力してください",
   "failed-to-add-progress": "進捗を追加できませんでした",
   "not-enough-data": "プロットするデータがありません",
-  "goal-header": "{{goal_name}} of {{goal_amount}} {{goal_unit}} by {{goal_date}}の目標",
+  "goal-header": "{{goal_amount}} {{goal_unit}}の{{goal_name}}を{{goal_date}}までに",
   "you-have-selected-dates": "{{start_date}}から{{end_date}}までの日付を選択しました",
   "you-have-selected-value": "{{date}}に{{value}} {{unit}}を選択しました",
   "you-have-achieved-between": "これらの日付の間に{{number}} {{unit}}を達成しました",

@@ -10,7 +10,6 @@ import Animated, {
 } from "react-native-reanimated";
 import { useIsFocused } from "@react-navigation/native";
 
-
 let { width, height } = Dimensions.get("window");
 
 const AnimatedCircles = ({
@@ -119,8 +118,8 @@ const AnimatedCircles = ({
 
           {
             position: "absolute",
-            width: radius,
-            height: radius,
+            width: 0.2 + radius,
+            height: 0.2 + radius,
             borderRadius: 999,
             opacity: opacity,
           },

@@ -76,7 +76,8 @@
     "react-navigation": "^5.0.0",
     "reanimated-color-picker": "^3.0.2",
     "tinycolor2": "^1.6.0",
-    "victory-native": "^40.0.4"
+    "victory-native": "^40.0.4",
+    "expo-blur": "~12.9.2"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

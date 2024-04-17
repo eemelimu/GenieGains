@@ -120,6 +120,7 @@ const LanguagePreferences = () => {
         text="Reset to system default"
         isHighlighted={true}
         onPress={reset}
+        width={"60%"}
       />
       <Modal
         visible={isModalVisible}

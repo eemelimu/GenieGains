@@ -10,41 +10,48 @@ import { waitFor } from "@testing-library/react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import Login from "../pages/Login";
 import { NotificationProvider } from "../contexts/NotificationContext";
+import { LocalizationProvider } from "../contexts/LocalizationContext";
 import Notification from "../components/Notification";
 import Toast, { ErrorToast } from "react-native-toast-message";
+import * as Localization from "expo-localization";
 
 jest.useFakeTimers();
 
 test("Home screen component renders correctly and that the theme context applies themes correctly", async () => {
+  jest
+    .spyOn(Localization, "getLocales")
+    .mockReturnValue([{languageTag:"en-US"}, {languageTag:"fi-FI"}, {languageTag:"ja-JA"}]);
+
   const Stack = createStackNavigator();
   let component;
-
-  await act(async () => {
-    component = renderer.create(
-      <NavigationContainer>
-        <NotificationProvider>
-          <SettingsProvider>
-            <ThemeProvider>
-              <AuthProvider>
+  component = renderer.create(
+    <NavigationContainer>
+      <NotificationProvider>
+        <SettingsProvider>
+          <ThemeProvider>
+            <AuthProvider>
+              <LocalizationProvider>
                 <Stack.Navigator>
                   <Stack.Screen name="Home" component={HomeScreen} />
                   <Stack.Screen name="Login" component={Login} />
                 </Stack.Navigator>
                 <Notification />
-              </AuthProvider>
-            </ThemeProvider>
-            <Toast />
-          </SettingsProvider>
-        </NotificationProvider>
-      </NavigationContainer>
-    );
+              </LocalizationProvider>
+            </AuthProvider>
+          </ThemeProvider>
+          <Toast />
+        </SettingsProvider>
+      </NotificationProvider>
+    </NavigationContainer>
+  );
+
+  let tree;
+  await act(async () => {
+    jest.runAllTimers();
+    tree = component.toJSON();
   });
 
-  await waitFor(() => {
-    let tree;
-    act(() => {
-      tree = component.toJSON();
-    });
-    expect(tree).toMatchSnapshot();
-  });
+  expect(tree).toMatchSnapshot();
+
+  jest.restoreAllMocks();
 });

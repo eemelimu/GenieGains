@@ -229,6 +229,7 @@ export default function ColorSettings({}) {
         </Pressable>
         <Button
           isHighlighted={true}
+          testID="resetTheme"
           text={t("reset-to-default")}
           width={"80%"}
           onPress={async () => {

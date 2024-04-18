@@ -235,6 +235,7 @@ const Routines = () => {
           </View>
           <View style={styles.startButton}>
             <Button
+              testID="start"
               isHighlighted={true}
               width={70}
               text={t("start")}
@@ -256,8 +257,8 @@ const Routines = () => {
       <ScrollView style={{ flex: 1 }}>
         {trainingPlans.length === 0 ? (
           <View>
-            <Text style={styles.notFoundText}>{t("no-training-plans")}</Text>
-            <Text style={styles.notFoundText}>{t("create-routine-hint")}</Text>
+            <Text style={styles.notFoundText} testID="no-training-plans">{t("no-training-plans")}</Text>
+            <Text style={styles.notFoundText} testID="create-routine-hint">{t("create-routine-hint")}</Text>
           </View>
         ) : (
           trainingPlans.map((trainingPlan) => (
@@ -279,6 +280,7 @@ const Routines = () => {
 
       <View style={styles.footer}>
         <Button
+          testID="create-movement"
           width={170}
           isHighlighted={true}
           text={t("create-movement")}
@@ -289,6 +291,7 @@ const Routines = () => {
         />
 
         <Button
+          testID="create-routine"
           width={170}
           text={t("create-routine")}
           onPress={moveToCreateRoutine}

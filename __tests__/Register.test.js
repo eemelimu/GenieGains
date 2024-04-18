@@ -16,9 +16,8 @@ import Toast, { ErrorToast } from "react-native-toast-message";
 import * as Localization from "expo-localization";
 import Register from "../pages/Register";
 
-jest.useFakeTimers();
-
 test("Register screen component renders correctly and that the theme context and localization context works", async () => {
+  jest.useFakeTimers();
   jest
     .spyOn(Localization, "getLocales")
     .mockReturnValue([
@@ -29,29 +28,26 @@ test("Register screen component renders correctly and that the theme context and
 
   const Stack = createStackNavigator();
   let component;
-  await act(async () => {
-    component = renderer.create(
-      <NavigationContainer>
-        <NotificationProvider>
-          <SettingsProvider>
-            <ThemeProvider>
-              <AuthProvider>
-                <LocalizationProvider>
-                  <Stack.Navigator>
-                    <Stack.Screen name="Register" component={Register} />
-                    <Stack.Screen name="Login" component={Login} />
-                  </Stack.Navigator>
-                  <Notification />
-                </LocalizationProvider>
-              </AuthProvider>
-            </ThemeProvider>
-            <Toast />
-          </SettingsProvider>
-        </NotificationProvider>
-      </NavigationContainer>
-    );
-  });
-
+  component = renderer.create(
+    <NavigationContainer>
+      <NotificationProvider>
+        <SettingsProvider>
+          <ThemeProvider>
+            <AuthProvider>
+              <LocalizationProvider>
+                <Stack.Navigator>
+                  <Stack.Screen name="Register" component={Register} />
+                  <Stack.Screen name="Login" component={Login} />
+                </Stack.Navigator>
+                <Notification />
+              </LocalizationProvider>
+            </AuthProvider>
+          </ThemeProvider>
+          <Toast />
+        </SettingsProvider>
+      </NotificationProvider>
+    </NavigationContainer>
+  );
   let tree;
   await act(async () => {
     jest.runAllTimers();

@@ -13,10 +13,9 @@ import { LocalizationProvider } from "../contexts/LocalizationContext";
 import Notification from "../components/Notification";
 import Toast, { ErrorToast } from "react-native-toast-message";
 import * as Localization from "expo-localization";
-import SkillLevelRegistration from "../pages/SkillLevelRegistration";
-jest.useFakeTimers();
+import Tos from "../pages/Tos";
 
-test("Skill level registration screen component renders correctly and that the theme context and localization context works", async () => {
+test("Terms of service screen component renders correctly and that the theme context and localization context works", async () => {
   jest
     .spyOn(Localization, "getLocales")
     .mockReturnValue([
@@ -27,37 +26,28 @@ test("Skill level registration screen component renders correctly and that the t
 
   const Stack = createStackNavigator();
   let component;
-  await act(async () => {
-    component = renderer.create(
-      <NavigationContainer>
-        <NotificationProvider>
-          <SettingsProvider>
-            <ThemeProvider>
-              <AuthProvider>
-                <LocalizationProvider>
-                  <Stack.Navigator>
-                    <Stack.Screen
-                      name="Skill level registration"
-                      component={SkillLevelRegistration}
-                    />
-                    <Stack.Screen name="Login" component={Login} />
-                  </Stack.Navigator>
-                  <Notification />
-                </LocalizationProvider>
-              </AuthProvider>
-            </ThemeProvider>
-            <Toast />
-          </SettingsProvider>
-        </NotificationProvider>
-      </NavigationContainer>
-    );
-  });
+  component = renderer.create(
+    <NavigationContainer>
+      <NotificationProvider>
+        <SettingsProvider>
+          <ThemeProvider>
+            <AuthProvider>
+              <LocalizationProvider>
+                <Stack.Navigator>
+                  <Stack.Screen name="Tos" component={Tos} />
+                  <Stack.Screen name="Login" component={Login} />
+                </Stack.Navigator>
+                <Notification />
+              </LocalizationProvider>
+            </AuthProvider>
+          </ThemeProvider>
+          <Toast />
+        </SettingsProvider>
+      </NotificationProvider>
+    </NavigationContainer>
+  );
 
-  let tree;
-  await act(async () => {
-    jest.runAllTimers();
-    tree = component.toJSON();
-  });
+  const tree = component.toJSON();
 
   expect(tree).toMatchSnapshot();
 

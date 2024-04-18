@@ -174,7 +174,7 @@
   "username": "Käyttäjänimi",
   "start": "Aloita",
   "no-training-plans": "Ei harjoitusohjelmia saatavilla",
-  "create-routine-hint": "Paina luodaksesi rutiini luodaksesi ensimmäisen rutiinisi!",
+  "create-routine-hint": "Paina luo rutiini luodaksesi ensimmäisen rutiinisi!",
   "select-skill-level-hint": "Valitse taitotasosi aloittaaksesi!",
   "beginner-description": "Olet uusi salilla, alle vuoden kokemus.",
   "intermediate-description": "Olet harjoitellut 1-3 vuotta ja haluat viedä kuntoilusi seuraavalle tasolle.",

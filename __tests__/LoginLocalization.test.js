@@ -48,10 +48,18 @@ test("Login localization works in Finnish", async () => {
   const loginButton = component.root.findByProps({
     testID: "login",
   });
+  const registerButton = component.root.findByProps({
+    testID: "register",
+  });
   const loginButtonText = loginButton.props.text;
   expect(loginButtonText).toEqual("Kirjaudu sisään");
   expect(loginButtonText).not.toEqual("Login");
   expect(loginButtonText).not.toEqual("ログイン");
+
+  const registerButtonText = registerButton.props.text;
+  expect(registerButtonText).toEqual("Rekisteröidy");
+  expect(registerButtonText).not.toEqual("Register");
+  expect(registerButtonText).not.toEqual("登録");
 
   jest.restoreAllMocks();
 });
@@ -87,10 +95,18 @@ test("Login localization works in English", async () => {
   const loginButton = component.root.findByProps({
     testID: "login",
   });
+  const registerButton = component.root.findByProps({
+    testID: "register",
+  });
   const loginButtonText = loginButton.props.text;
   expect(loginButtonText).toEqual("Login");
   expect(loginButtonText).not.toEqual("Kirjaudu sisään");
   expect(loginButtonText).not.toEqual("ログイン");
+
+  const registerButtonText = registerButton.props.text;
+  expect(registerButtonText).toEqual("Register");
+  expect(registerButtonText).not.toEqual("Rekisteröidy");
+  expect(registerButtonText).not.toEqual("登録");
 
   jest.restoreAllMocks();
 });
@@ -126,10 +142,18 @@ test("Login localization works in Japanese", async () => {
   const loginButton = component.root.findByProps({
     testID: "login",
   });
+  const registerButton = component.root.findByProps({
+    testID: "register",
+  });
   const loginButtonText = loginButton.props.text;
   expect(loginButtonText).toEqual("ログイン");
   expect(loginButtonText).not.toEqual("Login");
   expect(loginButtonText).not.toEqual("Kirjaudu sisään");
+
+  const registerButtonText = registerButton.props.text;
+  expect(registerButtonText).toEqual("登録");
+  expect(registerButtonText).not.toEqual("Register");
+  expect(registerButtonText).not.toEqual("Rekisteröidy");
 
   jest.restoreAllMocks();
 });

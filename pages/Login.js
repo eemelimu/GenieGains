@@ -405,6 +405,7 @@ const Login = () => {
           </View>
           <View style={styles.buttonContainer}>
             <Button
+              testID="login"
               textSize={20}
               height={50}
               width={"80%"}
@@ -412,6 +413,7 @@ const Login = () => {
               onPress={handleLogin}
             />
             <Button
+              testID="register"
               isHighlighted={true}
               textSize={20}
               height={50}

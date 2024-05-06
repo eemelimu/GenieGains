@@ -60,7 +60,7 @@ const LoadingPageAnim = () => {
       <Animated.View style={[styles.container, { opacity: fadeAnim }]}>
         <Video
           ref={videoRef}
-          source={require("../assets/GymJunkieIntro.mp4")}
+          source={require("../assets/GenieGainsIntro.mp4")}
           style={styles.video}
           resizeMode="cover"
           shouldPlay

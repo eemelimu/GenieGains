@@ -36,7 +36,7 @@
     "@shopify/react-native-skia": "0.1.221",
     "@testing-library/react-native": "^12.4.3",
     "babel-jest": "^29.7.0",
-    "expo": "^50.0.14",
+    "expo": "^50.0.17",
     "expo-asset": "^9.0.2",
     "expo-av": "~13.10.5",
     "expo-blur": "~12.9.2",
